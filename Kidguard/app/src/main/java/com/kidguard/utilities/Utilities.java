@@ -3,7 +3,9 @@ package com.kidguard.utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -27,7 +29,6 @@ public class Utilities {
                 apiAvailability.getErrorDialog(((Activity) ctx), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
-                Log.e("Splash", "This device is not supported.");
                 ((Activity) ctx).finish();
             }
             return false;
@@ -46,6 +47,7 @@ public class Utilities {
         }
     }
 
+    /* Package Util */
     public static class PackageUtil {
 
         public static boolean checkPermission(Context context, String accessFineLocation) {
@@ -73,4 +75,19 @@ public class Utilities {
         builder.show();
     }
 
+    /* Disable Registered Receiver in Manifest */
+    public static void disableReceiver(Context ctx, Class classname) {
+        PackageManager pm = ctx.getPackageManager();
+        ComponentName component = new ComponentName(ctx, classname);
+        pm.setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    /* Application Forcefully Stop With This Home Intent */
+    public static void stopAppIntent(Context ctx) {
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(homeIntent);
+    }
 }

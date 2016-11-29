@@ -2,8 +2,10 @@ package com.kidguard;
 
 import android.app.Application;
 
+import com.kidguard.interfaces.Constant;
 
-public class MyAppApplication extends Application {
+
+public class MyAppApplication extends Application implements Constant {
 
     private static MyAppApplication sInstance;
 
@@ -17,7 +19,6 @@ public class MyAppApplication extends Application {
         sInstance = this;
 
         sInstance.initializeInstance();
-
     }
 
     private void initializeInstance() {

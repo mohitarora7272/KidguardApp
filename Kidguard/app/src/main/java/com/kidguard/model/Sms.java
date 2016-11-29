@@ -1,7 +1,8 @@
 package com.kidguard.model;
 
 
-public class Sms {
+
+public class Sms  {
     private String id;
     private String address;
     private String msg;
