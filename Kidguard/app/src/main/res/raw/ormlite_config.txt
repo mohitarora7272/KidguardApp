@@ -1,0 +1,111 @@
+# --table-start--
+dataClass=com.kidguard.model.Sms
+tableName=Sms_details
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=sms_id
+columnName=sms_id
+# --field-end--
+# --field-start--
+fieldName=address
+columnName=address
+# --field-end--
+# --field-start--
+fieldName=message
+columnName=message
+# --field-end--
+# --field-start--
+fieldName=readState
+columnName=readState
+# --field-end--
+# --field-start--
+fieldName=time
+columnName=time
+# --field-end--
+# --field-start--
+fieldName=folderName
+columnName=folderName
+# --field-end--
+# --field-start--
+fieldName=sms_status
+columnName=sms_status
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+
+#################################
+# --table-start--
+dataClass=com.kidguard.model.Contacts
+tableName=Contacts_details
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=contactName
+columnName=contactName
+# --field-end--
+# --field-start--
+fieldName=contactPhoneNo
+columnName=contactPhoneNo
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+
+#################################
+# --table-start--
+dataClass=com.kidguard.model.Calls
+tableName=Calls_details
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=callerName
+columnName=callerName
+# --field-end--
+# --field-start--
+fieldName=phNumber
+columnName=phNumber
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=callType
+columnName=callType
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=callDate
+columnName=callDate
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=callDuration
+columnName=callDuration
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=dir
+columnName=dir
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=callDateTime
+columnName=callDateTime
+foreign=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+
