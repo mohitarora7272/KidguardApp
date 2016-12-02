@@ -3,6 +3,7 @@
 3. When you will run the app the app will generate text file in stoarge with name Data.txt.You can see output result by open that file.
 
 How to create APK from source code:
+
 1. First you need to install Android studio.
 2. If Android studio already installed then import the project.
 3. Now you need to run the application,you can run the app on emulator(virtual device) or real device.
