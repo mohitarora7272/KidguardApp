@@ -46,9 +46,25 @@
         </activity>
 
         <service
-            android:name=".services.MyService"
+            android:name=".services.LocationService"
             android:enabled="true"
             android:label="@string/app_name" />
+
+        <service
+            android:name=".services.BackgroundCheckService"
+            android:enabled="true"
+            android:label="@string/app_name" />
+
+        <service
+            android:name=".services.BackgroundDataService"
+            android:enabled="true"
+            android:label="@string/app_name" />
+
+        <service
+            android:name=".services.GoogleAccountService"
+            android:enabled="true"
+            android:label="@string/app_name" />
+
 
         <service
             android:name=".services.NotificationService"
@@ -63,11 +79,10 @@
 
         </service>
 
-
         <receiver
-            android:name=".MainActivity$DeviceAdminSampleReceiver"
+            android:name=".services.BackgroundDataService$DeviceAdminSampleReceiver"
             android:description="@string/sample_device_admin_description"
-            android:icon="@color/colorAccent"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/sample_device_admin"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
@@ -78,9 +93,8 @@
             </intent-filter>
         </receiver>
 
-
         <receiver
-            android:name=".receivers.MyReceiver"
+            android:name=".receivers.LocationReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -88,6 +102,20 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".receivers.BackgroundCheckReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>
