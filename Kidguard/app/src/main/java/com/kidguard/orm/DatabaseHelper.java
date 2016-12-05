@@ -13,6 +13,7 @@ import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Calls;
 import com.kidguard.model.Contacts;
+import com.kidguard.model.Files;
 import com.kidguard.model.Sms;
 
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
     private Dao<Sms, Integer> smsDao;
     private Dao<Contacts, Integer> contactsDao;
     private Dao<Calls, Integer> callsDao;
+    private Dao<Files, Integer> filesDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -43,7 +45,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
 
             TableUtils.createTable(connectionSource, Sms.class);
             TableUtils.createTable(connectionSource, Contacts.class);
-            //TableUtils.createTable(connectionSource, Calls.class);
+            TableUtils.createTable(connectionSource, Calls.class);
+            TableUtils.createTable(connectionSource, Files.class);
 
 
         } catch (SQLException e) {
@@ -62,7 +65,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
 
             TableUtils.dropTable(connectionSource, Sms.class, true);
             TableUtils.dropTable(connectionSource, Contacts.class, true);
-            //TableUtils.dropTable(connectionSource, Calls.class, true);
+            TableUtils.dropTable(connectionSource, Calls.class, true);
+            TableUtils.dropTable(connectionSource, Files.class, true);
             onCreate(sqliteDatabase, connectionSource);
 
 
@@ -94,5 +98,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             callsDao = getDao(Calls.class);
         }
         return callsDao;
+    }
+
+    public Dao<Files, Integer> getFilesDao() throws SQLException {
+        if (filesDao == null) {
+            filesDao = getDao(Files.class);
+        }
+        return filesDao;
     }
 }
