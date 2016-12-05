@@ -41,7 +41,7 @@ public class LocationService extends Service implements LocationListener, Consta
     private Location location;
 
 
-    // HomeActivity Instance
+    // LocationService Instance
     public static LocationService getInstance() {
         return mContext;
     }
@@ -71,6 +71,7 @@ public class LocationService extends Service implements LocationListener, Consta
     // Stop Apps Up API level > 21
     private void stopAppsUpToLevel21(final Context context) {
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        //Log.e("LocationService","currentapiVersion??"+currentapiVersion);
 
         if (currentapiVersion > 21) {
             AppChecker appChecker = new AppChecker();
@@ -78,7 +79,7 @@ public class LocationService extends Service implements LocationListener, Consta
                     .when(PACKAGE_NAME, new AppChecker.Listener() {
                         @Override
                         public void onForeground(String packageName) {
-                            Log.e("STOP", "STOP>21");
+                            //Log.e("STOP", "STOP>21");
                             Utilities.stopAppIntent(context);
                         }
 
@@ -99,6 +100,7 @@ public class LocationService extends Service implements LocationListener, Consta
             @Override
             public void run() {
                 //Log.e("run", ">=21");
+
                 if (!Utilities.isNetworkAvailable(context)) {
                     context.startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
