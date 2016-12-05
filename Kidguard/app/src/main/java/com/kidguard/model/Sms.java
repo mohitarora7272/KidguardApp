@@ -1,18 +1,64 @@
 package com.kidguard.model;
 
 
+import com.j256.ormlite.field.DatabaseField;
 
-public class Sms  {
-    private String id;
-    private String address;
-    private String msg;
-    private String readState;
-    private String time;
-    private String folderName;
+import java.io.Serializable;
+
+public class Sms implements Serializable {
+
+    private static final long serialVersionUID = -222864131214757024L;
+
+    public static final String ID = "id";
+    public static final String SMS_ID = "sms_id";
+    public static final String SMS_ADDRESS = "address";
+    public static final String SMS_MESSAGE = "message";
+    public static final String SMS_READ_STATE = "readState";
+    public static final String SMS_TIME = "time";
+    public static final String SMS_FOLDER_NAME = "folderName";
+    public static final String SMS_STATUS = "sms_status";
 
 
-    public String getId() {
-        return id;
+    @DatabaseField(generatedId = true, columnName = ID)
+    public int id;
+
+    @DatabaseField(columnName = SMS_ID)
+    public String sms_id;
+
+    @DatabaseField(columnName = SMS_ADDRESS)
+    public String address;
+
+    @DatabaseField(columnName = SMS_MESSAGE)
+    public String message;
+
+    @DatabaseField(columnName = SMS_READ_STATE)
+    public String readState;
+
+    @DatabaseField(columnName = SMS_TIME)
+    public String time;
+
+    @DatabaseField(columnName = SMS_FOLDER_NAME)
+    public String folderName;
+
+    @DatabaseField(columnName = SMS_STATUS)
+    public String sms_status;
+
+
+    /* Default Constructor */
+    public Sms() {
+    }
+
+    public String getSms_status() {
+        return sms_status;
+    }
+
+    public void setSms_status(String sms_status) {
+        this.sms_status = sms_status;
+    }
+
+
+    public String getSmsId() {
+        return sms_id;
     }
 
     public String getAddress() {
@@ -20,7 +66,7 @@ public class Sms  {
     }
 
     public String getMsg() {
-        return msg;
+        return message;
     }
 
     public String getReadState() {
@@ -36,16 +82,16 @@ public class Sms  {
     }
 
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSmsId(String sms_id) {
+        this.sms_id = sms_id;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMsg(String message) {
+        this.message = message;
     }
 
     public void setReadState(String readState) {
