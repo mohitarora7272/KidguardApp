@@ -44,7 +44,7 @@ public class BackgroundCheckService extends Service implements Constant{
 
     private Runnable myTask = new Runnable() {
         public void run() {
-            //Log.e("Running", "Running");
+           // Log.e("Running", "Running");
 
             if (!Utilities.isNetworkAvailable(context)) {
                 context.startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)
@@ -63,10 +63,11 @@ public class BackgroundCheckService extends Service implements Constant{
 
             if (currentapiVersion <= 21) {
 
-               // Log.e("currentapiVersion", "currentapiVersion<21");
+               //Log.e("currentapiVersion", "currentapiVersion<21");
 
                 try {
-                    boolean foreground = new BackgroundCheckService.ForegroundCheckTask().execute(PACKAGE_NAME).get();
+                    boolean foreground = new ForegroundCheckTask()
+                            .execute(PACKAGE_NAME).get();
                     if (foreground) {
                         Utilities.stopAppIntent(context);
                     }
@@ -90,8 +91,10 @@ public class BackgroundCheckService extends Service implements Constant{
         }
 
         private boolean isAppOnForeground(Context context, String packageName) {
-            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+            ActivityManager activityManager = (ActivityManager)
+                    context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> appProcesses =
+                    activityManager.getRunningAppProcesses();
             if (appProcesses == null) {
                 return false;
             }
