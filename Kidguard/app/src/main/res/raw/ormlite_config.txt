@@ -57,6 +57,10 @@ columnName=contactName
 fieldName=contactPhoneNo
 columnName=contactPhoneNo
 # --field-end--
+# --field-start--
+fieldName=contactStatus
+columnName=contactStatus
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -72,38 +76,70 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
+fieldName=callerId
+columnName=callerId
+# --field-end--
+# --field-start--
 fieldName=callerName
 columnName=callerName
 # --field-end--
 # --field-start--
 fieldName=phNumber
 columnName=phNumber
-foreign=true
 # --field-end--
 # --field-start--
 fieldName=callType
 columnName=callType
-foreign=true
 # --field-end--
 # --field-start--
 fieldName=callDate
 columnName=callDate
-foreign=true
 # --field-end--
 # --field-start--
 fieldName=callDuration
 columnName=callDuration
-foreign=true
 # --field-end--
 # --field-start--
 fieldName=dir
 columnName=dir
-foreign=true
 # --field-end--
 # --field-start--
 fieldName=callDateTime
 columnName=callDateTime
-foreign=true
+# --field-end--
+# --field-start--
+fieldName=callerStatus
+columnName=callerStatus
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+
+#################################
+# --table-start--
+dataClass=com.kidguard.model.Files
+tableName=Files_details
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=filename
+columnName=filename
+# --field-end--
+# --field-start--
+fieldName=filePath
+columnName=filePath
+# --field-end--
+# --field-start--
+fieldName=fileExt
+columnName=fileExt
+# --field-end--
+# --field-start--
+fieldName=fileStatus
+columnName=fileStatus
 # --field-end--
 # --table-fields-end--
 # --table-end--
