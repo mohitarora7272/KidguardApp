@@ -24,6 +24,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.kidguard.MainActivity;
+import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.preference.Preference;
 
@@ -37,10 +38,10 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class GoogleAccountService extends Service implements Constant {
+    private static GoogleAccountService services;
 
     /* GoogleAccountCredential */
     GoogleAccountCredential mCredential;
-    private static GoogleAccountService services;
     Context context;
 
     public static GoogleAccountService getInstance() {
@@ -106,7 +107,6 @@ public class GoogleAccountService extends Service implements Constant {
         }
     }
 
-
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
@@ -133,7 +133,7 @@ public class GoogleAccountService extends Service implements Constant {
         }
     }
 
-
+    /* GooglePlayServicesAvailabilityErrorDialog */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
@@ -144,6 +144,7 @@ public class GoogleAccountService extends Service implements Constant {
         dialog.show();
     }
 
+    /* MakeRequestTask */
     private class MakeRequestTask extends AsyncTask<Void, Void, List<Message>> {
         private com.google.api.services.gmail.Gmail mService = null;
         private Exception mLastError = null;
@@ -153,7 +154,7 @@ public class GoogleAccountService extends Service implements Constant {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.gmail.Gmail.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Gmail API Android Quickstart")
+                    .setApplicationName(getString(R.string.app_name))
                     .build();
         }
 
