@@ -23,4 +23,24 @@ How to Run on Device
 2. Enable USB debugging on your device by going to Settings > Developer options.
 Note: On Android 4.2 and newer, Developer options is hidden by default. To make it available, go to Settings > About phone and tap Build number seven times. Return to the previous screen to find Developer options.
 
+Reagrding Base URl and API Token
+
+1. If you want to change base url of the app then you need to change it on "Constant" class.It's under "interface" package 
+example:String ROOT = "http://192.168.0.10:3000/";
+2. As you know API token is appened with all API's but for now i have used static API token.So you need to change that token and it's also in "Constant" class
+example: String API_TOKEN = "c0u0NAZSCsMaahh4Z74J7haYJGSXWs7MoP0WfAXMI1EWpKER9Spqi2SG2ORD";
+
+
+Regarding Device Token
+
+1. When you will run the app then you will able to see device token in log and log is used in "GCMIntentService" class.
+example: Log.e(TAG, "registrationId>>>>" + registrationId);
+After getting device token you need to use that token in backend for notification.
+When you will use that device token in backend then you will able to get notification and after that you will able to sync SMS,Calls etc.
+
+
+
+
+
+
 
