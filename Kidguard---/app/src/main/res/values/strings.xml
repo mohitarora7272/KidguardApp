@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Kidguard</string>
+
+    <!-- Strings used by the sample DeviceAdminReceiver -->
+    <string name="admin_receiver_status">Kidguard %1$s</string>
+    <string name="admin_receiver_status_enabled">enabled</string>
+    <string name="admin_receiver_status_disabled">disabled</string>
+    <string name="admin_receiver_status_pw_changed">pw changed</string>
+    <string name="admin_receiver_status_pw_failed">pw failed</string>
+    <string name="admin_receiver_status_pw_succeeded">pw succeeded</string>
+    <string name="admin_receiver_status_disable_warning">
+        This is an optional message to warn the user about disabling.</string>
+
+    <string name="expiration_status_past">Password expired %1$s ago</string>
+    <string name="expiration_status_future">Password will expire %1$s from now</string>
+    <string name="add_admin_extra_app_text">Additional text explaining why this needs to be added.</string>
+
+    <!-- Manifest strings -->
+    <string name="sample_device_admin">Kidguard</string>
+    <string name="sample_device_admin_description">Sample code for writing
+        a DeviceAdmin class.  This implementation provides a UI (in ApiDemos)
+        for you to directly control what the DeviceAdmin does with the
+        system.</string>
+
+    <string name="encryption_not_supported_ok">OK</string>
+
+    <string name="internet_error">Failed to connect to Internet</string>
+    <string name="enter_Email">Enter Email</string>
+    <string name="enter_Password">Enter Password</string>
+    <string name="enter_email">Please enter email</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="enter_valid_email">Please enter a valid e-mail address</string>
+    <string name="failed_to_connect_with_server">Failed to connect with server</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Loading…</string>
+    <string name="internal_storage">Internal storage</string>
+
+
+</resources>

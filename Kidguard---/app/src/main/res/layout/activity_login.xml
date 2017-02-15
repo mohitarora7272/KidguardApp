@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        tools:context="com.kidguard.LogInActivity">
+
+
+        <EditText
+            android:id="@+id/edt_Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="@string/enter_Email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:typeface="normal"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/edt_Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="@string/enter_Password"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
+            android:typeface="normal"
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+        <Button
+            android:id="@+id/btn_SignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:selectAllOnFocus="false"
+            android:text="@string/common_signin_button_text"
+            android:textSize="15sp"
+            android:typeface="normal" />
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
