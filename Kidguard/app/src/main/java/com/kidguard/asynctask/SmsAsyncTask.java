@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implements Constant {
+    private static final String TAG = SmsAsyncTask.class.getSimpleName();
 
     private DatabaseHelper databaseHelper = null;
     private Dao<Sms, Integer> smsDao;
@@ -61,7 +63,6 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 ((Activity) context).startManagingCursor(c);
             }
-
 
             try {
                 // This is how, a reference of DAO object can be done
@@ -142,7 +143,8 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
             objSms.setAddress(c.getString(c.getColumnIndexOrThrow("address")));
             objSms.setMsg(c.getString(c.getColumnIndexOrThrow("body")));
             objSms.setReadState(c.getString(c.getColumnIndex("read")));
-            objSms.setTime(Utilities.changeDateFormat(c.getString(c.getColumnIndexOrThrow("date"))));
+            objSms.setDate(Utilities.changeDateFormat(c.getString(c.getColumnIndexOrThrow("date"))));
+            objSms.setDate_timestamp(c.getString(c.getColumnIndexOrThrow("date")));
             objSms.setSms_status(FALSE);
             if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
                 objSms.setFolderName("inbox");
@@ -163,7 +165,8 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
         objSms.setAddress(results.get(i).getAddress());
         objSms.setMsg(results.get(i).getMsg());
         objSms.setReadState(results.get(i).getReadState());
-        objSms.setTime(results.get(i).getTime());
+        objSms.setDate(results.get(i).getDate());
+        objSms.setDate_timestamp(results.get(i).getDate_timestamp());
         objSms.setSms_status(results.get(i).getSms_status());
         objSms.setFolderName(results.get(i).getFolderName());
         lstSmsSorted.add(objSms);
@@ -206,39 +209,39 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
             }
 
             if (count.equals("") && !dateFrom.equals("") && !dateTo.equals("")) {
-                Log.d("2", "2??");
+                Log.e("2", "2??");
 
-                List<Sms> resultDateFrom = queryBuilder.where().like(Sms.SMS_TIME, dateFrom).query();
-                List<Sms> resultDateTo = queryBuilder.where().like(Sms.SMS_TIME, dateTo).query();
+                List<Sms> resultDateFrom = queryBuilder.where().like(Sms.SMS_DATE, dateFrom).query();
+                List<Sms> resultDateTo = queryBuilder.where().like(Sms.SMS_DATE, dateTo).query();
 
                 if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                     if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         return null;
                     }
-                    dateFrom = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).get(0);
-                    dateTo = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo)
-                            .get(getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                    dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
+                    dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                            .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
 
                 } else if (resultDateFrom.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateFrom = dateTo;
 
                     } else {
-                        dateFrom = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).get(0);
+                        dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
 
                     }
 
                 } else if (resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateTo = dateFrom;
 
                     } else {
-                        dateTo = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
                     }
                 }
@@ -247,12 +250,8 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
                 if (dateFrom.equals(dateTo)) {
 
                     List<Sms> results = null;
-
-                    for (int i = 0; i < smsDao.queryForAll().size(); i++) {
-
-                        results = queryBuilder.where().eq(Sms.SMS_TIME, dateFrom)
-                                .and().eq(Sms.SMS_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().eq(Sms.SMS_DATE, dateFrom)
+                            .and().eq(Sms.SMS_STATUS, FALSE).query();
 
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
@@ -262,10 +261,8 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
 
                 } else {
                     List<Sms> results = null;
-                    for (int i = 0; i < smsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().between(Sms.SMS_TIME, dateFrom, dateTo)
-                                .and().eq(Sms.SMS_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().between(Sms.SMS_DATE, dateFrom, dateTo)
+                            .and().eq(Sms.SMS_STATUS, FALSE).query();
 
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
@@ -280,53 +277,62 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
             if (!count.equals("") && !dateFrom.equals("") && !dateTo.equals("")) {
                 Log.d("3", "3??");
 
-                List<Sms> resultDateFrom = queryBuilder.where().like(Sms.SMS_TIME, dateFrom).query();
-                List<Sms> resultDateTo = queryBuilder.where().like(Sms.SMS_TIME, dateTo).query();
+                List<Sms> resultDateFrom = queryBuilder.where().like(Sms.SMS_DATE, dateFrom).query();
+                List<Sms> resultDateTo = queryBuilder.where().like(Sms.SMS_DATE, dateTo).query();
 
                 if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         return null;
                     }
-                    dateFrom = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).get(0);
-                    dateTo = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo)
-                            .get(getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                    dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
+                    dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                            .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
 
                 } else if (resultDateFrom.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateFrom = dateTo;
 
                     } else {
-                        dateFrom = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).get(0);
+                        dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
 
                     }
 
                 } else if (resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateTo = dateFrom;
 
                     } else {
-                        dateTo = getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(smsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
                     }
                 }
 
                 List<Sms> results = null;
                 if (dateFrom.equals(dateTo)) {
-                    for (int i = 0; i < smsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().eq(Sms.SMS_TIME, dateFrom).and().eq(Sms.SMS_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().eq(Sms.SMS_DATE, dateFrom).and().eq(Sms.SMS_STATUS, FALSE).query();
                 } else {
-                    for (int i = 0; i < smsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().between(Sms.SMS_TIME, dateFrom, dateTo).and().eq(Sms.SMS_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().between(Sms.SMS_DATE, dateFrom, dateTo).and().eq(Sms.SMS_STATUS, FALSE).query();
                 }
 
                 checkCount(lstSmsSorted, results, count, countNew);
+
+                return lstSmsSorted;
+            }
+
+            List<Sms> results = null;
+            if (count.equals("") && dateFrom.equals("") && dateTo.equals("")) {
+                Log.d("4", "4??");
+                results = smsDao.queryForAll();
+                if (results != null && results.size() > 0) {
+                    for (int j = 0; j < results.size(); j++) {
+                        setSmsPOJO(lstSmsSorted, results, j);
+                    }
+                }
 
                 return lstSmsSorted;
             }
@@ -338,20 +344,18 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
     }
 
     /* Get Resulted DateFrom To */
-    private List<String> getResultedDateFromTo(Dao<Sms, Integer> smsDao, QueryBuilder<Sms,
+    private List<String> getResultedDateFromTo(QueryBuilder<Sms,
             Integer> queryBuilder, String dateFrom, String dateTo) {
         List<String> sortList = new ArrayList<>();
         try {
             List<Sms> results = null;
 
-            for (int i = 0; i < smsDao.queryForAll().size(); i++) {
-                results = queryBuilder.where().between(Sms.SMS_TIME, dateFrom, dateTo)
-                        .and().eq(Sms.SMS_STATUS, FALSE).query();
-            }
+            results = queryBuilder.where().between(Sms.SMS_DATE, dateFrom, dateTo)
+                    .and().eq(Sms.SMS_STATUS, FALSE).query();
 
             if (results != null && results.size() > 0) {
                 for (int i = 0; i < results.size(); i++) {
-                    sortList.add(results.get(i).getTime());
+                    sortList.add(results.get(i).getDate());
                 }
                 Collections.sort(sortList);
             }

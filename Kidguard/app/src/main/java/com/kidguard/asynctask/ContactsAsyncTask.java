@@ -20,11 +20,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contacts>> implements Constant {
-
+    private static final String TAG = ContactsAsyncTask.class.getSimpleName();
     private DatabaseHelper databaseHelper = null;
     private Dao<Contacts, Integer> contactsDao;
-    private ArrayList lstContacts;
+    private ArrayList<Contacts> lstContacts;
     private Context context;
 
     /* Sms Constructor */
@@ -43,7 +44,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        lstContacts = new ArrayList<Contacts>();
+        lstContacts = new ArrayList<>();
     }
 
     @Override
@@ -55,62 +56,66 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             try {
                 cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                         null, null, null, null);
-                if (contactsDao.isTableExists()) {
-                    long numRows = contactsDao.countOf();
-                    if (numRows != 0) {
-                        final QueryBuilder<Contacts, Integer> queryBuilder = contactsDao.queryBuilder();
-                        for (int i = 0; i < contactsDao.queryForAll().size(); i++) {
-                            while (cur.moveToNext()) {
-                                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                                    System.out.println("name : " + name + ", ID : " + id);
-                                    // get the phone number
-                                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                            new String[]{id}, null);
-                                    while (pCur.moveToNext()) {
-                                        List<Contacts> results = queryBuilder.where()
-                                                .eq(Contacts.CONTACT_PHONE_NO,
-                                                        pCur.getString(
-                                                                pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
-                                        if (results.size() == 0) {
-                                            setContactsPOJO(pCur, name);
+                if (cur != null) {
+                    if (contactsDao.isTableExists()) {
+                        long numRows = contactsDao.countOf();
+                        if (numRows != 0) {
+                            final QueryBuilder<Contacts, Integer> queryBuilder = contactsDao.queryBuilder();
+                            for (int i = 0; i < contactsDao.queryForAll().size(); i++) {
+                                while (cur.moveToNext()) {
+                                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                        // get the phone number
+                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                                new String[]{id}, null);
+                                        if (pCur != null) {
+                                            while (pCur.moveToNext()) {
+                                                List<Contacts> results = queryBuilder.where()
+                                                        .eq(Contacts.CONTACT_PHONE_NO,
+                                                                pCur.getString(
+                                                                        pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
+                                                if (results.size() == 0) {
+                                                    setContactsPOJO(pCur, name);
+                                                }
+                                            }
+                                            pCur.close();
                                         }
                                     }
-                                    pCur.close();
                                 }
+
                             }
 
-                        }
-                    } else {
-                        if (cur.getCount() > 0) {
-                            while (cur.moveToNext()) {
-                                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                                if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                                    System.out.println("name : " + name + ", ID : " + id);
-                                    // get the phone number
-                                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                            new String[]{id}, null);
-                                    while (pCur.moveToNext()) {
-                                        setContactsPOJO(pCur, name);
+                        } else {
+                            if (cur.getCount() > 0) {
+                                while (cur.moveToNext()) {
+                                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                        // get the phone number
+                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                                new String[]{id}, null);
+                                        if (pCur != null) {
+                                            while (pCur.moveToNext()) {
+                                                setContactsPOJO(pCur, name);
+                                            }
+                                            pCur.close();
+                                        }
                                     }
-                                    pCur.close();
                                 }
+
                             }
-
                         }
+
+                        // Contacts Fetch With Tag
+                        lstContacts = contactsFetchWithTag(contactsDao, params[0]);
+
                     }
-
-                    // Contacts Fetch With Tag
-                    lstContacts = contactsFetchWithTag(contactsDao, params[0]);
-
                 }
-
             } catch (Exception e) {
-
+                e.printStackTrace();
             } finally {
                 if (cur != null && !cur.isClosed())
                     cur.close();
@@ -131,11 +136,11 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             databaseHelper = null;
         }
         if (list != null && list.size() > 0)
-            Log.e("Size", "Contacts List???" + list.size());
+            Log.e(TAG, "Contacts List???" + list.size());
         BackgroundDataService.getInstance().sendContactsDataToServer(list);
     }
 
-    /* setContactsPOJO With Cursor*/
+    /* setContactsPOJO With Cursor */
     private void setContactsPOJO(Cursor pCur, String name) {
         try {
             final Contacts contact = new Contacts();
@@ -145,23 +150,22 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             contact.setContactsPhoneNo(phone);
             contact.setContactStatus(FALSE);
             contactsDao.create(contact);
-            Log.d("Contacts", "Details??" + name + "" + phone);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     /* set Contacts POJO With List*/
-    private void setContactsPOJO(ArrayList<Contacts> lstSmsSorted, List<Contacts> results, int i) {
+    private void setContactsPOJO(ArrayList<Contacts> lstContactsSorted, List<Contacts> results, int i) {
         final Contacts contacts = new Contacts();
         contacts.setContactsName(results.get(i).getContactsName());
         contacts.setContactsPhoneNo(results.get(i).getContactsPhoneNo());
         contacts.setContactStatus(results.get(i).getContactStatus());
-        lstSmsSorted.add(contacts);
+        lstContactsSorted.add(contacts);
     }
 
     /* Check Count */
-    private void checkCount(ArrayList<Contacts> lstSmsSorted, List<Contacts> results, String count, int countNew) {
+    private void checkCount(ArrayList<Contacts> lstContactsSorted, List<Contacts> results, String count, int countNew) {
 
         if (results != null && results.size() > 0) {
             if (Integer.parseInt(count) == results.size()) {
@@ -173,41 +177,41 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             }
 
             for (int i = 0; i < countNew; i++) {
-                setContactsPOJO(lstSmsSorted, results, i);
+                setContactsPOJO(lstContactsSorted, results, i);
             }
         }
     }
 
     // Contacts Fetch With Tag
     private ArrayList<Contacts> contactsFetchWithTag(Dao<Contacts, Integer> contactsDao, String count) {
-        ArrayList<Contacts> lstSmsSorted = new ArrayList<>();
+        ArrayList<Contacts> lstContactsSorted = new ArrayList<>();
         int countNew = 0;
         final QueryBuilder<Contacts, Integer> queryBuilder = contactsDao.queryBuilder();
         //queryBuilder.orderBy(Sms.SMS_ID, false); // descending sort
         try {
 
             if (!count.equals("")) {
-                List<Contacts> results = null;
+                List<Contacts> results;
                 results = queryBuilder.where().eq(Contacts.CONTACT_STATUS, FALSE).query();
-                checkCount(lstSmsSorted, results, count, countNew);
+                checkCount(lstContactsSorted, results, count, countNew);
 
             } else {
-                List<Contacts> results = null;
+                List<Contacts> results;
                 results = queryBuilder.where().eq(Contacts.CONTACT_STATUS, FALSE).query();
                 if (results != null && results.size() > 0) {
                     for (int i = 0; i < results.size(); i++) {
-                        setContactsPOJO(lstSmsSorted, results, i);
+                        setContactsPOJO(lstContactsSorted, results, i);
                     }
                 }
 
             }
-            return lstSmsSorted;
+            return lstContactsSorted;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return lstSmsSorted;
+        return lstContactsSorted;
     }
 
 }

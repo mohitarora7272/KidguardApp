@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Kidguard</string>
 
     <!-- Strings used by the sample DeviceAdminReceiver -->
@@ -16,18 +16,23 @@
     <string name="add_admin_extra_app_text">Additional text explaining why this needs to be added.</string>
 
     <!-- Manifest strings -->
-    <string name="activity_sample_device_admin">App/Device Admin</string>
     <string name="sample_device_admin">Kidguard</string>
     <string name="sample_device_admin_description">Sample code for writing
         a DeviceAdmin class.  This implementation provides a UI (in ApiDemos)
         for you to directly control what the DeviceAdmin does with the
         system.</string>
 
-    <string name="encryption_not_supported">Encryption is not supported on this device.</string>
-    <string name="encryption_active">Encryption active on this device.</string>
-    <string name="encryption_inactive">Encryption inactive on this device.</string>
     <string name="encryption_not_supported_ok">OK</string>
 
     <string name="internet_error">Failed to connect to Internet</string>
+    <string name="enter_Email">Enter Email</string>
+    <string name="enter_Password">Enter Password</string>
+    <string name="enter_email">Please enter email</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="enter_valid_email">Please enter a valid e-mail address</string>
+    <string name="failed_to_connect_with_server">Failed to connect with server</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Loading…</string>
+    <string name="internal_storage">Internal storage</string>
+
 
 </resources>

@@ -4,7 +4,7 @@ package com.kidguard.model;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
-
+@SuppressWarnings("all")
 public class Contacts implements Serializable {
 
     private static final long serialVersionUID = -222864131214757024L;
@@ -23,7 +23,6 @@ public class Contacts implements Serializable {
     private String contactPhoneNo;
     @DatabaseField(columnName = CONTACT_STATUS)
     private String contactStatus;
-
 
     /* Default Constructor */
     public Contacts() {

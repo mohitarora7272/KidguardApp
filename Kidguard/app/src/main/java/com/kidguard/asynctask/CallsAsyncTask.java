@@ -25,13 +25,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> implements Constant {
-
+    private static final String TAG = CallsAsyncTask.class.getSimpleName();
     private DatabaseHelper databaseHelper = null;
     private Dao<Calls, Integer> callsDao;
-    private ArrayList lstCalls;
+    private ArrayList<Calls> lstCalls;
     private Context context;
-    private String[] dateToFromStrArr;
 
     /* Calls Constructor */
     public CallsAsyncTask(Context context) {
@@ -49,7 +49,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        lstCalls = new ArrayList<Calls>();
+        lstCalls = new ArrayList<>();
     }
 
     @Override
@@ -63,41 +63,43 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
                 ((Activity) context).startManagingCursor(managedCursor);
             }
 
-            callsDao = getHelper().getCallsDao();
-            if (callsDao.isTableExists()) {
-                int id = managedCursor.getColumnIndex(CallLog.Calls._ID);
-                int name = managedCursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
-                int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
-                int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
-                int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
-                int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
+            if (managedCursor != null) {
+                callsDao = getHelper().getCallsDao();
+                if (callsDao.isTableExists()) {
+                    int id = managedCursor.getColumnIndex(CallLog.Calls._ID);
+                    int name = managedCursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
+                    int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
+                    int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
+                    int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
+                    int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
 
-                long numRows = callsDao.countOf();
-                if (numRows != 0) {
-                    final QueryBuilder<Calls, Integer> queryBuilder = callsDao.queryBuilder();
-                    for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-                        while (managedCursor.moveToNext()) {
-                            List<Calls> results = queryBuilder.where()
-                                    .eq(Calls.CALLER_ID, managedCursor.getString(id)).query();
-                            if (results.size() == 0) {
-                                setCallsPOJO(managedCursor, id, name, number, type, date, duration);
+                    long numRows = callsDao.countOf();
+                    if (numRows != 0) {
+                        final QueryBuilder<Calls, Integer> queryBuilder = callsDao.queryBuilder();
+                        for (int i = 0; i < callsDao.queryForAll().size(); i++) {
+                            while (managedCursor.moveToNext()) {
+                                List<Calls> results = queryBuilder.where()
+                                        .eq(Calls.CALLER_ID, managedCursor.getString(id)).query();
+                                if (results.size() == 0) {
+                                    setCallsPOJO(managedCursor, id, name, number, type, date, duration);
+                                }
                             }
                         }
+
+                    } else {
+                        while (managedCursor.moveToNext()) {
+                            setCallsPOJO(managedCursor, id, name, number, type, date, duration);
+                        }
+                        managedCursor.close();
                     }
-                } else {
-                    while (managedCursor.moveToNext()) {
-                        setCallsPOJO(managedCursor, id, name, number, type, date, duration);
-                    }
-                    managedCursor.close();
+
+                    // Calls Fetch With Tag
+                    lstCalls = callsFetchWithTag(callsDao, params[0], params[1], params[2]);
                 }
-
-                // Calls Fetch With Tag
-                lstCalls = callsFetchWithTag(callsDao, params[0], params[1], params[2]);
-
             }
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         } finally {
             if (managedCursor != null && !managedCursor.isClosed())
                 managedCursor.close();
@@ -116,7 +118,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
         }
 
         if (list != null && list.size() > 0)
-            Log.e("Size", "CALLS List???" + list.size());
+            Log.e(TAG, "CALLS List???" + list.size());
         BackgroundDataService.getInstance().sendCallsDataToServer(list);
     }
 
@@ -144,7 +146,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
             calls.setCallerName(managedCursor.getString(name));
             calls.setPhNumber(managedCursor.getString(number));
             calls.setCallType(managedCursor.getString(type));
-            calls.setCallDate(managedCursor.getString(date));
+            calls.setCallDateTimeStamp(managedCursor.getString(date));
             Date callDayTime = new Date(Long.valueOf(managedCursor.getString(date)));
             calls.setCallDateTime(Utilities.changeDateToString(callDayTime));
             calls.setCallDuration(managedCursor.getString(duration));
@@ -163,8 +165,8 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
         calls.setCallerName(results.get(i).getCallerName());
         calls.setPhNumber(results.get(i).getPhNumber());
         calls.setCallType(results.get(i).getCallType());
-        calls.setCallDate(results.get(i).getCallDate());
-        Date callDayTime = new Date(Long.valueOf(results.get(i).getCallDate()));
+        calls.setCallDateTimeStamp(results.get(i).getCallDateTimeStamp());
+        Date callDayTime = new Date(Long.valueOf(results.get(i).getCallDateTimeStamp()));
         calls.setCallDateTime(Utilities.changeDateToString(callDayTime));
         calls.setCallDuration(results.get(i).getCallDuration());
         calls.setDir(results.get(i).getDir());
@@ -200,7 +202,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
 
             if (!count.equals("") && dateFrom.equals("") && dateTo.equals("")) {
                 Log.e("1", "1??");
-                List<Calls> results = null;
+                List<Calls> results;
                 results = queryBuilder.where().eq(Calls.CALLER_STATUS, FALSE).query();
 
                 checkCount(lstCallsSorted, results, count, countNew);
@@ -215,46 +217,40 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
                 List<Calls> resultDateTo = queryBuilder.where().like(Calls.CALLER_DATE_TIME, dateTo).query();
 
                 if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         return null;
                     }
-                    dateFrom = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).get(0);
-                    dateTo = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo)
-                            .get(getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                    dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
+                    dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                            .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
 
                 } else if (resultDateFrom.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateFrom = dateTo;
 
                     } else {
-                        dateFrom = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).get(0);
-
+                        dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
                     }
 
                 } else if (resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateTo = dateFrom;
 
                     } else {
-                        dateTo = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() - 1);
-
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                     }
                 }
 
                 if (dateFrom.equals(dateTo)) {
 
-                    List<Calls> results = null;
-
-                    for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-
-                        results = queryBuilder.where().eq(Calls.CALLER_DATE_TIME, dateFrom)
-                                .and().eq(Calls.CALLER_STATUS, FALSE).query();
-                    }
+                    List<Calls> results;
+                    results = queryBuilder.where().eq(Calls.CALLER_DATE_TIME, dateFrom)
+                            .and().eq(Calls.CALLER_STATUS, FALSE).query();
 
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
@@ -263,11 +259,9 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
                     }
 
                 } else {
-                    List<Calls> results = null;
-                    for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo)
-                                .and().eq(Calls.CALLER_STATUS, FALSE).query();
-                    }
+                    List<Calls> results;
+                    results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo)
+                            .and().eq(Calls.CALLER_STATUS, FALSE).query();
 
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
@@ -286,49 +280,61 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
                 List<Calls> resultDateTo = queryBuilder.where().like(Calls.CALLER_DATE_TIME, dateTo).query();
 
                 if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         return null;
                     }
-                    dateFrom = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).get(0);
-                    dateTo = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo)
-                            .get(getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                    dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
+                    dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                            .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
 
                 } else if (resultDateFrom.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateFrom = dateTo;
 
                     } else {
-                        dateFrom = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).get(0);
+                        dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
 
                     }
 
+
                 } else if (resultDateTo.size() == 0) {
-                    if (getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo) == null
-                            && getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() == 0) {
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                            && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         dateTo = dateFrom;
 
                     } else {
-                        dateTo = getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(callsDao, queryBuilder, dateFrom, dateTo).size() - 1);
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
+                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
                     }
                 }
 
-                List<Calls> results = null;
+                List<Calls> results;
                 if (dateFrom.equals(dateTo)) {
-                    for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().eq(Calls.CALLER_DATE_TIME, dateFrom).and().eq(Calls.CALLER_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().eq(Calls.CALLER_DATE_TIME, dateFrom).and().eq(Calls.CALLER_STATUS, FALSE).query();
                 } else {
-                    for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-                        results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo).and().eq(Calls.CALLER_STATUS, FALSE).query();
-                    }
+                    results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo).and().eq(Calls.CALLER_STATUS, FALSE).query();
                 }
 
                 checkCount(lstCallsSorted, results, count, countNew);
+
+                return lstCallsSorted;
+            }
+
+
+            if (count.equals("") && dateFrom.equals("") && dateTo.equals("")) {
+                Log.e("4", "4??");
+                List<Calls> results;
+                results = callsDao.queryForAll();
+
+                if (results != null && results.size() > 0) {
+                    for (int j = 0; j < results.size(); j++) {
+                        setCallsPOJO(lstCallsSorted, results, j);
+                    }
+                }
 
                 return lstCallsSorted;
             }
@@ -340,16 +346,14 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
     }
 
     /* Get Resulted DateFrom To */
-    private List<String> getResultedDateFromTo(Dao<Calls, Integer> callsDao, QueryBuilder<Calls,
+    private List<String> getResultedDateFromTo(QueryBuilder<Calls,
             Integer> queryBuilder, String dateFrom, String dateTo) {
         List<String> sortList = new ArrayList<>();
         try {
-            List<Calls> results = null;
+            List<Calls> results;
 
-            for (int i = 0; i < callsDao.queryForAll().size(); i++) {
-                results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo)
-                        .and().eq(Calls.CALLER_STATUS, FALSE).query();
-            }
+            results = queryBuilder.where().between(Calls.CALLER_DATE_TIME, dateFrom, dateTo)
+                    .and().eq(Calls.CALLER_STATUS, FALSE).query();
 
             if (results != null && results.size() > 0) {
                 for (int i = 0; i < results.size(); i++) {

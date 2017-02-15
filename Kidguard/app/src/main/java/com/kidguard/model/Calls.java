@@ -4,19 +4,19 @@ package com.kidguard.model;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
-import java.util.Date;
 
+@SuppressWarnings("all")
 public class Calls implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
     public static final String ID = "id";
     public static final String CALLER_ID = "callerId";
-    public static final String CALLER_NAME = "callerName";
-    public static final String CALLER_PHONE_NO = "phNumber";
-    public static final String CALLER_TYPE = "callType";
-    public static final String CALLER_DATE = "callDate";
-    public static final String CALLER_DURATION = "callDuration";
-    public static final String CALLER_DIRECTORY = "dir";
+    private static final String CALLER_NAME = "callerName";
+    private static final String CALLER_PHONE_NO = "phNumber";
+    private static final String CALLER_TYPE = "callType";
+    private static final String CALLER_DATE_TIME_STAMP = "callDateTimeStamp";
+    private static final String CALLER_DURATION = "callDuration";
+    private static final String CALLER_DIRECTORY = "dir";
     public static final String CALLER_DATE_TIME = "callDateTime";
     public static final String CALLER_STATUS = "callerStatus";
 
@@ -30,8 +30,8 @@ public class Calls implements Serializable {
     private String phNumber;
     @DatabaseField(columnName = CALLER_TYPE)
     private String callType;
-    @DatabaseField(columnName = CALLER_DATE)
-    private String callDate;
+    @DatabaseField(columnName = CALLER_DATE_TIME_STAMP)
+    private String callDateTimeStamp;
     @DatabaseField(columnName = CALLER_DURATION)
     private String callDuration;
     @DatabaseField(columnName = CALLER_DIRECTORY)
@@ -86,13 +86,6 @@ public class Calls implements Serializable {
         this.callType = callType;
     }
 
-    public String getCallDate() {
-        return callDate;
-    }
-
-    public void setCallDate(String callDate) {
-        this.callDate = callDate;
-    }
 
     public String getCallDuration() {
         return callDuration;
@@ -118,5 +111,12 @@ public class Calls implements Serializable {
         this.callerStatus = callerStatus;
     }
 
+    public String getCallDateTimeStamp() {
+        return callDateTimeStamp;
+    }
+
+    public void setCallDateTimeStamp(String callDateTimeStamp) {
+        this.callDateTimeStamp = callDateTimeStamp;
+    }
 
 }

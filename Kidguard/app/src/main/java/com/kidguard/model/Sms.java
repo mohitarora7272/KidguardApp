@@ -5,6 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
+@SuppressWarnings("all")
 public class Sms implements Serializable {
 
     private static final long serialVersionUID = -222864131214757024L;
@@ -14,7 +15,8 @@ public class Sms implements Serializable {
     public static final String SMS_ADDRESS = "address";
     public static final String SMS_MESSAGE = "message";
     public static final String SMS_READ_STATE = "readState";
-    public static final String SMS_TIME = "time";
+    public static final String SMS_DATE = "date";
+    public static final String SMS_DATE_TIMESTAMP = "date_timestamp";
     public static final String SMS_FOLDER_NAME = "folderName";
     public static final String SMS_STATUS = "sms_status";
 
@@ -34,14 +36,17 @@ public class Sms implements Serializable {
     @DatabaseField(columnName = SMS_READ_STATE)
     public String readState;
 
-    @DatabaseField(columnName = SMS_TIME)
-    public String time;
+    @DatabaseField(columnName = SMS_DATE)
+    public String date;
 
     @DatabaseField(columnName = SMS_FOLDER_NAME)
     public String folderName;
 
     @DatabaseField(columnName = SMS_STATUS)
     public String sms_status;
+
+    @DatabaseField(columnName = SMS_DATE_TIMESTAMP)
+    public String date_timestamp;
 
 
     /* Default Constructor */
@@ -73,8 +78,8 @@ public class Sms implements Serializable {
         return readState;
     }
 
-    public String getTime() {
-        return time;
+    public String getDate() {
+        return date;
     }
 
     public String getFolderName() {
@@ -98,12 +103,20 @@ public class Sms implements Serializable {
         this.readState = readState;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setFolderName(String folderName) {
         this.folderName = folderName;
+    }
+
+    public String getDate_timestamp() {
+        return date_timestamp;
+    }
+
+    public void setDate_timestamp(String date_timestamp) {
+        this.date_timestamp = date_timestamp;
     }
 
 }

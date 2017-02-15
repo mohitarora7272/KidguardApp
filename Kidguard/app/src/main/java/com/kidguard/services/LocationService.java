@@ -21,14 +21,24 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.kidguard.MainActivity;
 import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
+import com.kidguard.model.Locations;
+import com.kidguard.model.Sms;
+import com.kidguard.preference.Preference;
 import com.kidguard.receivers.NotificationReceiver;
 import com.kidguard.utilities.Utilities;
 import com.rvalerio.fgchecker.AppChecker;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
+@SuppressWarnings("all")
 public class LocationService extends Service implements LocationListener, Constant {
 
     // Google client to interact with Google API
@@ -38,7 +48,10 @@ public class LocationService extends Service implements LocationListener, Consta
     private double fusedLongitude = 0.0;
     private static LocationService mContext;
     private Intent intent;
-    private Location location;
+    private ArrayList<Locations> lstlocation;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private String tag;
 
 
     // LocationService Instance
@@ -66,35 +79,47 @@ public class LocationService extends Service implements LocationListener, Consta
         registerRequestUpdate(mContext);
 
         stopAppsUpToLevel21(mContext);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+//        tag = intent.getStringExtra(KEY_TAG);
+//
+//        /* Get Data With Tag */
+//        if (tag != null && !tag.equals("")) {
+//           Log.e("tag","tag??"+tag);
+//        }
+
+        return super.onStartCommand(intent, flags, startId);
     }
 
     // Stop Apps Up API level > 21
     private void stopAppsUpToLevel21(final Context context) {
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         //Log.e("LocationService","currentapiVersion??"+currentapiVersion);
 
-        if (currentapiVersion > 21) {
+        if (currentApiVersion > 21) {
             AppChecker appChecker = new AppChecker();
             appChecker
                     .when(PACKAGE_NAME, new AppChecker.Listener() {
                         @Override
                         public void onForeground(String packageName) {
-                            //Log.e("STOP", "STOP>21");
+                            Log.e("STOP", "STOP>21");
                             Utilities.stopAppIntent(context);
                         }
 
                     }).timeout(TIME_DELAY_FOR_CHECK)
                     .start(context);
-
-
         }
 
-        if (currentapiVersion >= 21) {
-            startThreadForBackgroundCheck(context);
+        if (currentApiVersion >= 21) {
+            //startThreadForBackgroundCheck(context);
         }
     }
 
-    /* startThreadForBackgroundCheck */
+    /* Start Thread For Background Check */
     private void startThreadForBackgroundCheck(final Context context) {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -121,18 +146,12 @@ public class LocationService extends Service implements LocationListener, Consta
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-
-    @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         this.intent = intent;
     }
 
-    /* Start Fused Location */
+    /* Start Fused Locations */
     public void startFusedLocation() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
@@ -157,7 +176,7 @@ public class LocationService extends Service implements LocationListener, Consta
         }
     }
 
-    /* Stop Fused Location */
+    /* Stop Fused Locations */
     public void stopFusedLocation() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
@@ -171,7 +190,7 @@ public class LocationService extends Service implements LocationListener, Consta
     public void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000); // every second
+        mLocationRequest.setInterval(60000); // every minute
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -189,7 +208,7 @@ public class LocationService extends Service implements LocationListener, Consta
                     registerRequestUpdate(listener);
                 }
             }
-        }, 1000);
+        }, 1000); // every second
     }
 
     public boolean isGoogleApiClientConnected() {
@@ -198,13 +217,34 @@ public class LocationService extends Service implements LocationListener, Consta
 
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
-        Log.d("Latitude", "Latitude??" + location.getLatitude());
-        Log.d("Longitude", "Longitude??" + location.getLongitude());
-        generateNotification("Latitude =" + String.valueOf(location.getLatitude() + " " +
-                "Longitude=" + String.valueOf(location.getLongitude())));
+        Log.e("Latitude", "Latitude??" + location.getLatitude());
+        Log.e("Longitude", "Longitude??" + location.getLongitude());
+//        generateNotification("Latitude =" + String.valueOf(location.getLatitude() + " " +
+//                "Longitude=" + String.valueOf(location.getLongitude())));
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
+
+        if (Preference.getLatitude(this) == null && Preference.getLongitude(this) == null) {
+
+            Log.e("if", "if");
+            Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
+
+        } else {
+
+            Log.e("distance", "is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
+                    , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                    location.getLongitude()));
+            double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
+                    , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                    location.getLongitude());
+
+            Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
+            if (distance >= 50) {
+
+                Log.e("hit", "Api");
+                sendLocationToServer(location.getLatitude(), location.getLongitude(), distance);
+            }
+        }
     }
 
     public void setFusedLatitude(double lat) {
@@ -214,7 +254,6 @@ public class LocationService extends Service implements LocationListener, Consta
     public void setFusedLongitude(double lon) {
         fusedLongitude = lon;
     }
-
 
     /* Generate Notification */
     private void generateNotification(String s) {
@@ -233,6 +272,33 @@ public class LocationService extends Service implements LocationListener, Consta
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(String.valueOf(s)));
         final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(0, builder.build());
+    }
 
+    /* Send Location To Server */
+    private void sendLocationToServer(double latitude, double longitude, double distance) {
+
+        lstlocation = new ArrayList<>();
+        Locations locations = new Locations();
+        locations.setLatitude(String.valueOf(latitude));
+        locations.setLongitude(String.valueOf(longitude));
+        locations.setDistance(String.valueOf(distance));
+        locations.setDateTime(Utilities.getCurrentDateTime());
+        locations.setDateTimeStamp(Utilities.getCurrentDateTimeStamp());
+        lstlocation.add(locations);
+
+        if (lstlocation != null && lstlocation.size() > Integer.parseInt(ZERO)) {
+            StringBuffer sbAppend = new StringBuffer();
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Sms>>() {
+            }.getType();
+            //String jsonSMS = gson.toJson(lstSms, type);
+            JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstlocation, type);
+            JsonArray jsonArraySms = Utilities.getJsonArray(jsonArray);
+            String finalJSON = "\"Location\":" + jsonArraySms;
+            sbAppend.append(finalJSON);
+            finalJSON = "{" + sbAppend + "}";
+            Log.e("JSON", "FINAL??" + finalJSON);
+            new RestClientService(TAG_LOCATION, API_TOKEN, finalJSON);
+        }
     }
 }
