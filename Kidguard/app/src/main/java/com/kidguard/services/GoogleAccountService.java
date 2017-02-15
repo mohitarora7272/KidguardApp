@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -109,7 +110,6 @@ public class GoogleAccountService extends Service implements Constant {
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-
             String accountName = Preference.getAccountName(this);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
@@ -122,12 +122,13 @@ public class GoogleAccountService extends Service implements Constant {
                         REQUEST_ACCOUNT_PICKER);
             }
         } else {
+
             // Request the GET_ACCOUNTS permission via a user dialog
-//            EasyPermissions.requestPermissions(
-//                    MainActivity.getInstance(),
-//                    "This app needs to access your Google account (via Contacts).",
-//                    REQUEST_PERMISSION_GET_ACCOUNTS,
-//                    Manifest.permission.GET_ACCOUNTS);
+            EasyPermissions.requestPermissions(
+                    MainActivity.getInstance(),
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
         }
     }
 

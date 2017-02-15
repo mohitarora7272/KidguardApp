@@ -111,9 +111,11 @@ public class BackgroundDataService extends Service implements Constant {
         mAdminActive = services.isActiveAdmin();
 
         Log.e("active", "active??" + mAdminActive);
+        Log.e("active", "Pref??" + Preference.getIsAdminActive(context));
 
         /* Check For Device Admin Permission Are Enable Or Not */
-        if (!mAdminActive) {
+        if (!Preference.getIsAdminActive(context)) {
+            Preference.setIsAdminActive(context, true);
             getDeviceAdminPermission(REQUEST_CODE_ENABLE_ADMIN);
             return;
         }
@@ -208,7 +210,9 @@ public class BackgroundDataService extends Service implements Constant {
 
         if (tag.equals(TAG_CAMERA)) {
             try {
-                mDPM.setCameraDisabled(mDeviceAdminSample, true);
+                if(mAdminActive){
+                    mDPM.setCameraDisabled(mDeviceAdminSample, true);
+                }
             } catch (SecurityException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodError e) {

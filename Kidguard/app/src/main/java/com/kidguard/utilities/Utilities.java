@@ -14,8 +14,10 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -78,13 +80,14 @@ public class Utilities implements Constant {
 
     /* is GPS Enable */
     public static boolean isGpsEnabled(Context context) {
-
-        if (PackageUtil.checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } else {
+        String provider = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (!provider.contains("gps") || !provider.contains("network")) {
             return false;
+
+        } else {
+            return true;
         }
+
     }
 
     public static void showProgressDialog(Context ctx, ProgressDialog progressDialog) {

@@ -11,6 +11,8 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,8 +25,12 @@ import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.utilities.Utilities;
 
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
 @SuppressWarnings("all")
-public class MainActivity extends AppCompatActivity implements Constant {
+public class MainActivity extends AppCompatActivity implements Constant, EasyPermissions.PermissionCallbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static MainActivity mActivity;
@@ -79,10 +85,8 @@ public class MainActivity extends AppCompatActivity implements Constant {
             return;
         }
 
-        //Utilities.startServices(this, BackgroundDataService.class);
-
 //        Intent myIntent = new Intent(this, BackgroundDataService.class);
-//        myIntent.putExtra(KEY_TAG, TAG_CALLS);
+//        myIntent.putExtra(KEY_TAG, TAG_CONTACTS);
 //        myIntent.putExtra(KEY_COUNT, "");
 //        myIntent.putExtra(KEY_DATE_FROM, "");
 //        myIntent.putExtra(KEY_DATE_TO, "");
@@ -104,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements Constant {
                 Utilities.startServices(this, GoogleAccountService.class);
                 return;
             }
-
             return;
         }
 
@@ -115,26 +118,26 @@ public class MainActivity extends AppCompatActivity implements Constant {
     /* Check Notification Access */
     private void checkNotificationAccess() {
 
-//        if (android.provider.Settings.Secure.getString(getContentResolver(),
-//                "enabled_notification_listeners") == null
-//                || android.provider.Settings.Secure.getString(getContentResolver(),
-//                "enabled_notification_listeners").equals("")) {
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-//                boolean weHaveNotificationListenerPermission = false;
-//                for (String service : NotificationManagerCompat.getEnabledListenerPackages(this)) {
-//                    if (service.equals(getPackageName()))
-//                        weHaveNotificationListenerPermission = true;
-//                }
-//
-//                if (!weHaveNotificationListenerPermission) {
-//                    //ask for permission
-//                    Intent intent = new Intent(SETTINGS);
-//                    startActivity(intent);
-//                    return;
-//                }
-//            }
-//        }
+        if (android.provider.Settings.Secure.getString(getContentResolver(),
+                "enabled_notification_listeners") == null
+                || android.provider.Settings.Secure.getString(getContentResolver(),
+                "enabled_notification_listeners").equals("")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                boolean weHaveNotificationListenerPermission = false;
+                for (String service : NotificationManagerCompat.getEnabledListenerPackages(this)) {
+                    if (service.equals(getPackageName()))
+                        weHaveNotificationListenerPermission = true;
+                }
+
+                if (!weHaveNotificationListenerPermission) {
+                    //ask for permission
+                    Intent intent = new Intent(SETTINGS);
+                    startActivity(intent);
+                    return;
+                }
+            }
+        }
 
         /* Request Usage State Permission For Application Is In ForGround Or Not */
         requestUsageStatsPermission();
@@ -168,9 +171,8 @@ public class MainActivity extends AppCompatActivity implements Constant {
 
     /* Start Background Services */
     private void startServices() {
-
         if (!Utilities.isGpsEnabled(this)) {
-            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
             return;
         }
@@ -185,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements Constant {
         } catch (Exception e) {
             Log.e(TAG, "Exception??" + e.getMessage());
         }
+
     }
 
     /* Start Background Check Receiver */
@@ -280,5 +283,25 @@ public class MainActivity extends AppCompatActivity implements Constant {
         }
 
         finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
     }
 }

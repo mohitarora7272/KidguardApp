@@ -146,20 +146,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <provider
-            android:name="com.kidguard.aFileChooser.LocalStorageProvider"
-            android:authorities="com.kidguard.aFileChooser.documents"
-            android:enabled="true"
-            android:exported="true"
-            android:grantUriPermissions="true"
-            android:permission="android.permission.MANAGE_DOCUMENTS">
-            <!--suppress AndroidElementNotAllowed -->
-            <intent-filter>
-                <!--suppress AndroidElementNotAllowed -->
-                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
-            </intent-filter>
-        </provider>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="79e141f4d188471e9f68703ab4623e4b2e86e8dd" />
