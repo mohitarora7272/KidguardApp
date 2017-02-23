@@ -54,6 +54,10 @@ columnName=id
 generatedId=true
 # --field-end--
 # --field-start--
+fieldName=contact_id
+columnName=contact_id
+# --field-end--
+# --field-start--
 fieldName=contactName
 columnName=contactName
 # --field-end--

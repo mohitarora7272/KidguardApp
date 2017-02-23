@@ -1,5 +1,8 @@
 package com.kidguard.pojo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,76 +10,64 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "success",
+        "status",
+        "error",
         "message",
-        "data"
+        "user"
 })
-@SuppressWarnings("all")
 public class LogInPOJO {
 
-    @JsonProperty("success")
-    private Boolean success;
+    @JsonProperty("status")
+    private Integer status;
+    @JsonProperty("error")
+    private Boolean error;
     @JsonProperty("message")
     private String message;
-    @JsonProperty("data")
-    private List<Datum> data = new ArrayList<Datum>();
+    @JsonProperty("user")
+    private User user;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * @return The success
-     */
-    @JsonProperty("success")
-    public Boolean getSuccess() {
-        return success;
+    @JsonProperty("status")
+    public Integer getStatus() {
+        return status;
     }
 
-    /**
-     * @param success The success
-     */
-    @JsonProperty("success")
-    public void setSuccess(Boolean success) {
-        this.success = success;
+    @JsonProperty("status")
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    /**
-     * @return The message
-     */
+    @JsonProperty("error")
+    public Boolean getError() {
+        return error;
+    }
+
+    @JsonProperty("error")
+    public void setError(Boolean error) {
+        this.error = error;
+    }
+
     @JsonProperty("message")
     public String getMessage() {
         return message;
     }
 
-    /**
-     * @param message The message
-     */
     @JsonProperty("message")
     public void setMessage(String message) {
         this.message = message;
     }
 
-    /**
-     * @return The data
-     */
-    @JsonProperty("data")
-    public List<Datum> getData() {
-        return data;
+    @JsonProperty("user")
+    public User getUser() {
+        return user;
     }
 
-    /**
-     * @param data The data
-     */
-    @JsonProperty("data")
-    public void setData(List<Datum> data) {
-        this.data = data;
+    @JsonProperty("user")
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @JsonAnyGetter
@@ -89,335 +80,225 @@ public class LogInPOJO {
         this.additionalProperties.put(name, value);
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({
-            "id",
-            "username",
-            "password",
-            "email",
-            "country",
-            "gender",
-            "image",
-            "date_created",
-            "date_updated",
-            "latitude",
-            "longitude",
-            "status",
-            "device_token",
-            "total_photos",
-            "memory_given",
-            "checkin_time",
-            "checkout_time"
-    })
-    public class Datum {
+    public class User {
 
         @JsonProperty("id")
-        private String id;
-        @JsonProperty("username")
-        private String username;
-        @JsonProperty("password")
-        private String password;
+        private Integer id;
         @JsonProperty("email")
         private String email;
-        @JsonProperty("country")
-        private String country;
-        @JsonProperty("gender")
-        private String gender;
-        @JsonProperty("image")
-        private String image;
-        @JsonProperty("date_created")
-        private String date_created;
-        @JsonProperty("date_updated")
-        private String date_updated;
-        @JsonProperty("latitude")
-        private String latitude;
-        @JsonProperty("longitude")
-        private String longitude;
-        @JsonProperty("status")
-        private String status;
-        @JsonProperty("device_token")
-        private String device_token;
-        @JsonProperty("total_photos")
-        private String total_photos;
-        @JsonProperty("memory_given")
-        private String memory_given;
-        @JsonProperty("checkin_time")
-        private String checkin_time;
-        @JsonProperty("checkout_time")
-        private String checkout_time;
+        @JsonProperty("device_code")
+        private String device_code;
+        @JsonProperty("access_token")
+        private String access_token;
+        @JsonProperty("encrypted_password")
+        private String encrypted_password;
+        @JsonProperty("first_name")
+        private String first_name;
+        @JsonProperty("last_name")
+        private String last_name;
+        @JsonProperty("type")
+        private String type;
+        @JsonProperty("user_id")
+        private String user_id;
+        @JsonProperty("external_id")
+        private String external_id;
+        @JsonProperty("mac_address")
+        private String mac_address;
+        @JsonProperty("device_registration_id")
+        private String device_registration_id;
+        @JsonProperty("active_subscriber")
+        private String active_subscriber;
+        @JsonProperty("limited_trial_end_at")
+        private Object limited_trial_end_at;
+        @JsonProperty("current_referral_code")
+        private String current_referral_code;
+        @JsonProperty("current_used_coupon_code")
+        private Object current_used_coupon_code;
+        @JsonProperty("created_at")
+        private String created_at;
+        @JsonProperty("updated_at")
+        private String updated_at;
         @JsonIgnore
         private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-        /**
-         * @return The id
-         */
         @JsonProperty("id")
-        public String getId() {
+        public Integer getId() {
             return id;
         }
 
-        /**
-         * @param id The id
-         */
         @JsonProperty("id")
-        public void setId(String id) {
+        public void setId(Integer id) {
             this.id = id;
         }
 
-        /**
-         * @return The username
-         */
-        @JsonProperty("username")
-        public String getUsername() {
-            return username;
-        }
-
-        /**
-         * @param username The username
-         */
-        @JsonProperty("username")
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        /**
-         * @return The password
-         */
-        @JsonProperty("password")
-        public String getPassword() {
-            return password;
-        }
-
-        /**
-         * @param password The password
-         */
-        @JsonProperty("password")
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        /**
-         * @return The email
-         */
         @JsonProperty("email")
         public String getEmail() {
             return email;
         }
 
-        /**
-         * @param email The email
-         */
         @JsonProperty("email")
         public void setEmail(String email) {
             this.email = email;
         }
 
-        /**
-         * @return The country
-         */
-        @JsonProperty("country")
-        public String getCountry() {
-            return country;
+        @JsonProperty("device_code")
+        public String getDeviceCode() {
+            return device_code;
         }
 
-        /**
-         * @param country The country
-         */
-        @JsonProperty("country")
-        public void setCountry(String country) {
-            this.country = country;
+        @JsonProperty("device_code")
+        public void setDeviceCode(String device_code) {
+            this.device_code = device_code;
         }
 
-        /**
-         * @return The gender
-         */
-        @JsonProperty("gender")
-        public String getGender() {
-            return gender;
+        @JsonProperty("access_token")
+        public String getAccessToken() {
+            return access_token;
         }
 
-        /**
-         * @param gender The gender
-         */
-        @JsonProperty("gender")
-        public void setGender(String gender) {
-            this.gender = gender;
+        @JsonProperty("access_token")
+        public void setAccessToken(String access_token) {
+            this.access_token = access_token;
         }
 
-        /**
-         * @return The image
-         */
-        @JsonProperty("image")
-        public String getImage() {
-            return image;
+        @JsonProperty("encrypted_password")
+        public String getEncryptedPassword() {
+            return encrypted_password;
         }
 
-        /**
-         * @param image The image
-         */
-        @JsonProperty("image")
-        public void setImage(String image) {
-            this.image = image;
+        @JsonProperty("encrypted_password")
+        public void setEncryptedPassword(String encrypted_password) {
+            this.encrypted_password = encrypted_password;
         }
 
-        /**
-         * @return The dateCreated
-         */
-        @JsonProperty("date_created")
-        public String getDateCreated() {
-            return date_created;
+        @JsonProperty("first_name")
+        public String getFirstName() {
+            return first_name;
         }
 
-        /**
-         * @param dateCreated The date_created
-         */
-        @JsonProperty("date_created")
-        public void setDateCreated(String date_created) {
-            this.date_created = date_created;
+        @JsonProperty("first_name")
+        public void setFirstName(String first_name) {
+            this.first_name = first_name;
         }
 
-        /**
-         * @return The dateUpdated
-         */
-        @JsonProperty("date_updated")
-        public String getDateUpdated() {
-            return date_updated;
+        @JsonProperty("last_name")
+        public String getLastName() {
+            return last_name;
         }
 
-        /**
-         * @param dateUpdated The date_updated
-         */
-        @JsonProperty("date_updated")
-        public void setDateUpdated(String date_updated) {
-            this.date_updated = date_updated;
+        @JsonProperty("last_name")
+        public void setLastName(String last_name) {
+            this.last_name = last_name;
         }
 
-        /**
-         * @return The latitude
-         */
-        @JsonProperty("latitude")
-        public String getLatitude() {
-            return latitude;
+        @JsonProperty("type")
+        public String getType() {
+            return type;
         }
 
-        /**
-         * @param latitude The latitude
-         */
-        @JsonProperty("latitude")
-        public void setLatitude(String latitude) {
-            this.latitude = latitude;
+        @JsonProperty("type")
+        public void setType(String type) {
+            this.type = type;
         }
 
-        /**
-         * @return The longitude
-         */
-        @JsonProperty("longitude")
-        public String getLongitude() {
-            return longitude;
+        @JsonProperty("user_id")
+        public String getUserId() {
+            return user_id;
         }
 
-        /**
-         * @param longitude The longitude
-         */
-        @JsonProperty("longitude")
-        public void setLongitude(String longitude) {
-            this.longitude = longitude;
+        @JsonProperty("user_id")
+        public void setUserId(String user_id) {
+            this.user_id = user_id;
         }
 
-        /**
-         * @return The status
-         */
-        @JsonProperty("status")
-        public String getStatus() {
-            return status;
+        @JsonProperty("external_id")
+        public String getExternalId() {
+            return external_id;
         }
 
-        /**
-         * @param status The status
-         */
-        @JsonProperty("status")
-        public void setStatus(String status) {
-            this.status = status;
+        @JsonProperty("external_id")
+        public void setExternalId(String external_id) {
+            this.external_id = external_id;
         }
 
-        /**
-         * @return The deviceToken
-         */
-        @JsonProperty("device_token")
-        public String getDeviceToken() {
-            return device_token;
+        @JsonProperty("mac_address")
+        public String getMacAddress() {
+            return mac_address;
         }
 
-        /**
-         * @param deviceToken The device_token
-         */
-        @JsonProperty("device_token")
-        public void setDeviceToken(String device_token) {
-            this.device_token = device_token;
+        @JsonProperty("mac_address")
+        public void setMacAddress(String mac_address) {
+            this.mac_address = mac_address;
         }
 
-        /**
-         * @return The totalPhotos
-         */
-        @JsonProperty("total_photos")
-        public String getTotalPhotos() {
-            return total_photos;
+        @JsonProperty("device_registration_id")
+        public String getDeviceRegistrationId() {
+            return device_registration_id;
         }
 
-        /**
-         * @param totalPhotos The total_photos
-         */
-        @JsonProperty("total_photos")
-        public void setTotalPhotos(String total_photos) {
-            this.total_photos = total_photos;
+        @JsonProperty("device_registration_id")
+        public void setDeviceRegistrationId(String device_registration_id) {
+            this.device_registration_id = device_registration_id;
         }
 
-        /**
-         * @return The memoryGiven
-         */
-        @JsonProperty("memory_given")
-        public String getMemoryGiven() {
-            return memory_given;
+        @JsonProperty("active_subscriber")
+        public String getActiveSubscriber() {
+            return active_subscriber;
         }
 
-        /**
-         * @param memoryGiven The memory_given
-         */
-        @JsonProperty("memory_given")
-        public void setMemoryGiven(String memory_given) {
-            this.memory_given = memory_given;
+        @JsonProperty("active_subscriber")
+        public void setActiveSubscriber(String active_subscriber) {
+            this.active_subscriber = active_subscriber;
         }
 
-        /**
-         * @return The checkinTime
-         */
-        @JsonProperty("checkin_time")
-        public String getCheckinTime() {
-            return checkin_time;
+        @JsonProperty("limited_trial_end_at")
+        public Object getLimitedTrialEndAt() {
+            return limited_trial_end_at;
         }
 
-        /**
-         * @param checkinTime The checkin_time
-         */
-        @JsonProperty("checkin_time")
-        public void setCheckinTime(String checkin_time) {
-            this.checkin_time = checkin_time;
+        @JsonProperty("limited_trial_end_at")
+        public void setLimitedTrialEndAt(Object limited_trial_end_at) {
+            this.limited_trial_end_at = limited_trial_end_at;
         }
 
-        /**
-         * @return The checkoutTime
-         */
-        @JsonProperty("checkout_time")
-        public String getCheckoutTime() {
-            return checkout_time;
+        @JsonProperty("current_referral_code")
+        public String getCurrentReferralCode() {
+            return current_referral_code;
         }
 
-        /**
-         * @param checkoutTime The checkout_time
-         */
-        @JsonProperty("checkout_time")
-        public void setCheckoutTime(String checkout_time) {
-            this.checkout_time = checkout_time;
+        @JsonProperty("current_referral_code")
+        public void setCurrentReferralCode(String current_referral_code) {
+            this.current_referral_code = current_referral_code;
+        }
+
+        @JsonProperty("current_used_coupon_code")
+        public Object getCurrentUsedCouponCode() {
+            return current_used_coupon_code;
+        }
+
+        @JsonProperty("current_used_coupon_code")
+        public void setCurrentUsedCouponCode(Object current_used_coupon_code) {
+            this.current_used_coupon_code = current_used_coupon_code;
+        }
+
+        @JsonProperty("created_at")
+        public String getCreatedAt() {
+            return created_at;
+        }
+
+        @JsonProperty("created_at")
+        public void setCreatedAt(String created_at) {
+            this.created_at = created_at;
+        }
+
+        @JsonProperty("updated_at")
+        public String getUpdatedAt() {
+            return updated_at;
+        }
+
+        @JsonProperty("updated_at")
+        public void setUpdatedAt(String updated_at) {
+            this.updated_at = updated_at;
         }
 
         @JsonAnyGetter
@@ -431,6 +312,6 @@ public class LogInPOJO {
         }
 
     }
-
 }
+
 

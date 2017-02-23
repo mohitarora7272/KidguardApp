@@ -1,17 +1,24 @@
 package com.kidguard.utilities;
 
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 @SuppressWarnings("all")
 public class ApiClient implements Constant {
+    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     private Retrofit retrofit = null;
     private String tag;
+    private String authheader;
 
     public ApiClient(String tag) {
         this.tag = tag;
@@ -25,9 +32,10 @@ public class ApiClient implements Constant {
         if (retrofit == null) {
             if (tag.equals(TAG_LOGIN)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + LOGIN)
+                        .baseUrl(NEW_ROOT + APPENDED_URL_LOGIN + LOGIN)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
+
             }
 
             if (tag.equals(TAG_SMS)) {
@@ -39,7 +47,7 @@ public class ApiClient implements Constant {
 
             if (tag.equals(TAG_CONTACTS)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + CONTACT)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + CONTACT)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
@@ -81,7 +89,7 @@ public class ApiClient implements Constant {
 
             if (tag.equals(TAG_GOOGLE_DRIVE)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + DRIVE )
+                        .baseUrl(ROOT + APPENDED_URL + DRIVE)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }

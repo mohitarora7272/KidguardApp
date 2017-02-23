@@ -91,6 +91,7 @@ dependencies {
 
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.google.android.support:wearable:+'
+    compile 'com.github.fccaikai:AndroidPermissionX:0.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

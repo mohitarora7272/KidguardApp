@@ -40,6 +40,10 @@ import com.kidguard.model.Video;
 import com.kidguard.preference.Preference;
 import com.kidguard.utilities.Utilities;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -130,9 +134,9 @@ public class BackgroundDataService extends Service implements Constant {
         dateTo = intent.getStringExtra(KEY_DATE_TO);
         subject = intent.getStringExtra(KEY_SUBJECT);
         size = intent.getStringExtra(KEY_SIZE);
-
         /* Get Data With Tag */
         if (tag != null && !tag.equals("")) {
+
             GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
         }
 
@@ -210,7 +214,7 @@ public class BackgroundDataService extends Service implements Constant {
 
         if (tag.equals(TAG_CAMERA)) {
             try {
-                if(mAdminActive){
+                if (mAdminActive) {
                     mDPM.setCameraDisabled(mDeviceAdminSample, true);
                 }
             } catch (SecurityException e) {
@@ -278,7 +282,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendContactsDataToServer(ArrayList<Contacts> lstContacts) {
         this.lstContacts = lstContacts;
         String contact = convertToJSONFormat(TAG_CONTACTS);
-        new RestClientService(TAG_CONTACTS, API_TOKEN, contact);
+        new RestClientService(TAG_CONTACTS, Preference.getAccessToken(context), contact);
         stopSelf();
     }
 

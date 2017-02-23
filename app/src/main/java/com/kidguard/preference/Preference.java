@@ -45,16 +45,28 @@ public class Preference implements Constant {
         return regId;
     }
 
-    public static void setEmail(Context ctx, String email) {
+    public static void setAccessToken(Context ctx, String token) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(KEY_EMAIL, email).commit();
+        editor.putString(KEY_ACCESSTOKEN, token).commit();
     }
 
-    public static String getEmail(Context ctx) {
+    public static String getAccessToken(Context ctx) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
-        String email = sharedpreferences.getString(KEY_EMAIL, null);
-        return email;
+        String token = sharedpreferences.getString(KEY_ACCESSTOKEN, null);
+        return token;
+    }
+
+    public static void setID(Context ctx, String id) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(KEY_ID, id).commit();
+    }
+
+    public static String getID(Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        String id = sharedpreferences.getString(KEY_ID, null);
+        return id;
     }
 
     public static void setLatLong(Context ctx, double latitude, double longitude) {

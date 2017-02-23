@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/generic_confirmation_animation_interpolator_2.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/generic_confirmation_animation_interpolator_2.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/generic_confirmation_animation_interpolator_3.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/generic_confirmation_animation_interpolator_3.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/generic_confirmation_animation_interpolator_1.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/generic_confirmation_animation_interpolator_1.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/open_on_phone_animation_interpolator_0.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/open_on_phone_animation_interpolator_0.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/open_on_phone_animation_interpolator_1.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/open_on_phone_animation_interpolator_1.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/interpolator-v21/generic_confirmation_animation_interpolator_0.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/interpolator-v21/generic_confirmation_animation_interpolator_0.xml"
+    }
+]

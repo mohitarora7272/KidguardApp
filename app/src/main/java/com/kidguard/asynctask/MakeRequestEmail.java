@@ -175,7 +175,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
                 Integer y = _500;
                 x = y.longValue();
             }
-
+            Log.e("x", "" + x);
             response = service.users().messages().list(userId).setMaxResults(x).execute();
             Log.e("response", "Up" + response);
 

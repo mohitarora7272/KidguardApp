@@ -13,14 +13,18 @@ import com.kidguard.pojo.LocationPOJO;
 import com.kidguard.pojo.LogInPOJO;
 import com.kidguard.pojo.SmsPOJO;
 import com.kidguard.pojo.VideoPOJO;
+import com.kidguard.preference.Preference;
 
 import java.util.HashMap;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -33,12 +37,13 @@ public interface RestClient {
     @FormUrlEncoded
     @POST("./")
     Call<LogInPOJO> logInRequest(@Field("email") String email,
-                                 @Field("password") String password,
-                                 @Field("device_token") String device_token);
+                                 @Field("device_code") String device_code,
+                                 @Field("device_registration_id") String device_registration_id,
+                                 @Field("device_mac_address") String mac_address);
 
     @FormUrlEncoded
     @POST("./")
-    Call<ContactPOJO> sendContactsToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<ContactPOJO> sendContactsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
@@ -85,7 +90,7 @@ public interface RestClient {
     @Multipart
     @POST("./")
     Call<DrivePOJO> sendDriveToServer(@Query("api_token") String token,
-                                     @PartMap() HashMap<String, RequestBody> map,
-                                     @Part MultipartBody.Part file);
+                                      @PartMap() HashMap<String, RequestBody> map,
+                                      @Part MultipartBody.Part file);
 
 }

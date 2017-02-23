@@ -56,6 +56,8 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
     protected ArrayList<Images> doInBackground(String... params) {
         Cursor cursor = null;
         try {
+            Log.e("res--","res");
+
             Uri uri;
             int column_index_data, column_index_folder_name;
             String absolutePathOfImage;
@@ -66,6 +68,7 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
 
             cursor = context.getContentResolver().query(uri, projection, null,
                     null, null);
+            Log.e("cursor--","cursor"+cursor.getCount());
 
             column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
             column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
@@ -80,6 +83,7 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
                             absolutePathOfImage = cursor.getString(column_index_data);
                             List<Images> results = queryBuilder.where()
                                     .eq(Images.IMAGE_PATH, absolutePathOfImage).query();
+                            Log.e("results++","results"+results.size());
                             if (results.size() == 0) {
                                 setImagePOJO(absolutePathOfImage);
                             }
@@ -95,6 +99,7 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
             }
             // Images Fetch With Tag
             lstImages = imagesFetchWithTag(imagesDao, params[0], params[1], params[2], params[3]);
+            Log.e("lstImages--","lstImages"+lstImages.size());
 
         } catch (Exception e) {
         } finally {

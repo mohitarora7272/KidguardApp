@@ -4,6 +4,8 @@ package com.kidguard.services;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kidguard.LogInActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
@@ -26,6 +28,7 @@ import com.kidguard.pojo.VideoPOJO;
 import com.kidguard.utilities.ApiClient;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import java.util.HashMap;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,24 +47,13 @@ public class RestClientService implements Constant {
     private static final String TAG = RestClientService.class.getSimpleName();
     private int j = 0;
 
-    // Constructor For LogIn
-    public RestClientService(@NonNull String tag, @NonNull String data1, @NonNull String data2,
-                             @NonNull String data3) {
-
-        RestClient restClientAPI = new ApiClient(tag).getClient();
-
-        if (tag.equals(TAG_LOGIN)) {
-            Call<LogInPOJO> call = restClientAPI.logInRequest(data1, data2, data3);
-            call.enqueue(LogInActivity.getInstance());
-        }
-    }
-
     // Constructor For Contacts, Calls, Sms, Apps, Emails
     public RestClientService(@NonNull String tag, @NonNull String token, @NonNull String data) {
         RestClient restClientAPI = new ApiClient(tag).getClient();
 
         if (tag.equals(TAG_CONTACTS)) {
-
+            Log.e("token", "" + token);
+            Log.e("data", "" + data);
             Call<ContactPOJO> call = restClientAPI.sendContactsToServer(token, data);
             Callback<ContactPOJO> callback = new Callback<ContactPOJO>() {
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources>
+<!-- third_party/java_src/android_libs/android_wear/wearable_support/java/android/support/wearable/res/values-sw210dp/dimens.xml -->
+<eat-comment/>
+<dimen name="nav_drawer_single_page_circle_radius">27dp</dimen>
+<dimen name="nav_drawer_single_page_icon_size">32dp</dimen>
+<dimen name="nav_drawer_text_size">14sp</dimen>
+</resources>

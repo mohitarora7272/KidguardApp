@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding='utf-8' standalone='no'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- blaze-out/arm-linux-androideabi-4.8-bionic-libcxx-armv7a-opt/genfiles/third_party/java_src/android_libs/android_wear/wearable_support/java/android/support/wearable/res/values-zh-rCN/strings.xml -->
+<eat-comment/>
+<plurals name="time_difference_short_days" formatted="false" msgid="6044628401320465106"><item quantity="other"><xliff:g id="NUMBER_OF_DAYS_1">%d</xliff:g>天</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_DAYS_0">%d</xliff:g>天</item>
+</plurals>
+<plurals name="time_difference_short_hours" formatted="false" msgid="9209554600411186949"><item quantity="other"><xliff:g id="NUMBER_OF_HOURS_1">%d</xliff:g>小时</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_HOURS_0">%d</xliff:g>小时</item>
+</plurals>
+<plurals name="time_difference_short_minutes" formatted="false" msgid="6799968572793078120"><item quantity="other"><xliff:g id="NUMBER_OF_MINUTES_1">%d</xliff:g>分钟</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_MINUTES_0">%d</xliff:g>分钟</item>
+</plurals>
+<plurals name="time_difference_words_days" formatted="false" msgid="7958173734825557821"><item quantity="other"><xliff:g id="NUMBER_OF_DAYS_1">%d</xliff:g> 天</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_DAYS_0">%d</xliff:g> 天</item>
+</plurals>
+<plurals name="time_difference_words_hours" formatted="false" msgid="6659708596739126724"><item quantity="other"><xliff:g id="NUMBER_OF_HOURS_1">%d</xliff:g> 小时</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_HOURS_0">%d</xliff:g> 小时</item>
+</plurals>
+<plurals name="time_difference_words_minutes" formatted="false" msgid="5776851900234724977"><item quantity="other"><xliff:g id="NUMBER_OF_MINUTES_1">%d</xliff:g> 分钟</item>
+<item quantity="one"><xliff:g id="NUMBER_OF_MINUTES_0">%d</xliff:g> 分钟</item>
+</plurals>
+<string name="buttons_rect_bottom_center" msgid="2392275098186720450">"正下方"</string>
+<string name="buttons_rect_bottom_left" msgid="8019030592199928760">"左下方"</string>
+<string name="buttons_rect_bottom_right" msgid="7032364303033228242">"右下方"</string>
+<string name="buttons_rect_left_bottom" msgid="8926393267810862702">"下方靠左"</string>
+<string name="buttons_rect_left_center" msgid="8454996931469487054">"正左方"</string>
+<string name="buttons_rect_left_top" msgid="4253496812046397202">"上方靠左"</string>
+<string name="buttons_rect_right_bottom" msgid="2953342748755410698">"下方靠右"</string>
+<string name="buttons_rect_right_center" msgid="6444930972483368545">"正右方"</string>
+<string name="buttons_rect_right_top" msgid="8233353769931572306">"上方靠右"</string>
+<string name="buttons_rect_top_center" msgid="701028376099498620">"正上方"</string>
+<string name="buttons_rect_top_left" msgid="2793005097226316833">"左上方"</string>
+<string name="buttons_rect_top_right" msgid="5242720590797179216">"右上方"</string>
+<string name="buttons_round_bottom_center" msgid="1062213636886296984">"正下方"</string>
+<string name="buttons_round_bottom_left" msgid="4240105703428240165">"左下方"</string>
+<string name="buttons_round_bottom_left_lower" msgid="2170403244243537583">"左下方靠下的位置"</string>
+<string name="buttons_round_bottom_left_upper" msgid="4971879160739362911">"左下方靠上的位置"</string>
+<string name="buttons_round_bottom_right" msgid="3805017532700326567">"右下方"</string>
+<string name="buttons_round_bottom_right_lower" msgid="6856386193261962647">"右下方靠下的位置"</string>
+<string name="buttons_round_bottom_right_upper" msgid="3297691901098662241">"右下方靠上的位置"</string>
+<string name="buttons_round_center_left" msgid="4180117237132291640">"正左方"</string>
+<string name="buttons_round_center_right" msgid="2372638721705594674">"正右方"</string>
+<string name="buttons_round_top_center" msgid="3660790088455649953">"正上方"</string>
+<string name="buttons_round_top_left" msgid="1548749953449352214">"左上方"</string>
+<string name="buttons_round_top_left_lower" msgid="2662257990050998307">"左上方靠下的位置"</string>
+<string name="buttons_round_top_left_upper" msgid="8645976381442398995">"左上方靠上的位置"</string>
+<string name="buttons_round_top_right" msgid="223683024116278216">"右上方"</string>
+<string name="buttons_round_top_right_lower" msgid="5362570598213836713">"右上方靠下的位置"</string>
+<string name="buttons_round_top_right_upper" msgid="8652947447241978294">"右上方靠上的位置"</string>
+<string name="dismiss_overlay_button_label" msgid="4431314454967965046">"退出"</string>
+<string name="generic_cancel" msgid="4031765397716487527">"取消"</string>
+<string name="generic_yes" msgid="9120485112909311969">"是"</string>
+<string name="navigation_drawer_content_description" msgid="4674705273641635102">"抽屉式导航栏"</string>
+<string name="time_difference_now" msgid="4600747107629098989">"现在"</string>
+<string name="time_difference_short_days_and_hours" msgid="3432160628957797741">"<xliff:g id="SHORT_DAYS">%1$s</xliff:g><xliff:g id="SHORT_HOURS">%2$s</xliff:g>"</string>
+<string name="time_difference_short_hours_and_minutes" msgid="4219196550677438545">"<xliff:g id="SHORT_HOURS">%1$s</xliff:g><xliff:g id="SHORT_MINUTES">%2$s</xliff:g>"</string>
+</resources>

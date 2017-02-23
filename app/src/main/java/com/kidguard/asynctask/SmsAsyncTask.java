@@ -56,6 +56,7 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
     protected ArrayList<Sms> doInBackground(String... params) {
         Cursor c = null;
         try {
+            Log.e("TAG_SMS++", "doInBackground");
             Uri message = Uri.parse("content://sms/");
             ContentResolver cr = context.getContentResolver();
             c = cr.query(message, null, null, null, null);
@@ -146,6 +147,7 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
             objSms.setDate(Utilities.changeDateFormat(c.getString(c.getColumnIndexOrThrow("date"))));
             objSms.setDate_timestamp(c.getString(c.getColumnIndexOrThrow("date")));
             objSms.setSms_status(FALSE);
+
             if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
                 objSms.setFolderName("inbox");
             } else {
@@ -215,7 +217,7 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
                 List<Sms> resultDateTo = queryBuilder.where().like(Sms.SMS_DATE, dateTo).query();
 
                 if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                     if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
+                    if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
                             && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                         return null;
                     }

@@ -26,9 +26,9 @@
 
     <string name="internet_error">Failed to connect to Internet</string>
     <string name="enter_Email">Enter Email</string>
-    <string name="enter_Password">Enter Password</string>
+    <string name="enter_DeviceCode">Enter Device Code</string>
     <string name="enter_email">Please enter email</string>
-    <string name="enter_password">Please enter password</string>
+    <string name="enter_devicecode">Please enter device code</string>
     <string name="enter_valid_email">Please enter a valid e-mail address</string>
     <string name="failed_to_connect_with_server">Failed to connect with server</string>
     <string name="loading" tools:ignore="TypographyEllipsis">Loading…</string>

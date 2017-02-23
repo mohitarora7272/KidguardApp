@@ -1,0 +1,62 @@
+[
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/abc_btn_colored_material.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/res/drawable-v21/abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/accept_deny_dialog_negative_bg.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/accept_deny_dialog_negative_bg.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/abc_action_bar_item_background_material.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/res/drawable-v21/abc_action_bar_item_background_material.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/open_on_phone_animation.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/open_on_phone_animation.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/open_on_phone.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/open_on_phone.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/notification_action_background.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/res/drawable-v21/notification_action_background.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/accept_deny_dialog_positive_bg.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/accept_deny_dialog_positive_bg.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/design_bottom_navigation_item_background.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.android.support/design/25.0.1/res/drawable-v21/design_bottom_navigation_item_background.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/ic_cc_clear.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/ic_cc_clear.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/preference_wrapped_icon.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/preference_wrapped_icon.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/ic_cc_checkmark.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/ic_cc_checkmark.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/ic_expand_more_white_22.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/ic_expand_more_white_22.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/generic_confirmation_animation.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/generic_confirmation_animation.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/generic_confirmation.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.google.android.support/wearable/2.0.0/res/drawable-v21/generic_confirmation.xml"
+    },
+    {
+        "merged": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/res/merged/debug/drawable-v21/abc_edit_text_material.xml",
+        "source": "/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/res/drawable-v21/abc_edit_text_material.xml"
+    }
+]

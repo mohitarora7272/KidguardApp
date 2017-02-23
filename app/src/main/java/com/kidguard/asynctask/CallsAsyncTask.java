@@ -56,6 +56,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
     protected ArrayList<Calls> doInBackground(String... params) {
         Cursor managedCursor = null;
         try {
+            Log.e("doInBackground++", "doInBackground");
             ContentResolver cr = context.getContentResolver();
             managedCursor = cr.query(CallLog.Calls.CONTENT_URI, null, null, null, null);
 
@@ -116,7 +117,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-
+        Log.e("list++", "list" + list.size());
         if (list != null && list.size() > 0)
             Log.e(TAG, "CALLS List???" + list.size());
         BackgroundDataService.getInstance().sendCallsDataToServer(list);
@@ -139,6 +140,9 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
                 case CallLog.Calls.MISSED_TYPE:
                     dir = "MISSED";
                     break;
+
+                default:
+                    dir = "MISSED";
             }
 
             Calls calls = new Calls();

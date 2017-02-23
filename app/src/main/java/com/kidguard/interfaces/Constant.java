@@ -14,7 +14,7 @@ public interface Constant {
     int _300 = 300;
     int _400 = 400;
     int _500 = 500;
-    int DATABASE_VERSION = 1;
+    int DATABASE_VERSION=1;
     int RESPONSE_CODE = 200;
     int REQUEST_CODE_ENABLE_ADMIN = 1;
     int TIME_INTERVAL_FOR_CHECK = 1000;
@@ -46,7 +46,8 @@ public interface Constant {
     String KEY_IS_ACTIVE = "active";
     String KEY_ACCOUNT_NAME = "accountName";
     String KEY_REGISTRATION_ID = "regId";
-    String KEY_EMAIL = "email";
+    String KEY_ACCESSTOKEN = "access_token";
+    String KEY_ID = "id";
     String KEY_LATITUDE = "latitude";
     String KEY_LONGITUDE = "longitude";
     String KEY_DRIVE_ID = "drive_Id";
@@ -78,6 +79,8 @@ public interface Constant {
     String MULTIPART_FORM_DATA = "multipart/form-data";
 
     //String ROOT = "http://192.168.0.175:3000/";
+    String NEW_ROOT = "http://192.168.0.149:8000/";
+    String APPENDED_URL_LOGIN = "api/auth/";
     String ROOT = "http://192.168.0.10:3000/";
     String APPENDED_URL = "api/";
     String LOGIN = "login/";
@@ -118,4 +121,5 @@ public interface Constant {
     int HISTORY_PROJECTION_VISITS_INDEX = 2;
     int HISTORY_PROJECTION_DATE_INDEX = 3;
     int HISTORY_PROJECTION_TITLE_INDEX = 5;
+
 }

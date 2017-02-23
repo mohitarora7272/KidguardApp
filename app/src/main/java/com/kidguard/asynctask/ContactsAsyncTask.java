@@ -27,6 +27,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
     private Dao<Contacts, Integer> contactsDao;
     private ArrayList<Contacts> lstContacts;
     private Context context;
+    String email;
 
     /* Sms Constructor */
     public ContactsAsyncTask(Context context) {
@@ -70,6 +71,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                         Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                                                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                                                 new String[]{id}, null);
+
                                         if (pCur != null) {
                                             while (pCur.moveToNext()) {
                                                 List<Contacts> results = queryBuilder.where()
@@ -77,18 +79,20 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                                                 pCur.getString(
                                                                         pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
                                                 if (results.size() == 0) {
-                                                    setContactsPOJO(pCur, name);
+                                                    setContactsPOJO(pCur, name, id);
                                                 }
                                             }
                                             pCur.close();
                                         }
+
+
                                     }
                                 }
 
                             }
 
                         } else {
-                            if (cur.getCount() > 0) {
+                           if (cur.getCount() > 0) {
                                 while (cur.moveToNext()) {
                                     String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                                     String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
@@ -99,12 +103,13 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                                 new String[]{id}, null);
                                         if (pCur != null) {
                                             while (pCur.moveToNext()) {
-                                                setContactsPOJO(pCur, name);
+                                                setContactsPOJO(pCur, name, id);
                                             }
                                             pCur.close();
                                         }
                                     }
                                 }
+
 
                             }
                         }
@@ -117,8 +122,8 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (cur != null && !cur.isClosed())
-                    cur.close();
+                /*if (cur != null && !cur.isClosed())
+                    cur.close();*/
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,14 +145,16 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         BackgroundDataService.getInstance().sendContactsDataToServer(list);
     }
 
+
     /* setContactsPOJO With Cursor */
-    private void setContactsPOJO(Cursor pCur, String name) {
+    private void setContactsPOJO(Cursor pCur, String name, String id) {
         try {
             final Contacts contact = new Contacts();
             String phone = pCur.getString(
                     pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contact.setContactsName(name);
             contact.setContactsPhoneNo(phone);
+            contact.setContact_id(id);
             contact.setContactStatus(FALSE);
             contactsDao.create(contact);
         } catch (SQLException e) {
@@ -161,6 +168,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         contacts.setContactsName(results.get(i).getContactsName());
         contacts.setContactsPhoneNo(results.get(i).getContactsPhoneNo());
         contacts.setContactStatus(results.get(i).getContactStatus());
+        contacts.setContact_id(results.get(i).getContact_id());
         lstContactsSorted.add(contacts);
     }
 

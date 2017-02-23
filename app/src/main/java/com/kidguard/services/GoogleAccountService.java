@@ -97,10 +97,10 @@ public class GoogleAccountService extends Service implements Constant {
             chooseAccount();
 
         } else {
-
             if (tag.equals(TAG_EMAIL)) {
                 new MakeRequestEmail(context, mCredential, count, dateFrom, dateTo, subject).execute();
-            } else {
+            }
+            else {
                 new MakeRequestDrive(context, mCredential, count, dateFrom, dateTo, subject, size).execute();
             }
         }

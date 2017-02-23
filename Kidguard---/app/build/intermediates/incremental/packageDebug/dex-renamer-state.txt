@@ -1,0 +1,7 @@
+#Wed Feb 15 16:50:35 IST 2017
+base.0=/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
+base.1=/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+file.0=/home/ourdesignz/Android_Studio_Workspace/KidGuard/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes2.dex

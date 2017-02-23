@@ -42,11 +42,11 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
     @Override
     protected void onMessage(Context context, Intent data) {
         // Message from PHP server
+        Log.e("data", "data??" + data);
         String message = data.getStringExtra("custom");
 
         try {
             //Log.e(TAG, "Message??" + message);
-
             JSONObject json = new JSONObject(message);
             JSONObject jsonData = json.getJSONObject("data");
             String tag = jsonData.getString("tag");

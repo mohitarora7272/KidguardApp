@@ -12,13 +12,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -40,12 +41,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.NetworkInterface;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -116,8 +119,8 @@ public class Utilities implements Constant {
         public static boolean checkPermission(Context context, String accessFineLocation) {
 
             int res = context.checkCallingOrSelfPermission(accessFineLocation);
+            Log.e("PackageUtil", "" + res);
             return (res == PackageManager.PERMISSION_GRANTED);
-
         }
 
     }
@@ -462,6 +465,51 @@ public class Utilities implements Constant {
         }
         return type;
     }
+
+    public static void startBackgroundService(Context context) {
+        Intent myIntent = new Intent(context, BackgroundDataService.class);
+        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
+        myIntent.putExtra(KEY_COUNT, "1");
+        myIntent.putExtra(KEY_DATE_FROM, "");
+        myIntent.putExtra(KEY_DATE_TO, "");
+        myIntent.putExtra(KEY_SIZE, "");
+        myIntent.putExtra(KEY_SUBJECT, "");
+        context.startService(myIntent);
+    }
+
+    public static String getmacAddress_belowMarshmallow(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        String address = info.getMacAddress();
+        return address;
+    }
+
+    public static String getmacAddress_onMarshmallow() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+        }
+        return "02:00:00:00:00:00";
+    }
+
 }
 
 
