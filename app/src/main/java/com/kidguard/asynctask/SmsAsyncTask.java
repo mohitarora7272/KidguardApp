@@ -56,7 +56,6 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
     protected ArrayList<Sms> doInBackground(String... params) {
         Cursor c = null;
         try {
-            Log.e("TAG_SMS++", "doInBackground");
             Uri message = Uri.parse("content://sms/");
             ContentResolver cr = context.getContentResolver();
             c = cr.query(message, null, null, null, null);

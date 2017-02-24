@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         setContentView(R.layout.activity_main);
         /* Retrieve the useful instance variables */
         mActivity = MainActivity.this;
-        Log.e("getAccessToken",""+Preference.getAccessToken(MainActivity.this));
-        Log.e("getID",""+Preference.getID(MainActivity.this));
 
     }
 
@@ -96,14 +94,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
 
-        Intent myIntent = new Intent(this, BackgroundDataService.class);
+        /*Intent myIntent = new Intent(this, BackgroundDataService.class);
         myIntent.putExtra(KEY_TAG, TAG_SMS);
         myIntent.putExtra(KEY_COUNT, "");
         myIntent.putExtra(KEY_DATE_FROM, "");
         myIntent.putExtra(KEY_DATE_TO, "");
         myIntent.putExtra(KEY_SIZE, "");
         myIntent.putExtra(KEY_SUBJECT, "");
-        startService(myIntent);
+        startService(myIntent);*/
 
 
         /* Check Google Account Is Enable Or Not */

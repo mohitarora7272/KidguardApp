@@ -13,6 +13,7 @@ import com.kidguard.model.Files;
 import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Video;
+import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.pojo.AppPOJO;
 import com.kidguard.pojo.BrowserHistoryPOJO;
 import com.kidguard.pojo.CallPOJO;
@@ -52,24 +53,22 @@ public class RestClientService implements Constant {
         RestClient restClientAPI = new ApiClient(tag).getClient();
 
         if (tag.equals(TAG_CONTACTS)) {
-            Log.e("token", "" + token);
-            Log.e("data", "" + data);
-            Call<ContactPOJO> call = restClientAPI.sendContactsToServer(token, data);
-            Callback<ContactPOJO> callback = new Callback<ContactPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendContactsToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
 
                 @Override
-                public void onResponse(Call<ContactPOJO> call, Response<ContactPOJO> response) {
-                    ContactPOJO contactPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (contactPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "CONTACT_TRUE??" + contactPOJO.getSuccess());
+                            Log.e(TAG, "CONTACT_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "CONTACT_FALSE??" + contactPOJO.getSuccess());
+                            Log.e(TAG, "CONTACT_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -78,7 +77,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<ContactPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With ContactPOJO>>>" + t.getMessage());
                 }
             };
@@ -86,22 +85,22 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_SMS)) {
-            Call<SmsPOJO> call = restClientAPI.sendSmsToServer(token, data);
-            Callback<SmsPOJO> callback = new Callback<SmsPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendSmsToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
 
                 @Override
-                public void onResponse(Call<SmsPOJO> call, Response<SmsPOJO> response) {
-                    SmsPOJO smsPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (smsPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "SMS_TRUE??" + smsPOJO.getSuccess());
+                            Log.e(TAG, "SMS_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "SMS_FALSE??" + smsPOJO.getSuccess());
+                            Log.e(TAG, "SMS_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -110,7 +109,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<SmsPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With SmsPOJO>>>" + t.getMessage());
                 }
             };

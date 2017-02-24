@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "error",
         "message"
 })
-public class ContactPOJO {
+public class ApiResponsePOJO {
 
     @JsonProperty("status")
     private Integer status;

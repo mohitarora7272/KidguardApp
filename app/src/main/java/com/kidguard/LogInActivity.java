@@ -107,7 +107,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     //64:00:6a:3e:28:fc
     private void getLogin() {
         RestClient restClientAPI = new ApiClient(TAG_LOGIN).getClient();
-        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(), Preference.getRegIdInPref(this), macAddress);
+        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(), Preference.getRegIdInPref(this), "64:00:6a:3e:28:fc");
         Callback<LogInPOJO> callback = new Callback<LogInPOJO>() {
 
             @Override

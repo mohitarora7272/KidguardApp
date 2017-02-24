@@ -40,7 +40,7 @@ public class ApiClient implements Constant {
 
             if (tag.equals(TAG_SMS)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + SMS)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + SMS)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }

@@ -274,7 +274,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendSmsDataToServer(ArrayList<Sms> lstSms) {
         this.lstSms = lstSms;
         String sms = convertToJSONFormat(TAG_SMS);
-        new RestClientService(TAG_SMS, API_TOKEN, sms);
+        new RestClientService(TAG_SMS, Preference.getAccessToken(context), sms);
         stopSelf();
     }
 
