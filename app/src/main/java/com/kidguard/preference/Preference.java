@@ -56,6 +56,17 @@ public class Preference implements Constant {
         String token = sharedpreferences.getString(KEY_ACCESSTOKEN, null);
         return token;
     }
+    public static void setAgainTry(Context ctx, String again) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(KEY_AGAINTRY, again).commit();
+    }
+
+    public static String getAgainTry(Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        String again = sharedpreferences.getString(KEY_AGAINTRY, null);
+        return again;
+    }
 
     public static void setID(Context ctx, String id) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);

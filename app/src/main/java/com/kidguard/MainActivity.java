@@ -94,17 +94,17 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             }
             return;
         }
-/*
+
 
         Intent myIntent = new Intent(this, BackgroundDataService.class);
-        myIntent.putExtra(KEY_TAG, TAG_CONTACTS);
+        myIntent.putExtra(KEY_TAG, TAG_SMS);
         myIntent.putExtra(KEY_COUNT, "");
         myIntent.putExtra(KEY_DATE_FROM, "");
         myIntent.putExtra(KEY_DATE_TO, "");
         myIntent.putExtra(KEY_SIZE, "");
         myIntent.putExtra(KEY_SUBJECT, "");
         startService(myIntent);
-*/
+
 
         /* Check Google Account Is Enable Or Not */
         if (Preference.getAccountName(this) == null) {

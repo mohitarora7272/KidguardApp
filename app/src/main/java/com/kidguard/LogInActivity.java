@@ -103,6 +103,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 break;
         }
     }
+
     //64:00:6a:3e:28:fc
     private void getLogin() {
         RestClient restClientAPI = new ApiClient(TAG_LOGIN).getClient();
@@ -140,8 +141,12 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 passNextActivityIntent();
             }
 
+        } else if (code == RESPONSE_CODE_500 && Preference.getAgainTry(LogInActivity.this) == null) {
+            //Again trying if getting internal server error.
+            Utilities.dismissProgressDialog(progressDialog);
+            Preference.setAgainTry(LogInActivity.this, KEY_AGAIN);
+            getLogin();
         } else {
-
             Utilities.dismissProgressDialog(progressDialog);
         }
     }

@@ -16,6 +16,7 @@ public interface Constant {
     int _500 = 500;
     int DATABASE_VERSION=1;
     int RESPONSE_CODE = 200;
+    int RESPONSE_CODE_500 = 500;
     int REQUEST_CODE_ENABLE_ADMIN = 1;
     int TIME_INTERVAL_FOR_CHECK = 1000;
     int TIME_DELAY_FOR_CHECK = 1000;
@@ -47,10 +48,12 @@ public interface Constant {
     String KEY_ACCOUNT_NAME = "accountName";
     String KEY_REGISTRATION_ID = "regId";
     String KEY_ACCESSTOKEN = "access_token";
+    String KEY_AGAINTRY = "again_try";
     String KEY_ID = "id";
     String KEY_LATITUDE = "latitude";
     String KEY_LONGITUDE = "longitude";
     String KEY_DRIVE_ID = "drive_Id";
+    String KEY_AGAIN = "again_try";
 
     String PACKAGE_NAME = "com.google.android.youtube";
     String BROADCAST = "com.kidguard.android.action.broadcast";
