@@ -46,10 +46,9 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         passNextActivityIntent();
         setContentView(R.layout.activity_login);
         iniView();
-
     }
 
-
+    /* Initialize View */
     private void iniView() {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
@@ -58,10 +57,11 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         btn_SignIn = (Button) findViewById(R.id.btn_SignIn);
         btn_SignIn.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
+
         if (Build.VERSION.SDK_INT < 23) {
-            macAddress = Utilities.getmacAddress_belowMarshmallow(LogInActivity.this);
+            macAddress = Utilities.getMacAddressBelowMarshmallow(this);
         } else {
-            macAddress = Utilities.getmacAddress_onMarshmallow();
+            macAddress = Utilities.getMacAddressOnMarshmallow();
         }
     }
 
@@ -107,13 +107,14 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     //64:00:6a:3e:28:fc
     private void getLogin() {
         RestClient restClientAPI = new ApiClient(TAG_LOGIN).getClient();
-        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(), Preference.getRegIdInPref(this), "64:00:6a:3e:28:fc");
+        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(),
+                Preference.getRegIdInPref(this), macAddress);
+
         Callback<LogInPOJO> callback = new Callback<LogInPOJO>() {
 
             @Override
             public void onResponse(Call<LogInPOJO> call, Response<LogInPOJO> response) {
                 passLogInResponse(response);
-
             }
 
             @Override
@@ -121,7 +122,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 Log.e(TAG, "onFailure?? " + t.getMessage());
                 Utilities.showSnackBar(LogInActivity.this, coordinatorLayout, getString(R.string.failed_to_connect_with_server));
                 logInResponseFailure();
-
             }
         };
 
@@ -143,8 +143,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
         } else if (code == RESPONSE_CODE_500 && Preference.getAgainTry(LogInActivity.this) == null) {
             //Again trying if getting internal server error.
-            Utilities.dismissProgressDialog(progressDialog);
-            Preference.setAgainTry(LogInActivity.this, KEY_AGAIN);
+            Preference.setAgainTry(this, KEY_AGAIN);
             getLogin();
         } else {
             Utilities.dismissProgressDialog(progressDialog);
@@ -159,7 +158,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     /* Pass Next Activity Intent */
     public void passNextActivityIntent() {
         if (Preference.getID(LogInActivity.this) != null && !Preference.getID(LogInActivity.this).isEmpty()) {
-            Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }

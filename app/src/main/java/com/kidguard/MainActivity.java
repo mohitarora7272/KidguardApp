@@ -1,6 +1,5 @@
 package com.kidguard;
 
-import android.*;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
@@ -16,12 +15,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.kidguard.interfaces.Constant;
@@ -32,9 +28,7 @@ import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.utilities.Utilities;
 
-import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -92,11 +86,10 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             }
             return;
         }
-
-
-        /*Intent myIntent = new Intent(this, BackgroundDataService.class);
-        myIntent.putExtra(KEY_TAG, TAG_SMS);
-        myIntent.putExtra(KEY_COUNT, "");
+/*
+        Intent myIntent = new Intent(this, BackgroundDataService.class);
+        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
+        myIntent.putExtra(KEY_COUNT, "5");
         myIntent.putExtra(KEY_DATE_FROM, "");
         myIntent.putExtra(KEY_DATE_TO, "");
         myIntent.putExtra(KEY_SIZE, "");
@@ -119,48 +112,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                 return;
             }
             return;
-        }
-        if (Build.VERSION.SDK_INT < 23) {
-            //Get email access permission to user
-            Utilities.startBackgroundService(MainActivity.this);
-        } else {
-            checkAndRequestPermissions();
-        }
 
-        //Check For Notification Access
-        checkNotificationAccess();
-    }
-
-    /* Check Notification Access */
-    private void checkNotificationAccess() {
-
-        if (android.provider.Settings.Secure.getString(getContentResolver(),
-                "enabled_notification_listeners") == null
-                || android.provider.Settings.Secure.getString(getContentResolver(),
-                "enabled_notification_listeners").equals("")) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                boolean weHaveNotificationListenerPermission = false;
-                for (String service : NotificationManagerCompat.getEnabledListenerPackages(this)) {
-                    if (service.equals(getPackageName()))
-                        weHaveNotificationListenerPermission = true;
-                }
-
-                if (!weHaveNotificationListenerPermission) {
-                    //ask for permission
-                    Intent intent = new Intent(SETTINGS);
-                    startActivity(intent);
-                    return;
-                }
-            }
         }
 
         /* Request Usage State Permission For Application Is In ForGround Or Not */
         requestUsageStatsPermission();
-
     }
 
-    // Request Usage Stats Permission on RunTime
+    /* Request Usage Stats Permission on RunTime */
     private void requestUsageStatsPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !hasUsageStatsPermission(this)) {
@@ -265,8 +224,19 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                             data.getExtras() != null) {
                         String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                         Log.e(TAG, "AccName??" + accountName);
+
                         if (accountName != null) {
                             Preference.setAccountName(this, accountName);
+                        }
+
+                        if (Build.VERSION.SDK_INT < 23) {
+                            //Get email access permission to user
+                            Utilities.startGoogleAccountService(MainActivity.this);
+                            return;
+
+                        } else {
+                            checkAndRequestPermissions();
+                            return;
                         }
                     }
                     break;
@@ -312,9 +282,12 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Get email access permission to user
-                    Utilities.startBackgroundService(MainActivity.this);
+
+                    //Get email access permission to user
+                    Utilities.startGoogleAccountService(MainActivity.this);
+
                 } else {
-                    Utilities.startBackgroundService(MainActivity.this);
+                    checkAndRequestPermissions();
                 }
                 break;
         }
@@ -348,18 +321,23 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
         List<String> listPermissionsNeeded = new ArrayList<>();
+
         if (storagePermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
+
         if (SMSPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_SMS);
         }
+
         if (callPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_CALL_LOG);
         }
+
         if (finelocationPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
+
         if (coarselocationPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }

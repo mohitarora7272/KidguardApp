@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.gmail.Gmail;
 import com.kidguard.MainActivity;
 import com.kidguard.asynctask.MakeRequestDrive;
 import com.kidguard.asynctask.MakeRequestEmail;
@@ -38,6 +38,7 @@ public class GoogleAccountService extends Service implements Constant {
     private String dateTo;
     private String subject;
     private String size;
+    private Gmail mService = null;
 
     public static GoogleAccountService getInstance() {
         return services;
@@ -97,11 +98,15 @@ public class GoogleAccountService extends Service implements Constant {
             chooseAccount();
 
         } else {
-            if (tag.equals(TAG_EMAIL)) {
-                new MakeRequestEmail(context, mCredential, count, dateFrom, dateTo, subject).execute();
-            }
-            else {
-                new MakeRequestDrive(context, mCredential, count, dateFrom, dateTo, subject, size).execute();
+            if(tag != null && !tag.equals("")){
+
+                if (tag.equals(TAG_EMAIL)) {
+                    new MakeRequestEmail(context, mCredential, count, dateFrom, dateTo, subject).execute();
+
+                } else  {
+                    new MakeRequestDrive(context, mCredential, count, dateFrom, dateTo, subject, size).execute();
+
+                }
             }
         }
     }
@@ -112,17 +117,18 @@ public class GoogleAccountService extends Service implements Constant {
                 this, Manifest.permission.GET_ACCOUNTS)) {
             String accountName = Preference.getAccountName(this);
             if (accountName != null) {
+
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
 
             } else {
+
                 // Start a dialog from which the user can choose an account
                 MainActivity.getInstance().startActivityForResult(
                         mCredential.newChooseAccountIntent(),
                         REQUEST_ACCOUNT_PICKER);
             }
         } else {
-
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     MainActivity.getInstance(),

@@ -43,6 +43,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
     protected void onMessage(Context context, Intent data) {
         // Message from PHP server
         Log.e("data", "data??" + data);
+
         String message = data.getStringExtra("custom");
 
         try {
@@ -86,7 +87,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             startService(myIntent);
 
         } else {
-
+            Log.e("hit", "hit??");
             Intent myIntent = new Intent(this, BackgroundDataService.class)
                     .putExtra(KEY_TAG, tag)
                     .putExtra(KEY_COUNT, count)

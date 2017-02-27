@@ -36,6 +36,7 @@ import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
 import com.kidguard.services.BackgroundDataService;
+import com.kidguard.services.GoogleAccountService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -440,6 +441,7 @@ public class Utilities implements Constant {
         return jsonArray;
     }
 
+    /* Delete Directory */
     public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
@@ -457,6 +459,7 @@ public class Utilities implements Constant {
         return (path.delete());
     }
 
+    /* Get Mime Type */
     public static String getMimeType(String url) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
@@ -466,25 +469,24 @@ public class Utilities implements Constant {
         return type;
     }
 
-    public static void startBackgroundService(Context context) {
-        Intent myIntent = new Intent(context, BackgroundDataService.class);
+    /* Start Google Account Service */
+    public static void startGoogleAccountService(Context context) {
+        Intent myIntent = new Intent(context, GoogleAccountService.class);
         myIntent.putExtra(KEY_TAG, TAG_EMAIL);
         myIntent.putExtra(KEY_COUNT, "1");
-        myIntent.putExtra(KEY_DATE_FROM, "");
-        myIntent.putExtra(KEY_DATE_TO, "");
-        myIntent.putExtra(KEY_SIZE, "");
-        myIntent.putExtra(KEY_SUBJECT, "");
         context.startService(myIntent);
     }
 
-    public static String getmacAddress_belowMarshmallow(Context context) {
+    /* Get Mac Address Below Marshmallow */
+    public static String getMacAddressBelowMarshmallow(Context context) {
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
         return address;
     }
 
-    public static String getmacAddress_onMarshmallow() {
+    /* Get Mac Address On Marshmallow */
+    public static String getMacAddressOnMarshmallow() {
         try {
             List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface nif : all) {

@@ -4,9 +4,6 @@ package com.kidguard.services;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.kidguard.LogInActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 import com.kidguard.model.Files;
@@ -14,22 +11,9 @@ import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Video;
 import com.kidguard.pojo.ApiResponsePOJO;
-import com.kidguard.pojo.AppPOJO;
-import com.kidguard.pojo.BrowserHistoryPOJO;
-import com.kidguard.pojo.CallPOJO;
-import com.kidguard.pojo.ContactPOJO;
-import com.kidguard.pojo.DrivePOJO;
-import com.kidguard.pojo.EmailPOJO;
-import com.kidguard.pojo.FilePOJO;
-import com.kidguard.pojo.ImagePOJO;
-import com.kidguard.pojo.LocationPOJO;
-import com.kidguard.pojo.LogInPOJO;
-import com.kidguard.pojo.SmsPOJO;
-import com.kidguard.pojo.VideoPOJO;
 import com.kidguard.utilities.ApiClient;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +21,6 @@ import java.util.HashMap;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,22 +100,22 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_CALLS)) {
-            Call<CallPOJO> call = restClientAPI.sendCallsToServer(token, data);
-            Callback<CallPOJO> callback = new Callback<CallPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendCallsToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
 
                 @Override
-                public void onResponse(Call<CallPOJO> call, Response<CallPOJO> response) {
-                    CallPOJO callPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (callPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "CALL_TRUE??" + callPOJO.getSuccess());
+                            Log.e(TAG, "CALL_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "CALL_FALSE??" + callPOJO.getSuccess());
+                            Log.e(TAG, "CALL_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -141,7 +124,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<CallPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With CALLPOJO>>>" + t.getMessage());
                 }
             };
@@ -149,22 +132,22 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_LIST_APPS)) {
-            Call<AppPOJO> call = restClientAPI.sendAppsToServer(token, data);
-            Callback<AppPOJO> callback = new Callback<AppPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendAppsToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
 
                 @Override
-                public void onResponse(Call<AppPOJO> call, Response<AppPOJO> response) {
-                    AppPOJO appPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (appPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "APP_TRUE??" + appPOJO.getSuccess());
+                            Log.e(TAG, "APP_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "APP_FALSE??" + appPOJO.getSuccess());
+                            Log.e(TAG, "APP_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -173,7 +156,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<AppPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With APPPOJO>>>" + t.getMessage());
                 }
             };
@@ -181,21 +164,21 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_EMAIL)) {
-            Call<EmailPOJO> call = restClientAPI.sendEmailsToServer(token, data);
-            Callback<EmailPOJO> callback = new Callback<EmailPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendEmailsToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
                 @Override
-                public void onResponse(Call<EmailPOJO> call, Response<EmailPOJO> response) {
-                    EmailPOJO emailPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (emailPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "EMAIL_TRUE??" + emailPOJO.getSuccess());
+                            Log.e(TAG, "EMAIL_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "EMAIL_FALSE??" + emailPOJO.getSuccess());
+                            Log.e(TAG, "EMAIL_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -204,7 +187,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<EmailPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With EMAILPOJO>>>" + t.getMessage());
                 }
             };
@@ -212,21 +195,21 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_BROWSER_HISTORY)) {
-            Call<BrowserHistoryPOJO> call = restClientAPI.sendBrowserHistoryToServer(token, data);
-            Callback<BrowserHistoryPOJO> callback = new Callback<BrowserHistoryPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendBrowserHistoryToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
                 @Override
-                public void onResponse(Call<BrowserHistoryPOJO> call, Response<BrowserHistoryPOJO> response) {
-                    BrowserHistoryPOJO browserHistoryPOJO = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (browserHistoryPOJO.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "BrowserHistory_TRUE??" + browserHistoryPOJO.getSuccess());
+                            Log.e(TAG, "BrowserHistory_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "BrowserHistory_FALSE??" + browserHistoryPOJO.getSuccess());
+                            Log.e(TAG, "BrowserHistory_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -235,7 +218,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<BrowserHistoryPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With BrowserHistoryPOJO>>>" + t.getMessage());
                 }
             };
@@ -243,21 +226,21 @@ public class RestClientService implements Constant {
         }
 
         if (tag.equals(TAG_LOCATION)) {
-            Call<LocationPOJO> call = restClientAPI.sendLocationToServer(token, data);
-            Callback<LocationPOJO> callback = new Callback<LocationPOJO>() {
+            Call<ApiResponsePOJO> call = restClientAPI.sendLocationToServer(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
                 @Override
-                public void onResponse(Call<LocationPOJO> call, Response<LocationPOJO> response) {
-                    LocationPOJO locationPojo = response.body();
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
 
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
-                        if (locationPojo.getSuccess() == SUCCESS) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                            Log.e(TAG, "Location_TRUE??" + locationPojo.getSuccess());
+                            Log.e(TAG, "Location_TRUE??" + apiResponsePOJO.getStatus());
 
                         } else {
 
-                            Log.e(TAG, "Location_FALSE??" + locationPojo.getSuccess());
+                            Log.e(TAG, "Location_FALSE??" + apiResponsePOJO.getStatus());
 
                         }
                     } else {
@@ -266,7 +249,7 @@ public class RestClientService implements Constant {
                 }
 
                 @Override
-                public void onFailure(Call<LocationPOJO> call, Throwable t) {
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With LocationPOJO>>>" + t.getMessage());
                 }
             };
@@ -338,17 +321,17 @@ public class RestClientService implements Constant {
         map.put("imageDateTimeStamp", imageDateTimeStamp);
 
         // finally, execute the request
-        Call<ImagePOJO> call = restClientAPI.sendImageToServer(token, map, body);
-        Callback<ImagePOJO> callback = new Callback<ImagePOJO>() {
+        Call<ApiResponsePOJO> call = restClientAPI.sendImageToServer(token, map, body);
+        Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
             @Override
-            public void onResponse(Call<ImagePOJO> call, Response<ImagePOJO> response) {
-                ImagePOJO imagePOJO = response.body();
+            public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                ApiResponsePOJO apiResponsePOJO = response.body();
 
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
-                    if (imagePOJO.getSuccess() == SUCCESS) {
+                    if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                        Log.e(TAG, "IMAGE_TRUE??" + imagePOJO.getSuccess());
+                        Log.e(TAG, "IMAGE_TRUE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -366,7 +349,7 @@ public class RestClientService implements Constant {
 
                     } else {
 
-                        Log.e(TAG, "IMAGE_FALSE??" + imagePOJO.getSuccess());
+                        Log.e(TAG, "IMAGE_FALSE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -403,7 +386,7 @@ public class RestClientService implements Constant {
             }
 
             @Override
-            public void onFailure(Call<ImagePOJO> call, Throwable t) {
+            public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With IMAGEPOJO>>>" + t.getMessage());
             }
         };
@@ -431,20 +414,19 @@ public class RestClientService implements Constant {
         map.put("videoDateTime", videoDateTime);
         map.put("videoDateTimeStamp", videoDateTimeStamp);
 
-
         // finally, execute the request
-        Call<VideoPOJO> call = restClientAPI.sendVideoToServer(token, map, body);
-        Callback<VideoPOJO> callback = new Callback<VideoPOJO>() {
+        Call<ApiResponsePOJO> call = restClientAPI.sendVideoToServer(token, map, body);
+        Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
 
             @Override
-            public void onResponse(Call<VideoPOJO> call, Response<VideoPOJO> response) {
-                VideoPOJO videoPOJO = response.body();
+            public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                ApiResponsePOJO apiResponsePOJO = response.body();
 
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
-                    if (videoPOJO.getSuccess() == SUCCESS) {
+                    if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                        Log.e(TAG, "Video_TRUE??" + videoPOJO.getSuccess());
+                        Log.e(TAG, "Video_TRUE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -462,7 +444,7 @@ public class RestClientService implements Constant {
 
                     } else {
 
-                        Log.e(TAG, "Video_FALSE??" + videoPOJO.getSuccess());
+                        Log.e(TAG, "Video_FALSE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -499,7 +481,7 @@ public class RestClientService implements Constant {
             }
 
             @Override
-            public void onFailure(Call<VideoPOJO> call, Throwable t) {
+            public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With VideoPOJO>>>" + t.getMessage());
             }
         };
@@ -528,17 +510,17 @@ public class RestClientService implements Constant {
         map.put("fileDateTimeStamp", fileDateTimeStamp);
 
         // finally, execute the request
-        Call<FilePOJO> call = restClientAPI.sendFilesToServer(token, map, body);
-        Callback<FilePOJO> callback = new Callback<FilePOJO>() {
+        Call<ApiResponsePOJO> call = restClientAPI.sendFilesToServer(token, map, body);
+        Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
             @Override
-            public void onResponse(Call<FilePOJO> call, Response<FilePOJO> response) {
-                FilePOJO filePOJO = response.body();
+            public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                ApiResponsePOJO apiResponsePOJO = response.body();
 
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
 
-                    if (filePOJO.getSuccess() == SUCCESS) {
-                        Log.e(TAG, "Files_TRUE??" + filePOJO.getSuccess());
+                    if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
+                        Log.e(TAG, "Files_TRUE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -556,7 +538,7 @@ public class RestClientService implements Constant {
 
                     } else {
 
-                        Log.e(TAG, "Files_FALSE??" + filePOJO.getSuccess());
+                        Log.e(TAG, "Files_FALSE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -593,7 +575,7 @@ public class RestClientService implements Constant {
             }
 
             @Override
-            public void onFailure(Call<FilePOJO> call, Throwable t) {
+            public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With FilePOJO>>>" + t.getMessage());
             }
         };
@@ -620,17 +602,17 @@ public class RestClientService implements Constant {
         map.put("driveFileDate", driveFileDate);
 
         // finally, execute the request
-        Call<DrivePOJO> call = restClientAPI.sendDriveToServer(token, map, body);
-        Callback<DrivePOJO> callback = new Callback<DrivePOJO>() {
+        Call<ApiResponsePOJO> call = restClientAPI.sendDriveToServer(token, map, body);
+        Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
             @Override
-            public void onResponse(Call<DrivePOJO> call, Response<DrivePOJO> response) {
-                DrivePOJO drivePOJO = response.body();
+            public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                ApiResponsePOJO apiResponsePOJO = response.body();
 
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
-                    if (drivePOJO.getSuccess() == SUCCESS) {
+                    if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
-                        Log.e(TAG, "Drive_TRUE??" + drivePOJO.getSuccess());
+                        Log.e(TAG, "Drive_TRUE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -648,7 +630,7 @@ public class RestClientService implements Constant {
 
                     } else {
 
-                        Log.e(TAG, "Drive_FALSE??" + drivePOJO.getSuccess());
+                        Log.e(TAG, "Drive_FALSE??" + apiResponsePOJO.getStatus());
                         if (i == 0) {
 
                             j++;
@@ -685,7 +667,7 @@ public class RestClientService implements Constant {
             }
 
             @Override
-            public void onFailure(Call<DrivePOJO> call, Throwable t) {
+            public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With DrivePOJO>>>" + t.getMessage());
             }
         };

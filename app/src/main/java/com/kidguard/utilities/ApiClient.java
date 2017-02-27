@@ -35,7 +35,6 @@ public class ApiClient implements Constant {
                         .baseUrl(NEW_ROOT + APPENDED_URL_LOGIN + LOGIN)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
-
             }
 
             if (tag.equals(TAG_SMS)) {
@@ -54,63 +53,63 @@ public class ApiClient implements Constant {
 
             if (tag.equals(TAG_CALLS)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + CALL)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + CALL)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_FILES)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + FILE)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + FILE)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_IMAGES)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + IMAGE)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + IMAGE)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_LIST_APPS)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + APP)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + APP)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_EMAIL)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + EMAIL)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + EMAIL)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_GOOGLE_DRIVE)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + DRIVE)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + DRIVE)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_VIDEOS)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + VIDEO)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + VIDEO)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_BROWSER_HISTORY)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + BROWSER_HISTORY)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + BROWSER_HISTORY)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }
 
             if (tag.equals(TAG_LOCATION)) {
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ROOT + APPENDED_URL + LOCATION)
+                        .baseUrl(NEW_ROOT + APPENDED_URL + LOCATION)
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
             }

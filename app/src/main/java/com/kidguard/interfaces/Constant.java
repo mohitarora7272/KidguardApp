@@ -57,6 +57,7 @@ public interface Constant {
 
     String PACKAGE_NAME = "com.google.android.youtube";
     String BROADCAST = "com.kidguard.android.action.broadcast";
+    String BOOT_COMPLETE = "android.intent.action.BOOT_COMPLETED";
     String SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     String DATABASE_NAME = "Kidguard.db";
     String TRUE = "true";
@@ -99,7 +100,7 @@ public interface Constant {
     String FILE = "save_file/";
     String DRIVE = "save_drive/";
 
-    String[] SCOPES_GMAIL = {GmailScopes.GMAIL_READONLY};
+    String[] SCOPES_GMAIL = {GmailScopes.GMAIL_READONLY, DriveScopes.DRIVE};
     String[] SCOPES_GOOGLE_DRIVE = {DriveScopes.DRIVE};
 
     boolean SUCCESS = true;
