@@ -14,15 +14,9 @@ public class LocationReceiver extends BroadcastReceiver implements Constant {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            {
-                Log.e("extras", "extras??" + extras.get("send_data"));
-                Intent myIntent = new Intent(context, LocationService.class);
-                myIntent.putExtra(KEY_TAG, TAG_LOCATION);
-                context.startService(myIntent);
-            }
-        }
+
+        Intent myIntent = new Intent(context, LocationService.class);
+        context.startService(myIntent);
 
     }
 }

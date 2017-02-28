@@ -8,7 +8,6 @@ import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -86,15 +85,15 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             }
             return;
         }
-/*
-        Intent myIntent = new Intent(this, BackgroundDataService.class);
-        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
-        myIntent.putExtra(KEY_COUNT, "5");
-        myIntent.putExtra(KEY_DATE_FROM, "");
-        myIntent.putExtra(KEY_DATE_TO, "");
-        myIntent.putExtra(KEY_SIZE, "");
-        myIntent.putExtra(KEY_SUBJECT, "");
-        startService(myIntent);*/
+
+//        Intent myIntent = new Intent(this, BackgroundDataService.class);
+//        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
+//        myIntent.putExtra(KEY_COUNT, "5");
+//        myIntent.putExtra(KEY_DATE_FROM, "");
+//        myIntent.putExtra(KEY_DATE_TO, "");
+//        myIntent.putExtra(KEY_SIZE, "");
+//        myIntent.putExtra(KEY_SUBJECT, "");
+//        startService(myIntent);
 
 
         /* Check Google Account Is Enable Or Not */
@@ -155,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         /* Start Background Receivers Here */
         try {
 
-            startBackgroundReceiver();
+            startBlockAppReceiver();
 
-            registerLocationReceiver();
+            startLocationReceiver();
 
         } catch (Exception e) {
             Log.e(TAG, "Exception??" + e.getMessage());
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     }
 
     /* Start Background Check Receiver */
-    private void startBackgroundReceiver() {
+    private void startBlockAppReceiver() {
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion <= 21) {
             //Log.e("run", "<21");
@@ -183,26 +182,17 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-    /* Register Locations Receiver */
-    private void registerLocationReceiver() {
+    /* Pass Intent To Locations Receiver */
+    private void startLocationReceiver() {
 
-        // Initialize Receiver
-        mLocationReceiver = new LocationReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BROADCAST);
-        registerReceiver(mLocationReceiver, intentFilter);
+        Intent intent = new Intent(this, LocationReceiver.class);
+        sendBroadcast(intent);
 
-        passIntentReceiver();
-
+        stopServicesIntent();
     }
 
-    /* Pass Intent Receiver */
-    private void passIntentReceiver() {
-        Intent intent = new Intent(BROADCAST);
-        Bundle extras = new Bundle();
-        extras.putString("send_data", "test");
-        intent.putExtras(extras);
-        sendBroadcast(intent);
+    /* Stop Services Intent */
+    private void stopServicesIntent() {
 
         if (BackgroundDataService.getInstance() != null) {
             stopService(new Intent(this, BackgroundDataService.class));
@@ -213,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-    /* OnActivity Result Call */
+    /* On Activity Result Call */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -44,14 +44,14 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
         // Message from PHP server
         Log.e("data", "data??" + data);
 
-        String message = data.getStringExtra("custom");
+        String message = data.getStringExtra(CUSTOM);
 
         try {
             //Log.e(TAG, "Message??" + message);
             JSONObject json = new JSONObject(message);
-            JSONObject jsonData = json.getJSONObject("data");
-            String tag = jsonData.getString("tag");
-            Log.e(TAG, "Tag??" + tag);
+            JSONObject jsonData = json.getJSONObject(DATA);
+            String tag = jsonData.getString(TAGGING);
+            Log.e(TAG, "Tag_In_Notification??" + tag);
 
             passServiceIntent(tag, "", "", "", "", "");
 
@@ -76,11 +76,19 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
 
         if (tag.equals(TAG_LOCATION)) {
 
+            if (LocationService.getInstance() != null) {
+                stopService(new Intent(this, LocationService.class));
+            }
+
             Intent myIntent = new Intent(this, LocationService.class)
                     .putExtra(KEY_TAG, tag);
             startService(myIntent);
 
         } else if (tag.equals(TAG_BLOCK_APP)) {
+
+            if (BlockAppService.getInstance() != null) {
+                stopService(new Intent(this, BlockAppService.class));
+            }
 
             Intent myIntent = new Intent(this, BlockAppService.class)
                     .putExtra(KEY_TAG, tag).putExtra(KEY_PACKAGE_NAME, count);

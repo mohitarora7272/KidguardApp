@@ -1,19 +1,12 @@
 package com.kidguard.services;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -24,15 +17,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import com.kidguard.MainActivity;
-import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Locations;
 import com.kidguard.model.Sms;
 import com.kidguard.preference.Preference;
-import com.kidguard.receivers.NotificationReceiver;
 import com.kidguard.utilities.Utilities;
-import com.rvalerio.fgchecker.AppChecker;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -71,79 +60,24 @@ public class LocationService extends Service implements LocationListener, Consta
 
         mContext = LocationService.this;
 
-        /* Get Notification Message Using LocalBroadcastManager */
-        NotificationReceiver onNotice = new NotificationReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, new IntentFilter("Msg"));
-
         startFusedLocation();
         registerRequestUpdate(mContext);
-
-        stopAppsUpToLevel21(mContext);
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-//        tag = intent.getStringExtra(KEY_TAG);
-//
-//        /* Get Data With Tag */
-//        if (tag != null && !tag.equals("")) {
-//           Log.e("tag","tag??"+tag);
-//        }
+        if (intent != null) {
+            tag = intent.getStringExtra(KEY_TAG);
+                 /* Get Data With Tag */
+            if (tag != null && !tag.equals("")) {
+                Log.e("tag", "tag??" + tag);
+            }
+
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
-
-    // Stop Apps Up API level > 21
-    private void stopAppsUpToLevel21(final Context context) {
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        //Log.e("LocationService","currentapiVersion??"+currentapiVersion);
-
-        if (currentApiVersion > 21) {
-            AppChecker appChecker = new AppChecker();
-            appChecker
-                    .when(PACKAGE_NAME, new AppChecker.Listener() {
-                        @Override
-                        public void onForeground(String packageName) {
-                            Log.e("STOP", "STOP>21");
-                            Utilities.stopAppIntent(context);
-                        }
-
-                    }).timeout(TIME_DELAY_FOR_CHECK)
-                    .start(context);
-        }
-
-        if (currentApiVersion >= 21) {
-            //startThreadForBackgroundCheck(context);
-        }
-    }
-
-    /* Start Thread For Background Check */
-    private void startThreadForBackgroundCheck(final Context context) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Log.e("run", ">=21");
-
-                if (!Utilities.isNetworkAvailable(context)) {
-                    context.startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)
-                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                }
-
-                if (!Utilities.isGpsEnabled(context)) {
-                    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-
-                startThreadForBackgroundCheck(context);
-            }
-
-        }, TIME_DELAY_FOR_CHECK);
-
-    }
-
 
     @Override
     public void onStart(Intent intent, int startId) {
@@ -219,8 +153,7 @@ public class LocationService extends Service implements LocationListener, Consta
     public void onLocationChanged(Location location) {
         Log.e("Latitude", "Latitude??" + location.getLatitude());
         Log.e("Longitude", "Longitude??" + location.getLongitude());
-//        generateNotification("Latitude =" + String.valueOf(location.getLatitude() + " " +
-//                "Longitude=" + String.valueOf(location.getLongitude())));
+
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
 
@@ -255,25 +188,6 @@ public class LocationService extends Service implements LocationListener, Consta
         fusedLongitude = lon;
     }
 
-    /* Generate Notification */
-    private void generateNotification(String s) {
-        // Prepare intent which is triggered if the
-        // notification is selected
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("data")
-                        .setContentText(String.valueOf(s))
-                        .setDefaults(Notification.DEFAULT_ALL) // requires VIBRATE permission
-                        .setContentIntent(pIntent)
-                        .setDefaults(0)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(String.valueOf(s)));
-        final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(0, builder.build());
-    }
-
     /* Send Location To Server */
     private void sendLocationToServer(double latitude, double longitude, double distance) {
 
@@ -293,12 +207,12 @@ public class LocationService extends Service implements LocationListener, Consta
             }.getType();
             //String jsonSMS = gson.toJson(lstSms, type);
             JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstlocation, type);
-            JsonArray jsonArraySms = Utilities.getJsonArray(jsonArray);
-            String finalJSON = "\"Location\":" + jsonArraySms;
+            JsonArray jsonArrayLocation = Utilities.getJsonArray(jsonArray);
+            String finalJSON = "\"Location\":" + jsonArrayLocation;
             sbAppend.append(finalJSON);
             finalJSON = "{" + sbAppend + "}";
             Log.e("JSON", "FINAL??" + finalJSON);
-            new RestClientService(TAG_LOCATION, API_TOKEN, finalJSON);
+            new RestClientService(TAG_LOCATION, Preference.getAccessToken(mContext), finalJSON);
         }
     }
 }

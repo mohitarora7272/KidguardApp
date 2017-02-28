@@ -1,4 +1,4 @@
-package com.kidguard.services;
+ package com.kidguard.services;
 
 
 import android.Manifest;
@@ -39,10 +39,6 @@ import com.kidguard.model.Sms;
 import com.kidguard.model.Video;
 import com.kidguard.preference.Preference;
 import com.kidguard.utilities.Utilities;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Type;

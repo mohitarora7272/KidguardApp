@@ -18,8 +18,6 @@ public class BlockAppReceiver extends BroadcastReceiver implements Constant {
     public void onReceive(Context context, Intent intent) {
 
         Intent myIntent = new Intent(context, BlockAppService.class);
-        myIntent.putExtra(KEY_TAG, TAG_BLOCK_APP);
-        myIntent.putExtra(KEY_PACKAGE_NAME, PACKAGE_NAME);
         context.startService(myIntent);
 
         try {

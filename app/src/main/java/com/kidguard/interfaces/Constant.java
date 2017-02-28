@@ -25,8 +25,6 @@ public interface Constant {
     int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    int NOTIFICATION_ID = 100;
-    int NOTIFICATION_ID_BIG_IMAGE = 101;
 
     String TAG_LOGIN = "Login";
     String TAG_SMS = "Sms";
@@ -55,12 +53,7 @@ public interface Constant {
     String KEY_DRIVE_ID = "drive_Id";
     String KEY_AGAIN = "again_try";
 
-    String PACKAGE_NAME = "com.google.android.youtube";
-    String BROADCAST = "com.kidguard.android.action.broadcast";
-    String BOOT_COMPLETE = "android.intent.action.BOOT_COMPLETED";
-    String SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     String DATABASE_NAME = "Kidguard.db";
-    String TRUE = "true";
     String FALSE = "false";
     String ZERO = "0";
     String KEY_COUNT = "count";
@@ -69,17 +62,14 @@ public interface Constant {
     String KEY_SUBJECT = "subject";
     String KEY_TAG = "tag";
     String KEY_SIZE = "size";
-    String KEY_TOKEN = "token";
     String KEY_PACKAGE_NAME = "packageName";
     String DRIVE_NAME = "KidguardDrive";
     String DRIVE_DB_NAME = "KidguardDatabase";
-    String REGISTRATION_COMPLETE = "registrationComplete";
-    String PUSH_NOTIFICATION = "pushNotification";
-    String TOPIC_GLOBAL = "global";
-    String TOKEN = "token";
     String SENDER_ID = "969615957584";
+    String CUSTOM = "custom";
+    String DATA = "data";
+    String TAGGING = "tag";
 
-    String API_TOKEN = "c0u0NAZSCsMaahh4Z74J7haYJGSXWs7MoP0WfAXMI1EWpKER9Spqi2SG2ORD";
     String MULTIPART_FORM_DATA = "multipart/form-data";
 
     //String ROOT = "http://192.168.0.175:3000/";
@@ -102,8 +92,6 @@ public interface Constant {
 
     String[] SCOPES_GMAIL = {GmailScopes.GMAIL_READONLY, DriveScopes.DRIVE};
     String[] SCOPES_GOOGLE_DRIVE = {DriveScopes.DRIVE};
-
-    boolean SUCCESS = true;
 
     // For Default Browser History
     Uri BOOKMARKS_URI = Uri.parse("content://browser/bookmarks");
