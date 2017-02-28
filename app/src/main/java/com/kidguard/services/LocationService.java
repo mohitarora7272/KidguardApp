@@ -161,6 +161,7 @@ public class LocationService extends Service implements LocationListener, Consta
 
             Log.e("if", "if");
             Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
+            sendLocationToServer(location.getLatitude(), location.getLongitude(), 0.0);
 
         } else {
 

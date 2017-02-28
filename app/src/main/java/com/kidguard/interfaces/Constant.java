@@ -17,6 +17,7 @@ public interface Constant {
     int DATABASE_VERSION=1;
     int RESPONSE_CODE = 200;
     int RESPONSE_CODE_500 = 500;
+    int RESPONSE_CODE_422 = 422;
     int REQUEST_CODE_ENABLE_ADMIN = 1;
     int TIME_INTERVAL_FOR_CHECK = 1000;
     int TIME_DELAY_FOR_CHECK = 1000;
@@ -36,10 +37,11 @@ public interface Constant {
     String TAG_CAMERA = "Camera";
     String TAG_VIDEOS = "Video";
     String TAG_EMAIL = "Email";
-    String TAG_GOOGLE_DRIVE = "Google_Drive";
+    String TAG_GOOGLE_DRIVE = "Drive";
     String TAG_BROWSER_HISTORY = "BrowserHistory";
     String TAG_LOCATION = "Locations";
     String TAG_BLOCK_APP = "BlockApp";
+    String TAG_WIFI = "Wifi";
 
     String MY_PREFERENCE = "KidGuardPreference";
     String KEY_IS_ACTIVE = "active";

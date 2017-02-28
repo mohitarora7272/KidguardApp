@@ -59,7 +59,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.android.support:design:25.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.rvalerio:fgchecker:1.0.1'

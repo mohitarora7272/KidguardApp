@@ -19,6 +19,7 @@ public class Sms implements Serializable {
     public static final String SMS_DATE_TIMESTAMP = "date_timestamp";
     public static final String SMS_FOLDER_NAME = "folderName";
     public static final String SMS_STATUS = "sms_status";
+    public static final String SMS_FROM_ME = "from_me";
 
 
     @DatabaseField(generatedId = true, columnName = ID)
@@ -47,6 +48,9 @@ public class Sms implements Serializable {
 
     @DatabaseField(columnName = SMS_DATE_TIMESTAMP)
     public String date_timestamp;
+
+    @DatabaseField(columnName = SMS_FROM_ME)
+    public String from_me;
 
 
     /* Default Constructor */
@@ -117,6 +121,14 @@ public class Sms implements Serializable {
 
     public void setDate_timestamp(String date_timestamp) {
         this.date_timestamp = date_timestamp;
+    }
+
+    public String getFrom_me() {
+        return from_me;
+    }
+
+    public void setFrom_me(String from_me) {
+        this.from_me = from_me;
     }
 
 }

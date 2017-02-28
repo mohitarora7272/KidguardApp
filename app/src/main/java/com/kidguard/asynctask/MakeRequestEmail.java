@@ -595,7 +595,9 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         Mail mail = new Mail();
         mail.setMail_id(results.get(j).getMail_id());
         mail.setSubject(results.get(j).getSubject());
+        mail.setFrom(results.get(j).getFrom());
         mail.setDate(results.get(j).getDate());
+        mail.setDate_timestamp(results.get(j).getDate_timestamp());
         mail.setSnippet(results.get(j).getSnippet());
         mailList.add(mail);
     }

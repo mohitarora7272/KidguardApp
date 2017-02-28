@@ -32,6 +32,10 @@ fieldName=date_timestamp
 columnName=date_timestamp
 # --field-end--
 # --field-start--
+fieldName=from_me
+columnName=from_me
+# --field-end--
+# --field-start--
 fieldName=folderName
 columnName=folderName
 # --field-end--

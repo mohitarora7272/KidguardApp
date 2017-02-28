@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         setContentView(R.layout.activity_main);
         /* Retrieve the useful instance variables */
         mActivity = MainActivity.this;
-
     }
 
     /* onResume */

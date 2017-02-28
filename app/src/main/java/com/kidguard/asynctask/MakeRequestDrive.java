@@ -296,7 +296,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
                         if (results != null && results.size() > 0) {
                             for (int j = 0; j < results.size(); j++) {
                                 setDrivePOJO(fileInfo, results, j);
-                             }
+                            }
                         }
                     }
 

@@ -30,7 +30,7 @@ public class MyAppApplication extends Application implements Constant {
         GCMRegistrar.checkDevice(this);
         GCMRegistrar.checkManifest(this);
         GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
-        // Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
     }
 
     private void initializeInstance() {

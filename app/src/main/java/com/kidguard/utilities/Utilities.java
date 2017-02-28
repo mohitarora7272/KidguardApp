@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -55,6 +56,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 @SuppressWarnings("all")
 public class Utilities implements Constant {
@@ -129,7 +132,7 @@ public class Utilities implements Constant {
     /* Check Internet Available Or Not */
     public static boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager connectivityManager =
-                ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+                ((ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null &&
                 connectivityManager.getActiveNetworkInfo().isConnected();
     }
@@ -473,7 +476,11 @@ public class Utilities implements Constant {
     public static void startGoogleAccountService(Context context) {
         Intent myIntent = new Intent(context, GoogleAccountService.class);
         myIntent.putExtra(KEY_TAG, TAG_EMAIL);
-        myIntent.putExtra(KEY_COUNT, "1");
+        myIntent.putExtra(KEY_COUNT, "0");
+        myIntent.putExtra(KEY_DATE_FROM, "");
+        myIntent.putExtra(KEY_DATE_TO, "");
+        myIntent.putExtra(KEY_SIZE, "");
+        myIntent.putExtra(KEY_SUBJECT, "");
         context.startService(myIntent);
     }
 
@@ -510,6 +517,16 @@ public class Utilities implements Constant {
         } catch (Exception ex) {
         }
         return "02:00:00:00:00:00";
+    }
+
+    /* is Connected To Wifi */
+    public static boolean isConnectedToWifi(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifi.isConnected()) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -149,8 +149,10 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
 
             if (c.getString(c.getColumnIndexOrThrow("type")).contains("1")) {
                 objSms.setFolderName("inbox");
+                //objSms.setFrom_me("false");
             } else {
                 objSms.setFolderName("sent");
+                //objSms.setFrom_me("true");
             }
 
             smsDao.createOrUpdate(objSms);
@@ -170,6 +172,7 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
         objSms.setDate_timestamp(results.get(i).getDate_timestamp());
         objSms.setSms_status(results.get(i).getSms_status());
         objSms.setFolderName(results.get(i).getFolderName());
+        //objSms.setFrom_me(results.get(i).getFrom_me());
         lstSmsSorted.add(objSms);
     }
 

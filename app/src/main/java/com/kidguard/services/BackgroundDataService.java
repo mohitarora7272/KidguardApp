@@ -63,15 +63,11 @@ public class BackgroundDataService extends Service implements Constant {
     private ArrayList<GoogleDrive> lstDrive2;
     private ArrayList<BrowserHistory> lstBrowserHistory;
     private ArrayList<File> fileList;
+
     @SuppressWarnings("FieldCanBeLocal")
     private String finalJSON;
     @SuppressWarnings("FieldCanBeLocal")
     private StringBuffer sbAppend;
-
-    private DevicePolicyManager mDPM;
-    private ComponentName mDeviceAdminSample;
-    protected boolean mAdminActive;
-
     @SuppressWarnings("FieldCanBeLocal")
     private String tag;
     @SuppressWarnings("FieldCanBeLocal")
@@ -84,6 +80,10 @@ public class BackgroundDataService extends Service implements Constant {
     private String subject;
     @SuppressWarnings("FieldCanBeLocal")
     private String size;
+
+    private DevicePolicyManager mDPM;
+    private ComponentName mDeviceAdminSample;
+    protected boolean mAdminActive;
 
 
     public static BackgroundDataService getInstance() {

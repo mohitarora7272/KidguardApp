@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -55,7 +56,6 @@ public class GoogleAccountService extends Service implements Constant {
         super.onCreate();
         this.context = this;
         services = GoogleAccountService.this;
-        //getGoogleAccount();
     }
 
     @Override
