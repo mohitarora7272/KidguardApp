@@ -59,12 +59,12 @@ public class Preference implements Constant {
     public static void setAgainTry(Context ctx, String again) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(KEY_AGAINTRY, again).commit();
+        editor.putString(KEY_AGAIN, again).commit();
     }
 
     public static String getAgainTry(Context ctx) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
-        String again = sharedpreferences.getString(KEY_AGAINTRY, null);
+        String again = sharedpreferences.getString(KEY_AGAIN, null);
         return again;
     }
 

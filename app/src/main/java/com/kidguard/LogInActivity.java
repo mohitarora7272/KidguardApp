@@ -31,7 +31,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     private CoordinatorLayout coordinatorLayout;
     private EditText edt_Email;
     private EditText edt_DeviceCode;
-    @SuppressWarnings("FieldCanBeLocal")
     private Button btn_SignIn;
     private ProgressDialog progressDialog;
     private String macAddress;
@@ -129,11 +128,11 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
     }
 
-    // Pass LogIn Response
+    /* Pass LogIn Response */
     public void passLogInResponse(Response<LogInPOJO> response) {
         LogInPOJO logIn = response.body();
         int code = response.code();
-        Log.e("code","code???>>"+code);
+        Log.e("code", "code???>>" + code);
         if (code == RESPONSE_CODE) {
             Utilities.dismissProgressDialog(progressDialog);
             if (logIn.getStatus() == RESPONSE_CODE) {
@@ -142,7 +141,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 passNextActivityIntent();
             }
 
-        } else if (code == RESPONSE_CODE_500 || code == RESPONSE_CODE_422 && Preference.getAgainTry(LogInActivity.this) == null) {
+        } else if (code == RESPONSE_CODE_500 || code == RESPONSE_CODE_422 && Preference.getAgainTry(this) == null) {
             //Again trying if getting internal server error.
             Preference.setAgainTry(this, KEY_AGAIN);
             getLogin();
@@ -151,7 +150,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         }
     }
 
-    // LogIn Response Failure
+    /* LogIn Response Failure */
     public void logInResponseFailure() {
         Utilities.dismissProgressDialog(progressDialog);
     }

@@ -60,12 +60,14 @@ public class GoogleAccountService extends Service implements Constant {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        tag = intent.getStringExtra(KEY_TAG);
-        count = intent.getStringExtra(KEY_COUNT);
-        dateFrom = intent.getStringExtra(KEY_DATE_FROM);
-        dateTo = intent.getStringExtra(KEY_DATE_TO);
-        subject = intent.getStringExtra(KEY_SUBJECT);
-        size = intent.getStringExtra(KEY_SIZE);
+        if(intent != null){
+            tag = intent.getStringExtra(KEY_TAG);
+            count = intent.getStringExtra(KEY_COUNT);
+            dateFrom = intent.getStringExtra(KEY_DATE_FROM);
+            dateTo = intent.getStringExtra(KEY_DATE_TO);
+            subject = intent.getStringExtra(KEY_SUBJECT);
+            size = intent.getStringExtra(KEY_SIZE);
+        }
         getGoogleAccount();
         return super.onStartCommand(intent, flags, startId);
     }

@@ -24,7 +24,7 @@ public class MyAppApplication extends Application implements Constant {
         sInstance = this;
         sInstance.initializeInstance();
 
-        Utilities.makeDatabaseFolder();
+        //Utilities.makeDatabaseFolder();
 
         // GCM Registration
         GCMRegistrar.checkDevice(this);

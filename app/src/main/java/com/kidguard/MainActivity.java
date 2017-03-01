@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         return mActivity;
     }
 
-    private static LocationReceiver mLocationReceiver;
 
     /* onCrate */
     @Override
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
 //        Intent myIntent = new Intent(this, BackgroundDataService.class);
-//        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
-//        myIntent.putExtra(KEY_COUNT, "5");
+//        myIntent.putExtra(KEY_TAG, TAG_GOOGLE_DRIVE);
+//        myIntent.putExtra(KEY_COUNT, "");
 //        myIntent.putExtra(KEY_DATE_FROM, "");
 //        myIntent.putExtra(KEY_DATE_TO, "");
 //        myIntent.putExtra(KEY_SIZE, "");
@@ -235,31 +234,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-    /* onDestroy */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (Utilities.isNetworkAvailable(this) && Utilities.isGpsEnabled(this)) {
-
-            if (mLocationReceiver != null) {
-                Log.e(TAG, "onDestroy");
-                unregisterReceiver(mLocationReceiver);
-            }
-
-            if (BackgroundDataService.getInstance() != null) {
-                Log.e(TAG, "Stop BackgroundDataService");
-                stopService(new Intent(this, BackgroundDataService.class));
-            }
-
-            if (GoogleAccountService.getInstance() != null) {
-                Log.e(TAG, "Stop GoogleAccountService");
-                stopService(new Intent(this, GoogleAccountService.class));
-            }
-        }
-
-        finish();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -285,11 +259,12 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
+        Log.e("requestCode", "onPermissionsGranted" + requestCode + perms);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.e("requestCode", "onPermissionsDenied" + requestCode + perms);
 
     }
 
@@ -335,5 +310,25 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             ActivityCompat.requestPermissions(this,
                     listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
+    }
+
+    /* onDestroy */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (Utilities.isNetworkAvailable(this) && Utilities.isGpsEnabled(this)) {
+
+            if (BackgroundDataService.getInstance() != null) {
+                Log.e(TAG, "Stop BackgroundDataService");
+                stopService(new Intent(this, BackgroundDataService.class));
+            }
+
+            if (GoogleAccountService.getInstance() != null) {
+                Log.e(TAG, "Stop GoogleAccountService");
+                stopService(new Intent(this, GoogleAccountService.class));
+            }
+        }
+
+        finish();
     }
 }

@@ -2,6 +2,7 @@ package com.kidguard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -16,6 +17,7 @@ import com.kidguard.utilities.Utilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 @SuppressWarnings("all")
@@ -46,7 +48,6 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
     protected void onMessage(Context context, Intent data) {
         // Message from PHP server
         Log.e("data", "data??" + data);
-
         String message = data.getStringExtra(CUSTOM);
 
         try {
@@ -63,7 +64,6 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
         } catch (Exception e) {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
-
     }
 
     /* Pass Service Intent */
@@ -126,6 +126,12 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             }
         } else {
             Log.e("hit", "hit??");
+
+            /* Check and Delete Google Drive Foolder in SdCard */
+            File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString()
+                    + java.io.File.separator + DRIVE_NAME);
+            Utilities.deleteDirectory(toFiles);
+
             Intent myIntent = new Intent(this, BackgroundDataService.class)
                     .putExtra(KEY_TAG, tag)
                     .putExtra(KEY_COUNT, count)
@@ -135,8 +141,6 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                     .putExtra(KEY_SUBJECT, subject);
             startService(myIntent);
         }
-
-
     }
 
     @Override

@@ -1,4 +1,4 @@
- package com.kidguard.services;
+package com.kidguard.services;
 
 
 import android.Manifest;
@@ -64,22 +64,14 @@ public class BackgroundDataService extends Service implements Constant {
     private ArrayList<BrowserHistory> lstBrowserHistory;
     private ArrayList<File> fileList;
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private String finalJSON;
-    @SuppressWarnings("FieldCanBeLocal")
-    private StringBuffer sbAppend;
-    @SuppressWarnings("FieldCanBeLocal")
     private String tag;
-    @SuppressWarnings("FieldCanBeLocal")
     private String count;
-    @SuppressWarnings("FieldCanBeLocal")
     private String dateFrom;
-    @SuppressWarnings("FieldCanBeLocal")
     private String dateTo;
-    @SuppressWarnings("FieldCanBeLocal")
     private String subject;
-    @SuppressWarnings("FieldCanBeLocal")
     private String size;
+    private String finalJSON;
+    private StringBuffer sbAppend;
 
     private DevicePolicyManager mDPM;
     private ComponentName mDeviceAdminSample;
@@ -124,18 +116,19 @@ public class BackgroundDataService extends Service implements Constant {
     //onStartCommand
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        tag = intent.getStringExtra(KEY_TAG);
-        count = intent.getStringExtra(KEY_COUNT);
-        dateFrom = intent.getStringExtra(KEY_DATE_FROM);
-        dateTo = intent.getStringExtra(KEY_DATE_TO);
-        subject = intent.getStringExtra(KEY_SUBJECT);
-        size = intent.getStringExtra(KEY_SIZE);
+        if (intent != null) {
+            tag = intent.getStringExtra(KEY_TAG);
+            count = intent.getStringExtra(KEY_COUNT);
+            dateFrom = intent.getStringExtra(KEY_DATE_FROM);
+            dateTo = intent.getStringExtra(KEY_DATE_TO);
+            subject = intent.getStringExtra(KEY_SUBJECT);
+            size = intent.getStringExtra(KEY_SIZE);
         /* Get Data With Tag */
-        if (tag != null && !tag.equals("")) {
+            if (tag != null && !tag.equals("")) {
 
-            GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
+                GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
+            }
         }
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -227,6 +220,11 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_GOOGLE_DRIVE)) {
+
+            File path = new java.io.File(Environment.getExternalStorageDirectory().toString()
+                    + java.io.File.separator + DRIVE_NAME);
+            Utilities.deleteDirectory(path);
+
             passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
             return;
         }
@@ -342,7 +340,6 @@ public class BackgroundDataService extends Service implements Constant {
             }
         }
         convertToJSONFormat(TAG_GOOGLE_DRIVE);
-
     }
 
     /* Send Download Drive Data To Server */
@@ -356,15 +353,17 @@ public class BackgroundDataService extends Service implements Constant {
             for (File file : fileList) {
                 if (lstDrive.size() > 0) {
                     for (GoogleDrive driveList : lstDrive) {
-                        if (file.getName().equals(driveList.getFileTitle())) {
-                            GoogleDrive drive = new GoogleDrive();
-                            drive.setFileId(driveList.getFileId());
-                            drive.setFileTitle(driveList.getFileTitle());
-                            drive.setFileDate(driveList.getFileDate());
-                            drive.setFileSize(driveList.getFileSize());
-                            drive.setFileExtention(driveList.getFileExtention());
-                            drive.setFileDownloadUrl(file.getAbsolutePath());
-                            lstDrive2.add(drive);
+                        if (!driveList.getFileSize().equals("null")) {
+                            if (String.valueOf(file.length()).equals(driveList.getFileSize())) {
+                                GoogleDrive drive = new GoogleDrive();
+                                drive.setFileId(driveList.getFileId());
+                                drive.setFileTitle(driveList.getFileTitle());
+                                drive.setFileDate(driveList.getFileDate());
+                                drive.setFileSize(driveList.getFileSize());
+                                drive.setFileExtention(driveList.getFileExtention());
+                                drive.setFileDownloadUrl(file.getAbsolutePath());
+                                lstDrive2.add(drive);
+                            }
                         }
                     }
                 }

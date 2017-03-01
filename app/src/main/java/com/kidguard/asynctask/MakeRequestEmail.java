@@ -64,6 +64,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     private GoogleAccountCredential mCredential;
     private Dao<Mail, Integer> mailDao;
     private DatabaseHelper databaseHelper = null;
+    private int i = 0;
 
     public MakeRequestEmail(Context ctx, GoogleAccountCredential mCredential, String count,
                             String dateFrom, String dateTo, String subject) {
@@ -116,12 +117,12 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     @Override
     protected ArrayList<Mail> doInBackground(Void... params) {
         try {
-
             return listMessagesMatchingQuery(mService, mCredential.getSelectedAccountName(),
                     count, dateFrom, dateTo, subject);
 
         } catch (Exception e) {
             mLastError = e;
+            Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
             cancel(true);
             return null;
         }
@@ -185,7 +186,6 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             }
 
             for (Message message : messages) {
-                //getMessage(mService, mCredential.getSelectedAccountName(), message.getId());
                 try {
 
                     mailList = getMimeMessageList(mService, mCredential.getSelectedAccountName(), message.getId(), mailList);
@@ -212,7 +212,6 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         }
 
         for (Message message : messages) {
-            //getMessage(mService, mCredential.getSelectedAccountName(), message.getId());
             try {
                 mailDao = getMimeMessageDao(mService, mCredential.getSelectedAccountName(), message.getId());
             } catch (MessagingException e) {
@@ -559,37 +558,6 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         }
     }
 
-    @Override
-    protected void onCancelled() {
-        if (BackgroundDataService.getInstance() != null) {
-            ctx.stopService(new Intent(ctx, BackgroundDataService.class));
-        }
-
-        if (GoogleAccountService.getInstance() != null) {
-            ctx.stopService(new Intent(ctx, GoogleAccountService.class));
-        }
-
-        if (mLastError != null) {
-            if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                showGooglePlayServicesAvailabilityErrorDialog(
-                        ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                .getConnectionStatusCode());
-            } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                if (MainActivity.getInstance() != null) {
-                    MainActivity.getInstance().startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            REQUEST_AUTHORIZATION);
-                }
-
-            } else {
-
-                Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
-            }
-        } else {
-            Log.e(TAG, "Request cancelled.");
-        }
-    }
-
     /* Set Mail POJO */
     private void setMailPOJO(List<Mail> mailList, List<Mail> results, int j) {
         Mail mail = new Mail();
@@ -641,7 +609,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             throws IOException, MessagingException {
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID??" + message.getId());
-
+        Log.e("email_count", "" + i++);
         Base64 base64Url = new Base64(true);
         byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
 
@@ -686,6 +654,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID_UP??" + message.getId());
+        Log.e("email_count", "" + i++);
         Base64 base64Url = new Base64(true);
         byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
 

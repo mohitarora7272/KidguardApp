@@ -5,7 +5,6 @@ public class Apps {
     String appname;
     String packageName;
 
-
     public String getPackageName() {
         return packageName;
     }

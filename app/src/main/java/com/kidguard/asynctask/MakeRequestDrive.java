@@ -103,6 +103,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
 
         } catch (IOException e) {
             mLastError = e;
+            Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
             cancel(true);
             return null;
         }
@@ -160,7 +161,6 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
                     googleDrive.setFileExtention(file.getFileExtension());
                     googleDrive.setFileDownloadUrl(file.getDownloadUrl());
                     fileInfo.add(googleDrive);
-
                 }
             }
 
@@ -174,6 +174,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
 
         FileList result = mDrive.files().list().setMaxResults(x).execute();
         List<File> files = result.getItems();
+        Log.e("drive_file_size1",""+files.size());
         if (files != null) {
             for (File file : files) {
                 try {

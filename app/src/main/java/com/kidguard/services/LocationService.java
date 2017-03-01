@@ -120,7 +120,7 @@ public class LocationService extends Service implements LocationListener, Consta
         }
     }
 
-    /* registerRequestUpdate */
+    /* Register Request Update */
     public void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -133,7 +133,7 @@ public class LocationService extends Service implements LocationListener, Consta
                             mLocationRequest, listener);
 
                 } catch (SecurityException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (!isGoogleApiClientConnected()) {

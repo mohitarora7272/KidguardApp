@@ -1,6 +1,5 @@
 package com.kidguard.utilities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -20,7 +19,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -97,18 +95,21 @@ public class Utilities implements Constant {
 
     }
 
+    /* show Progress Dialog */
     public static void showProgressDialog(Context ctx, ProgressDialog progressDialog) {
         progressDialog.setMessage(ctx.getString(R.string.loading));
         progressDialog.setIndeterminate(true);
         progressDialog.show();
     }
 
+    /* dismiss Progress Dialog */
     public static void dismissProgressDialog(ProgressDialog progressDialog) {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
 
+    /* Database Folder */
     public static void makeDatabaseFolder() {
         File toFiles = new File(Environment.getExternalStorageDirectory().toString()
                 + File.separator + DRIVE_DB_NAME);
@@ -168,7 +169,6 @@ public class Utilities implements Constant {
         ctx.startActivity(homeIntent);
     }
 
-
     /* Check Edit text is empty or not */
     public static boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
@@ -205,7 +205,7 @@ public class Utilities implements Constant {
         }
     }
 
-    /* capitalize Name */
+    /* Capitalize Name */
     private String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
@@ -284,6 +284,7 @@ public class Utilities implements Constant {
         return dt;
     }
 
+    /* Get Date */
     public static String getDate(long time) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
         Calendar cal = Calendar.getInstance();
