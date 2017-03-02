@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.gmail.GmailScopes;
+import com.kidguard.BuildConfig;
 
 @SuppressWarnings("all")
 public interface Constant {
@@ -73,9 +74,7 @@ public interface Constant {
     String TAGGING             = "tag";
     String MULTIPART_FORM_DATA = "multipart/form-data";
 
-    //String ROOT = "http://192.168.0.175:3000/";
-    //String ROOT = "http://192.168.0.10:3000/";
-    String ROOT               = "http://192.168.1.132/";
+    String ROOT               = BuildConfig.API_URL;
     String APPENDED_URL       = "api/";
     String APPENDED_URL_LOGIN = "api/auth/";
     String LOGIN              = "login/";
