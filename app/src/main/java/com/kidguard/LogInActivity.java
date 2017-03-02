@@ -147,9 +147,9 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 passNextActivityIntent();
             }
         } else {
-            if (Preference.getAgainTry(this) == null) {
-                //Preference.setAgainTry(this, KEY_AGAIN);
+            if (Preference.getAgainTry(this) != null) {
                 getLogin();
+                Preference.setAgainTry(this, null);
             }
 
             try {
