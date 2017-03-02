@@ -12,12 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.kidguard.exceptions.APIError;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 import com.kidguard.pojo.LogInPOJO;
 import com.kidguard.preference.Preference;
 import com.kidguard.utilities.ApiClient;
+import com.kidguard.utilities.ErrorUtils;
 import com.kidguard.utilities.Utilities;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +38,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     private Button btn_SignIn;
     private ProgressDialog progressDialog;
     private String macAddress;
+    private ApiClient apiClient;
 
     public static LogInActivity getInstance() {
         return mActivity;
@@ -105,7 +110,8 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
     //64:00:6a:3e:28:fc
     private void getLogin() {
-        RestClient restClientAPI = new ApiClient(TAG_LOGIN).getClient();
+        apiClient = new ApiClient(TAG_LOGIN);
+        RestClient restClientAPI = apiClient.getClient();
         Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(),
                 Preference.getRegIdInPref(this), macAddress);
 
@@ -133,20 +139,31 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         LogInPOJO logIn = response.body();
         int code = response.code();
         Log.e("code", "code???>>" + code);
-        if (code == RESPONSE_CODE) {
+        if (response.isSuccessful()) {
             Utilities.dismissProgressDialog(progressDialog);
             if (logIn.getStatus() == RESPONSE_CODE) {
                 Preference.setAccessToken(LogInActivity.this, logIn.getUser().getAccessToken());
                 Preference.setID(LogInActivity.this, String.valueOf(logIn.getUser().getId()));
                 passNextActivityIntent();
             }
-
-        } else if (code == RESPONSE_CODE_500 || code == RESPONSE_CODE_422 && Preference.getAgainTry(this) == null) {
-            //Again trying if getting internal server error.
-            Preference.setAgainTry(this, KEY_AGAIN);
-            getLogin();
         } else {
-            Utilities.dismissProgressDialog(progressDialog);
+            if (Preference.getAgainTry(this) == null) {
+                //Preference.setAgainTry(this, KEY_AGAIN);
+                getLogin();
+            }
+
+            try {
+                APIError error = ErrorUtils.parseError(response, apiClient.getRetrofit());
+
+                Log.e("login failed", "error???>>" + error.message());
+                Utilities.showSnackBar(this, coordinatorLayout, error.message());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("parse response error", "error???>>" + e.getMessage());
+                Utilities.showSnackBar(this, coordinatorLayout, e.getMessage());
+            } finally {
+                Utilities.dismissProgressDialog(progressDialog);
+            }
         }
     }
 

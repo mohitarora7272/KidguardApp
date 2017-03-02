@@ -1,9 +1,6 @@
 package com.kidguard.utilities;
 
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kidguard.interfaces.Constant;
@@ -116,5 +113,9 @@ public class ApiClient implements Constant {
 
         }
         return retrofit.create(RestClient.class);
+    }
+
+    public Retrofit getRetrofit() {
+        return retrofit;
     }
 }

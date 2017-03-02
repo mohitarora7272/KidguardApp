@@ -75,7 +75,7 @@ public interface Constant {
 
     //String ROOT = "http://192.168.0.175:3000/";
     //String ROOT = "http://192.168.0.10:3000/";
-    String ROOT               = "http://192.168.0.149:8000/";
+    String ROOT               = "http://192.168.1.132/";
     String APPENDED_URL       = "api/";
     String APPENDED_URL_LOGIN = "api/auth/";
     String LOGIN              = "login/";
