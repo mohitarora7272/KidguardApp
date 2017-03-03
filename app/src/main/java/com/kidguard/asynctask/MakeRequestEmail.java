@@ -122,9 +122,30 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         } catch (Exception e) {
             mLastError = e;
-            Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
             cancel(true);
             return null;
+        }
+    }
+
+    @Override
+    protected void onCancelled() {
+        if (mLastError != null) {
+            if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                showGooglePlayServicesAvailabilityErrorDialog(
+                        ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                .getConnectionStatusCode());
+            } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                if (MainActivity.getInstance() != null) {
+                    MainActivity.getInstance().startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            REQUEST_AUTHORIZATION);
+                }
+
+            } else {
+                Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
+            }
+        } else {
+            Log.e(TAG, "Request cancelled.");
         }
     }
 
@@ -199,10 +220,10 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         }
 
-        Log.e("1", "1_DOWN");
+
         Integer y = _500;
         x = y.longValue();
-
+        Log.e("1", "1_DOWN>>>"+x);
         response = service.users().messages().list(userId).setMaxResults(x).execute();
         Log.e("response", "Down" + response);
 

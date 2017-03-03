@@ -84,8 +84,6 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                             }
                                             pCur.close();
                                         }
-
-
                                     }
                                 }
 
@@ -109,9 +107,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                         }
                                     }
                                 }
-
-
-                            }
+                           }
                         }
 
                         // Contacts Fetch With Tag

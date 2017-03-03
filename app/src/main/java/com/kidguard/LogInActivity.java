@@ -67,6 +67,8 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         } else {
             macAddress = Utilities.getMacAddressOnMarshmallow();
         }
+
+        //String version = BuildConfig.VERSION_NAME;
     }
 
     @Override

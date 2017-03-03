@@ -1,13 +1,17 @@
 package com.kidguard.asynctask;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -18,6 +22,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableUtils;
+import com.kidguard.MainActivity;
 import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.GoogleDrive;
@@ -103,10 +108,42 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
 
         } catch (IOException e) {
             mLastError = e;
-            Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
             cancel(true);
             return null;
         }
+    }
+
+    @Override
+    protected void onCancelled() {
+        if (mLastError != null) {
+            if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                showGooglePlayServicesAvailabilityErrorDialog(
+                        ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                .getConnectionStatusCode());
+            } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                if (MainActivity.getInstance() != null) {
+                    MainActivity.getInstance().startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            REQUEST_AUTHORIZATION);
+                }
+
+            } else {
+                Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
+            }
+        } else {
+            Log.e(TAG, "Request cancelled.");
+        }
+    }
+
+    /* GooglePlayServicesAvailabilityErrorDialog */
+    void showGooglePlayServicesAvailabilityErrorDialog(
+            final int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                MainActivity.getInstance(),
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
     }
 
     private ArrayList<GoogleDrive> getDataFromDriveApi() throws IOException {

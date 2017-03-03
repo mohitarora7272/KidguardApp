@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
 //        Intent myIntent = new Intent(this, BackgroundDataService.class);
-//        myIntent.putExtra(KEY_TAG, TAG_GOOGLE_DRIVE);
-//        myIntent.putExtra(KEY_COUNT, "");
+//        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
+//        myIntent.putExtra(KEY_COUNT, "5");
 //        myIntent.putExtra(KEY_DATE_FROM, "");
 //        myIntent.putExtra(KEY_DATE_TO, "");
 //        myIntent.putExtra(KEY_SIZE, "");

@@ -1,6 +1,7 @@
 package com.kidguard;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
@@ -31,6 +32,7 @@ public class MyAppApplication extends Application implements Constant {
         GCMRegistrar.checkManifest(this);
         GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
         Fabric.with(this, new Crashlytics());
+
     }
 
     private void initializeInstance() {

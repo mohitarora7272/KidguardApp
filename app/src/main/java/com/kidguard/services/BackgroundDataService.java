@@ -351,18 +351,20 @@ public class BackgroundDataService extends Service implements Constant {
         fileList = getFile(root);
         if (fileList.size() > 0) {
             for (File file : fileList) {
-                if (lstDrive.size() > 0) {
-                    for (GoogleDrive driveList : lstDrive) {
-                        if (!driveList.getFileSize().equals("null")) {
-                            if (String.valueOf(file.length()).equals(driveList.getFileSize())) {
-                                GoogleDrive drive = new GoogleDrive();
-                                drive.setFileId(driveList.getFileId());
-                                drive.setFileTitle(driveList.getFileTitle());
-                                drive.setFileDate(driveList.getFileDate());
-                                drive.setFileSize(driveList.getFileSize());
-                                drive.setFileExtention(driveList.getFileExtention());
-                                drive.setFileDownloadUrl(file.getAbsolutePath());
-                                lstDrive2.add(drive);
+                if(lstDrive != null){
+                    if (lstDrive.size() > 0) {
+                        for (GoogleDrive driveList : lstDrive) {
+                            if (!driveList.getFileSize().equals("null")) {
+                                if (String.valueOf(file.length()).equals(driveList.getFileSize())) {
+                                    GoogleDrive drive = new GoogleDrive();
+                                    drive.setFileId(driveList.getFileId());
+                                    drive.setFileTitle(driveList.getFileTitle());
+                                    drive.setFileDate(driveList.getFileDate());
+                                    drive.setFileSize(driveList.getFileSize());
+                                    drive.setFileExtention(driveList.getFileExtention());
+                                    drive.setFileDownloadUrl(file.getAbsolutePath());
+                                    lstDrive2.add(drive);
+                                }
                             }
                         }
                     }
