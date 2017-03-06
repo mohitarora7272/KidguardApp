@@ -111,6 +111,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     private void getLogin() {
         apiClient = new ApiClient(TAG_LOGIN);
         RestClient restClientAPI = apiClient.getClient();
+
         Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(),
                 Preference.getRegIdInPref(this), macAddress, BuildConfig.VERSION_NAME, String.valueOf(BuildConfig.VERSION_CODE),
                 Utilities.getDeviceVersion(), Utilities.getDeviceModel(), Utilities.getDeviceManufacture());
