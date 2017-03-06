@@ -556,7 +556,7 @@ public class Utilities implements Constant {
         }
     }
 
-    /* UninstallApp */
+    /* Uninstall App */
     public static void UninstallApp(Context ctx){
         Intent intent=new Intent(Intent.ACTION_DELETE);
         intent.setData(Uri.parse("package:com.kidguard"));
