@@ -27,7 +27,6 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
     private Dao<Contacts, Integer> contactsDao;
     private ArrayList<Contacts> lstContacts;
     private Context context;
-    String email;
 
     /* Sms Constructor */
     public ContactsAsyncTask(Context context) {

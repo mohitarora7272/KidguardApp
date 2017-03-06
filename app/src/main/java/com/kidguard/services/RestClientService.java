@@ -1,9 +1,12 @@
 package com.kidguard.services;
 
 
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.kidguard.MyAppApplication;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 import com.kidguard.model.Files;
@@ -12,6 +15,7 @@ import com.kidguard.model.Images;
 import com.kidguard.model.Video;
 import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.utilities.ApiClient;
+import com.kidguard.utilities.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -332,66 +336,46 @@ public class RestClientService implements Constant {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
                         Log.e(TAG, "IMAGE_TRUE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstImages.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_IMAGES).getClient();
-                            sendImage(j, lstImages, restClientAPI, token);
-                        }
+                        setNextImage(i, lstImages, token);
 
                     } else {
 
                         Log.e(TAG, "IMAGE_FALSE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstImages.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_IMAGES).getClient();
-                            sendImage(j, lstImages, restClientAPI, token);
-                        }
+                        setNextImage(i, lstImages, token);
                     }
 
                 } else {
                     Log.e(TAG, "IMAGE_FAILED_CODE_ERROR_404_505??" + code);
-                    if (i == 0) {
-
-                        j++;
-
-                    } else {
-
-                        j++;
-
-                    }
-
-                    if (lstImages.size() != j) {
-                        RestClient restClientAPI = new ApiClient(TAG_IMAGES).getClient();
-                        sendImage(j, lstImages, restClientAPI, token);
-                    }
+                    setNextImage(i, lstImages, token);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With IMAGEPOJO>>>" + t.getMessage());
+                setNextImage(i, lstImages, token);
             }
         };
 
         call.enqueue(callback);
+    }
+
+    /* Set Next Image */
+    private void setNextImage(int i, ArrayList<Images> lstImages, final String token) {
+        if (i == 0) {
+
+            j++;
+
+        } else {
+
+            j++;
+
+        }
+
+        if (lstImages.size() != j) {
+            RestClient restClientAPI = new ApiClient(TAG_IMAGES).getClient();
+            sendImage(j, lstImages, restClientAPI, token);
+        }
     }
 
     /* Send Video */
@@ -427,66 +411,46 @@ public class RestClientService implements Constant {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
                         Log.e(TAG, "Video_TRUE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstVideos.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_VIDEOS).getClient();
-                            sendVideo(j, lstVideos, restClientAPI, token);
-                        }
+                        setNextVideo(i, lstVideos, token);
 
                     } else {
 
                         Log.e(TAG, "Video_FALSE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstVideos.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_VIDEOS).getClient();
-                            sendVideo(j, lstVideos, restClientAPI, token);
-                        }
+                        setNextVideo(i, lstVideos, token);
                     }
 
                 } else {
                     Log.e(TAG, "Video_FAILED_CODE_ERROR_404_505??" + code);
-                    if (i == 0) {
-
-                        j++;
-
-                    } else {
-
-                        j++;
-
-                    }
-
-                    if (lstVideos.size() != j) {
-                        RestClient restClientAPI = new ApiClient(TAG_VIDEOS).getClient();
-                        sendVideo(j, lstVideos, restClientAPI, token);
-                    }
+                    setNextVideo(i, lstVideos, token);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With VideoPOJO>>>" + t.getMessage());
+                setNextVideo(i, lstVideos, token);
             }
         };
 
         call.enqueue(callback);
+    }
+
+    /* Set Next Video */
+    private void setNextVideo(int i, ArrayList<Video> lstVideos, String token) {
+        if (i == 0) {
+
+            j++;
+
+        } else {
+
+            j++;
+
+        }
+
+        if (lstVideos.size() != j) {
+            RestClient restClientAPI = new ApiClient(TAG_VIDEOS).getClient();
+            sendVideo(j, lstVideos, restClientAPI, token);
+        }
     }
 
     /* Send Files To Server */
@@ -521,69 +485,49 @@ public class RestClientService implements Constant {
 
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
                         Log.e(TAG, "Files_TRUE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstFiles.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_FILES).getClient();
-                            sendFiles(j, lstFiles, restClientAPI, token);
-                        }
+                        setNextFiles(i, lstFiles, token);
 
                     } else {
 
                         Log.e(TAG, "Files_FALSE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstFiles.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_FILES).getClient();
-                            sendFiles(j, lstFiles, restClientAPI, token);
-                        }
+                        setNextFiles(i, lstFiles, token);
                     }
 
                 } else {
                     Log.e(TAG, "Files_FAILED_CODE_ERROR_404_505??" + code);
-                    if (i == 0) {
-
-                        j++;
-
-                    } else {
-
-                        j++;
-
-                    }
-
-                    if (lstFiles.size() != j) {
-                        RestClient restClientAPI = new ApiClient(TAG_FILES).getClient();
-                        sendFiles(j, lstFiles, restClientAPI, token);
-                    }
+                    setNextFiles(i, lstFiles, token);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With FilePOJO>>>" + t.getMessage());
+                setNextFiles(i, lstFiles, token);
             }
         };
 
         call.enqueue(callback);
     }
 
-    /* Send GoogleDrive To Server */
+    /* Set Next Files */
+    private void setNextFiles(int i, ArrayList<Files> lstFiles, String token) {
+        if (i == 0) {
+
+            j++;
+
+        } else {
+
+            j++;
+
+        }
+
+        if (lstFiles.size() != j) {
+            RestClient restClientAPI = new ApiClient(TAG_FILES).getClient();
+            sendFiles(j, lstFiles, restClientAPI, token);
+        }
+    }
+
+    /* Send Google Drive To Server */
     private void sendGoogleDrive(final int i, final ArrayList<GoogleDrive> lstDrive, final RestClient restClientAPI, final String token) {
 
         // create part for file (photo, video, ...)
@@ -613,66 +557,48 @@ public class RestClientService implements Constant {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
                         Log.e(TAG, "Drive_TRUE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstDrive.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_GOOGLE_DRIVE).getClient();
-                            sendGoogleDrive(j, lstDrive, restClientAPI, token);
-                        }
+                        setNextDrive(i, lstDrive, token);
 
                     } else {
 
                         Log.e(TAG, "Drive_FALSE??" + apiResponsePOJO.getStatus());
-                        if (i == 0) {
-
-                            j++;
-
-                        } else {
-
-                            j++;
-
-                        }
-
-                        if (lstDrive.size() != j) {
-                            RestClient restClientAPI = new ApiClient(TAG_GOOGLE_DRIVE).getClient();
-                            sendGoogleDrive(j, lstDrive, restClientAPI, token);
-                        }
+                        setNextDrive(i, lstDrive, token);
                     }
 
                 } else {
                     Log.e(TAG, "Drive_FAILED_CODE_ERROR_404_505??" + code);
-                    if (i == 0) {
-
-                        j++;
-
-                    } else {
-
-                        j++;
-
-                    }
-
-                    if (lstDrive.size() != j) {
-                        RestClient restClientAPI = new ApiClient(TAG_GOOGLE_DRIVE).getClient();
-                        sendGoogleDrive(j, lstDrive, restClientAPI, token);
-                    }
+                    setNextDrive(i, lstDrive, token);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                 Log.e(TAG, "<<<Failure With DrivePOJO>>>" + t.getMessage());
+                setNextDrive(i, lstDrive, token);
             }
         };
 
         call.enqueue(callback);
+    }
+
+    /* Set Next Drive */
+    private void setNextDrive(int i, ArrayList<GoogleDrive> lstDrive, String token) {
+        if (i == 0) {
+
+            j++;
+
+        } else {
+
+            j++;
+
+        }
+
+        if (lstDrive.size() != j) {
+            RestClient restClientAPI = new ApiClient(TAG_GOOGLE_DRIVE).getClient();
+            sendGoogleDrive(j, lstDrive, restClientAPI, token);
+        } else {
+            deleteDriveFolder();
+        }
     }
 
     @NonNull
@@ -687,5 +613,15 @@ public class RestClientService implements Constant {
 
         // MultipartBody.Part is used to send also the actual file name
         return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+    }
+
+    /* Delete Drive Folder */
+    private void deleteDriveFolder() {
+       /* Check and Delete And Refresh Gallery Google Drive Foolder in SdCard */
+        File path = new java.io.File(Environment.getExternalStorageDirectory().toString()
+                + java.io.File.separator + DRIVE_NAME);
+        Utilities.deleteDirectory(path);
+        Utilities.refreshAndroidGallery(MyAppApplication.getInstance(), Uri.fromFile(path));
+        Log.e("delete", "drive folder");
     }
 }

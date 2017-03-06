@@ -56,6 +56,7 @@ public class Preference implements Constant {
         String token = sharedpreferences.getString(KEY_ACCESSTOKEN, null);
         return token;
     }
+
     public static void setAgainTry(Context ctx, String again) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -105,5 +106,17 @@ public class Preference implements Constant {
     public static int getDriveId(Context ctx) {
         SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         return sharedpreferences.getInt(KEY_DRIVE_ID, 1);
+    }
+
+    public static void setActiveSubscriber(Context ctx, String is_Active) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(KEY_ACTIVE_SUBSCRIBER, is_Active).commit();
+    }
+
+    public static String getActiveSubscriber(Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        String is_register = sharedpreferences.getString(KEY_ACTIVE_SUBSCRIBER, null);
+        return is_register;
     }
 }

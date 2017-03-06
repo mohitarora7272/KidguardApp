@@ -8,13 +8,13 @@ repositories {
 //noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.kidguard"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_URL", "\"https://app.kidguard.com/\""
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.rvalerio:fgchecker:1.0.1'
     compile 'pub.devrel:easypermissions:0.1.5'
     compile 'com.j256.ormlite:ormlite-core:4.48'

@@ -67,8 +67,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         } else {
             macAddress = Utilities.getMacAddressOnMarshmallow();
         }
-
-        //String version = BuildConfig.VERSION_NAME;
     }
 
     @Override
@@ -89,14 +87,13 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                     }
 
                     if (Utilities.isEmpty(edt_DeviceCode)) {
-                        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_devicecode));
+                        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_deviceCode));
                         return;
                     }
 
                     Utilities.showProgressDialog(this, progressDialog);
 
                     getLogin();
-
 
                 } else {
                     Utilities.showSnackBar(this, coordinatorLayout,
@@ -110,12 +107,13 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         }
     }
 
-    //64:00:6a:3e:28:fc
+    // 64:00:6a:3e:28:fc
     private void getLogin() {
         apiClient = new ApiClient(TAG_LOGIN);
         RestClient restClientAPI = apiClient.getClient();
         Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(),
-                Preference.getRegIdInPref(this), macAddress);
+                Preference.getRegIdInPref(this), macAddress, BuildConfig.VERSION_NAME, String.valueOf(BuildConfig.VERSION_CODE),
+                Utilities.getDeviceVersion(), Utilities.getDeviceModel(), Utilities.getDeviceManufacture());
 
         Callback<LogInPOJO> callback = new Callback<LogInPOJO>() {
 
@@ -133,7 +131,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         };
 
         call.enqueue(callback);
-
     }
 
     /* Pass LogIn Response */
@@ -144,8 +141,9 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         if (response.isSuccessful()) {
             Utilities.dismissProgressDialog(progressDialog);
             if (logIn.getStatus() == RESPONSE_CODE) {
-                Preference.setAccessToken(LogInActivity.this, logIn.getUser().getAccessToken());
-                Preference.setID(LogInActivity.this, String.valueOf(logIn.getUser().getId()));
+                Preference.setAccessToken(this, logIn.getUser().getAccessToken());
+                Preference.setID(this, String.valueOf(logIn.getUser().getId()));
+                Preference.setActiveSubscriber(this, "true");
                 passNextActivityIntent();
             }
         } else {
@@ -176,7 +174,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
     /* Pass Next Activity Intent */
     public void passNextActivityIntent() {
-        if (Preference.getID(LogInActivity.this) != null && !Preference.getID(LogInActivity.this).isEmpty()) {
+        if (Preference.getID(this) != null && !Preference.getID(this).isEmpty()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

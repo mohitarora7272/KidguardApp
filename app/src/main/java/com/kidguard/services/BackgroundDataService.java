@@ -123,7 +123,7 @@ public class BackgroundDataService extends Service implements Constant {
             dateTo = intent.getStringExtra(KEY_DATE_TO);
             subject = intent.getStringExtra(KEY_SUBJECT);
             size = intent.getStringExtra(KEY_SIZE);
-        /* Get Data With Tag */
+            /* Get Data With Tag */
             if (tag != null && !tag.equals("")) {
 
                 GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
@@ -204,8 +204,13 @@ public class BackgroundDataService extends Service implements Constant {
         if (tag.equals(TAG_CAMERA)) {
             try {
                 if (mAdminActive) {
-                    mDPM.setCameraDisabled(mDeviceAdminSample, true);
+                    if (mDPM.getCameraDisabled(mDeviceAdminSample)) {
+                        mDPM.setCameraDisabled(mDeviceAdminSample, false);
+                    } else {
+                        mDPM.setCameraDisabled(mDeviceAdminSample, true);
+                    }
                 }
+                stopSelf();
             } catch (SecurityException e) {
                 e.printStackTrace();
             } catch (NoSuchMethodError e) {
@@ -220,10 +225,6 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_GOOGLE_DRIVE)) {
-
-            File path = new java.io.File(Environment.getExternalStorageDirectory().toString()
-                    + java.io.File.separator + DRIVE_NAME);
-            Utilities.deleteDirectory(path);
 
             passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
             return;
@@ -351,7 +352,7 @@ public class BackgroundDataService extends Service implements Constant {
         fileList = getFile(root);
         if (fileList.size() > 0) {
             for (File file : fileList) {
-                if(lstDrive != null){
+                if (lstDrive != null) {
                     if (lstDrive.size() > 0) {
                         for (GoogleDrive driveList : lstDrive) {
                             if (!driveList.getFileSize().equals("null")) {
@@ -571,6 +572,7 @@ public class BackgroundDataService extends Service implements Constant {
         public void onDisabled(Context context, Intent intent) {
             Preference.setIsAdminActive(context, false);
             showToast(context, context.getString(R.string.admin_receiver_status_disabled));
+            Utilities.UninstallApp(context);
         }
 
         @Override

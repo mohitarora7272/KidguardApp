@@ -28,7 +28,7 @@ public class LogInPOJO {
     @JsonProperty("user")
     private User user;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("status")
     public Integer getStatus() {
@@ -119,7 +119,7 @@ public class LogInPOJO {
         @JsonProperty("updated_at")
         private String updated_at;
         @JsonIgnore
-        private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+        private final Map<String, Object> additionalProperties = new HashMap<>();
 
         @JsonProperty("id")
         public Integer getId() {

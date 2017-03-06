@@ -2,6 +2,7 @@ package com.kidguard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -78,15 +79,20 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             stopService(new Intent(this, GoogleAccountService.class));
         }
 
+        /* Check and Delete And Refresh Gallery Google Drive Folder in Sd Card */
+        File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString()
+                + java.io.File.separator + DRIVE_NAME);
+        Utilities.deleteDirectory(toFiles);
+        Utilities.refreshAndroidGallery(this, Uri.fromFile(toFiles));
+
         if (tag.equals(TAG_LOCATION)) {
 
             if (LocationService.getInstance() != null) {
                 stopService(new Intent(this, LocationService.class));
             }
 
-            Intent myIntent = new Intent(this, LocationService.class)
-                    .putExtra(KEY_TAG, tag);
-            startService(myIntent);
+            startService(new Intent(this, LocationService.class)
+                    .putExtra(KEY_TAG, tag));
 
         } else if (tag.equals(TAG_BLOCK_APP)) {
 
@@ -94,9 +100,8 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                 stopService(new Intent(this, BlockAppService.class));
             }
 
-            Intent myIntent = new Intent(this, BlockAppService.class)
-                    .putExtra(KEY_TAG, tag).putExtra(KEY_PACKAGE_NAME, count);
-            startService(myIntent);
+            startService(new Intent(this, BlockAppService.class)
+                    .putExtra(KEY_TAG, tag).putExtra(KEY_PACKAGE_NAME, count));
 
         } else if (tag.equals(TAG_WIFI)) {
 
@@ -114,32 +119,26 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                 listTag.add(TAG_BROWSER_HISTORY);
 
                 for (int i = 0; i < listTag.size(); i++) {
-                    Intent myIntent = new Intent(this, BackgroundDataService.class)
+
+                    startService(new Intent(this, BackgroundDataService.class)
                             .putExtra(KEY_TAG, listTag.get(i))
                             .putExtra(KEY_COUNT, count)
                             .putExtra(KEY_DATE_FROM, dateFrom)
                             .putExtra(KEY_DATE_TO, dateTo)
                             .putExtra(KEY_SIZE, size)
-                            .putExtra(KEY_SUBJECT, subject);
-                    startService(myIntent);
+                            .putExtra(KEY_SUBJECT, subject));
                 }
             }
         } else {
-            Log.e("hit", "hit??");
+            Log.e("hit", "hit Notification??");
 
-            /* Check and Delete Google Drive Foolder in SdCard */
-            File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString()
-                    + java.io.File.separator + DRIVE_NAME);
-            Utilities.deleteDirectory(toFiles);
-
-            Intent myIntent = new Intent(this, BackgroundDataService.class)
+            startService(new Intent(this, BackgroundDataService.class)
                     .putExtra(KEY_TAG, tag)
                     .putExtra(KEY_COUNT, count)
                     .putExtra(KEY_DATE_FROM, dateFrom)
                     .putExtra(KEY_DATE_TO, dateTo)
                     .putExtra(KEY_SIZE, size)
-                    .putExtra(KEY_SUBJECT, subject);
-            startService(myIntent);
+                    .putExtra(KEY_SUBJECT, subject));
         }
     }
 
@@ -147,5 +146,4 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
     protected void onError(Context arg0, String errorId) {
         Log.e(TAG, "onError: errorId=" + errorId);
     }
-
 }

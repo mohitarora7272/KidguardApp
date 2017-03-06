@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -194,19 +195,25 @@ public class Utilities implements Constant {
         snackbar.show();
     }
 
-    /* Get Device Name */
-    public String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return capitalize(model);
-        } else {
-            return capitalize(manufacturer) + " " + model;
-        }
+    /* Get Device Manufacture */
+    public static String getDeviceManufacture() {
+        return capitalize(Build.MANUFACTURER);
+    }
+
+    /* Get Device Model */
+    public static String getDeviceModel() {
+        return capitalize(Build.MODEL);
+    }
+
+    /* Get Device OS Version */
+    public static String getDeviceVersion() {
+        String release = Build.VERSION.RELEASE;
+        int sdkVersion = Build.VERSION.SDK_INT;
+        return release;
     }
 
     /* Capitalize Name */
-    private String capitalize(String s) {
+    private static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }
@@ -218,7 +225,7 @@ public class Utilities implements Constant {
         }
     }
 
-    /* SplitDate */
+    /* Splite Date */
     public static String splitDate(String s) {
         String[] separated = s.split("T");
         String splitDate = null;
@@ -530,6 +537,30 @@ public class Utilities implements Constant {
         return false;
     }
 
+    /* Refresh Android Gallery */
+    public static void refreshAndroidGallery(Context context, Uri fileUri) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Intent mediaScanIntent = new Intent(
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(fileUri);
+                context.sendBroadcast(mediaScanIntent);
+
+            } else {
+                context.sendBroadcast(new Intent(
+                        Intent.ACTION_MEDIA_MOUNTED,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* UninstallApp */
+    public static void UninstallApp(Context ctx){
+        Intent intent=new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:com.kidguard"));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
+    }
 }
-
-

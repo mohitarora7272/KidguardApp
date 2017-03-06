@@ -19,8 +19,6 @@ public interface Constant {
     int DATABASE_VERSION                 = 1;
     int REQUEST_CODE_ENABLE_ADMIN        = 1;
     int RESPONSE_CODE                    = 200;
-    int RESPONSE_CODE_500                = 500;
-    int RESPONSE_CODE_422                = 422;
     int TIME_INTERVAL_FOR_CHECK          = 1000;
     int TIME_DELAY_FOR_CHECK             = 1000;
     int REQUEST_ACCOUNT_PICKER           = 1000;
@@ -45,16 +43,17 @@ public interface Constant {
     String TAG_GOOGLE_DRIVE    = "Drive";
     String TAG_BROWSER_HISTORY = "BrowserHistory";
 
-    String MY_PREFERENCE       = "KidGuardPreference";
-    String KEY_IS_ACTIVE       = "active";
-    String KEY_ACCOUNT_NAME    = "accountName";
-    String KEY_REGISTRATION_ID = "regId";
-    String KEY_ACCESSTOKEN     = "access_token";
-    String KEY_ID              = "id";
-    String KEY_LATITUDE        = "latitude";
-    String KEY_LONGITUDE       = "longitude";
-    String KEY_DRIVE_ID        = "drive_Id";
-    String KEY_AGAIN           = "again_try";
+    String MY_PREFERENCE               = "KidGuardPreference";
+    String KEY_IS_ACTIVE               = "active";
+    String KEY_ACCOUNT_NAME            = "accountName";
+    String KEY_REGISTRATION_ID         = "regId";
+    String KEY_ACCESSTOKEN             = "access_token";
+    String KEY_ID                      = "id";
+    String KEY_LATITUDE                = "latitude";
+    String KEY_LONGITUDE               = "longitude";
+    String KEY_DRIVE_ID                = "drive_Id";
+    String KEY_AGAIN                   = "again_try";
+    String KEY_ACTIVE_SUBSCRIBER       = "active_subscriber";
 
     String DATABASE_NAME       = "Kidguard.db";
     String FALSE               = "false";
@@ -66,7 +65,7 @@ public interface Constant {
     String KEY_TAG             = "tag";
     String KEY_SIZE            = "size";
     String KEY_PACKAGE_NAME    = "packageName";
-    String DRIVE_NAME          = "KidguardDrive";
+    String DRIVE_NAME          = ".KidguardDrive";
     String DRIVE_DB_NAME       = "KidguardDatabase";
     String SENDER_ID           = "969615957584";
     String CUSTOM              = "custom";

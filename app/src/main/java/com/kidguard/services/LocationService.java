@@ -71,7 +71,7 @@ public class LocationService extends Service implements LocationListener, Consta
             tag = intent.getStringExtra(KEY_TAG);
                  /* Get Data With Tag */
             if (tag != null && !tag.equals("")) {
-                Log.e("tag", "tag??" + tag);
+                Log.e("tag", "LocationService??" + tag);
             }
 
         }
@@ -157,26 +157,28 @@ public class LocationService extends Service implements LocationListener, Consta
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
 
-        if (Preference.getLatitude(this) == null && Preference.getLongitude(this) == null) {
+        if(Preference.getActiveSubscriber(this) != null && !Preference.getActiveSubscriber(this).equals(FALSE)){
+            if (Preference.getLatitude(this) == null && Preference.getLongitude(this) == null) {
 
-            Log.e("if", "if");
-            Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
-            sendLocationToServer(location.getLatitude(), location.getLongitude(), 0.0);
+                Log.e("if", "if");
+                Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
+                sendLocationToServer(location.getLatitude(), location.getLongitude(), 0.0);
 
-        } else {
+            } else {
 
-            Log.e("distance", "is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                    , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
-                    location.getLongitude()));
-            double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                    , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
-                    location.getLongitude());
+                Log.e("distance", "is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
+                        ,Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                        location.getLongitude()));
+                double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
+                        ,Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                        location.getLongitude());
 
-            Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
-            if (distance >= 50) {
+                Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
+                if (distance >= 50) {
 
-                Log.e("hit", "Api");
-                sendLocationToServer(location.getLatitude(), location.getLongitude(), distance);
+                    Log.e("hit", "Api");
+                    sendLocationToServer(location.getLatitude(), location.getLongitude(), distance);
+                }
             }
         }
     }

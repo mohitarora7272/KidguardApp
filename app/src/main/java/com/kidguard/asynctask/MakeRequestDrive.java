@@ -138,12 +138,14 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
     /* GooglePlayServicesAvailabilityErrorDialog */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.getInstance(),
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
+        if (MainActivity.getInstance() != null) {
+            GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+            Dialog dialog = apiAvailability.getErrorDialog(
+                    MainActivity.getInstance(),
+                    connectionStatusCode,
+                    REQUEST_GOOGLE_PLAY_SERVICES);
+            dialog.show();
+        }
     }
 
     private ArrayList<GoogleDrive> getDataFromDriveApi() throws IOException {
@@ -211,7 +213,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
 
         FileList result = mDrive.files().list().setMaxResults(x).execute();
         List<File> files = result.getItems();
-        Log.e("drive_file_size1",""+files.size());
+        Log.e("drive_file_size1", "" + files.size());
         if (files != null) {
             for (File file : files) {
                 try {
@@ -377,7 +379,6 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
                         } else {
                             dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
                                     .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
                         }
                     }
 
@@ -423,7 +424,6 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
                         dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
                                 .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
 
-
                     } else if (resultDateFrom.size() == 0) {
                         if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
                                 && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
@@ -449,7 +449,6 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
                     if (dateFrom.equals(dateTo)) {
 
                         results = queryBuilder.where().eq(GoogleDrive.FILE_DATE, dateFrom).query();
-
 
                     } else {
 
@@ -506,7 +505,6 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
 
                         results = queryBuilder.where().eq(GoogleDrive.FILE_DATE, dateFrom)
                                 .and().eq(GoogleDrive.FILE_EXTENSION, extention).query();
-
 
                     } else {
 
@@ -599,7 +597,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
         }
     }
 
-    /* Get Resulted DateFrom To */
+    /* Get Resulted Date From To */
     private List<String> getResultedDateFromTo(QueryBuilder<GoogleDrive,
             Integer> queryBuilder, String dateFrom, String dateTo) {
         List<String> sortList = new ArrayList<>();

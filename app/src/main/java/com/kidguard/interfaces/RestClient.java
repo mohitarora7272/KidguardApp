@@ -23,9 +23,14 @@ public interface RestClient {
     @FormUrlEncoded
     @POST("./")
     Call<LogInPOJO> logInRequest(@Field("email") String email,
-                                 @Field("device_code") String device_code,
-                                 @Field("device_registration_id") String device_registration_id,
-                                 @Field("device_mac_address") String mac_address);
+                                 @Field("device_code") String deviceCode,
+                                 @Field("device_registration_id") String deviceRegistrationId,
+                                 @Field("device_mac_address") String macAddress,
+                                 @Field("app_version_name") String appVersionName,
+                                 @Field("app_version_code") String appVersionCode,
+                                 @Field("os_version") String osVersion,
+                                 @Field("device_model") String deviceModel,
+                                 @Field("manufacturer") String manufacturer);
 
     @FormUrlEncoded
     @POST("./")
@@ -58,25 +63,25 @@ public interface RestClient {
     @Multipart
     @POST("./")
     Call<ApiResponsePOJO> sendImageToServer(@Query("access_token") String token,
-                                      @PartMap() HashMap<String, RequestBody> map,
-                                      @Part MultipartBody.Part file);
+                                            @PartMap() HashMap<String, RequestBody> map,
+                                            @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
     Call<ApiResponsePOJO> sendVideoToServer(@Query("access_token") String token,
-                                      @PartMap() HashMap<String, RequestBody> map,
-                                      @Part MultipartBody.Part file);
+                                            @PartMap() HashMap<String, RequestBody> map,
+                                            @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
     Call<ApiResponsePOJO> sendFilesToServer(@Query("access_token") String token,
-                                     @PartMap() HashMap<String, RequestBody> map,
-                                     @Part MultipartBody.Part file);
+                                            @PartMap() HashMap<String, RequestBody> map,
+                                            @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
     Call<ApiResponsePOJO> sendDriveToServer(@Query("access_token") String token,
-                                      @PartMap() HashMap<String, RequestBody> map,
-                                      @Part MultipartBody.Part file);
+                                            @PartMap() HashMap<String, RequestBody> map,
+                                            @Part MultipartBody.Part file);
 
 }
