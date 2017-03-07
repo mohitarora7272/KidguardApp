@@ -17,7 +17,7 @@ android {
         versionName "1.0.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "API_URL", "\"https://app.kidguard.com/\""
+        buildConfigField "String", "API_URL", "\"https://android.app.kidguard.com/\""
     }
     buildTypes {
         release {
@@ -57,10 +57,10 @@ android {
             buildConfigField "String", "API_URL", "\"http://192.168.0.149:8000/\""
         }
         RC {
-            buildConfigField "String", "API_URL", "\"https://staging.kidguard.com/\""
+            buildConfigField "String", "API_URL", "\"https://staging.android.app.kidguard.com/\""
         }
         PUB {
-            buildConfigField "String", "API_URL", "https://app.kidguard.com/"
+            buildConfigField "String", "API_URL", "\"https://android.app.kidguard.com/\""
         }
     }
 }
