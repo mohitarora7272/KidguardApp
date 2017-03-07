@@ -59,7 +59,7 @@ public class GoogleAccountService extends Service implements Constant {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null){
+        if (intent != null) {
             tag = intent.getStringExtra(KEY_TAG);
             count = intent.getStringExtra(KEY_COUNT);
             dateFrom = intent.getStringExtra(KEY_DATE_FROM);
@@ -99,12 +99,12 @@ public class GoogleAccountService extends Service implements Constant {
             chooseAccount();
 
         } else {
-            if(tag != null && !tag.equals("")){
+            if (tag != null && !tag.equals("")) {
 
                 if (tag.equals(TAG_EMAIL)) {
                     new MakeRequestEmail(context, mCredential, count, dateFrom, dateTo, subject).execute();
 
-                } else  {
+                } else {
                     new MakeRequestDrive(context, mCredential, count, dateFrom, dateTo, subject, size).execute();
 
                 }
@@ -123,19 +123,23 @@ public class GoogleAccountService extends Service implements Constant {
                 getResultsFromApi();
 
             } else {
+                if (MainActivity.getInstance() != null) {
+                    // Start a dialog from which the user can choose an account
+                    MainActivity.getInstance().startActivityForResult(
+                            mCredential.newChooseAccountIntent(),
+                            REQUEST_ACCOUNT_PICKER);
+                }
 
-                // Start a dialog from which the user can choose an account
-                MainActivity.getInstance().startActivityForResult(
-                        mCredential.newChooseAccountIntent(),
-                        REQUEST_ACCOUNT_PICKER);
             }
         } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
-                    MainActivity.getInstance(),
-                    "This app needs to access your Google account (via Contacts).",
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    Manifest.permission.GET_ACCOUNTS);
+            if (MainActivity.getInstance() != null) {
+                // Request the GET_ACCOUNTS permission via a user dialog
+                EasyPermissions.requestPermissions(
+                        MainActivity.getInstance(),
+                        "This app needs to access your Google account (via Contacts).",
+                        REQUEST_PERMISSION_GET_ACCOUNTS,
+                        Manifest.permission.GET_ACCOUNTS);
+            }
         }
     }
 

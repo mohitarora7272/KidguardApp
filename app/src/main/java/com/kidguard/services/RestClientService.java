@@ -59,7 +59,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "CONTACT_FAILED_CODE_ERROR_404,505??" + code);
+                        Log.e(TAG, "CONTACT_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -91,7 +91,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "SMS_FAILED_CODE_ERROR_404,505??" + code);
+                        Log.e(TAG, "SMS_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -123,7 +123,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "CALL_FAILED_CODE_ERROR_404,505??" + code);
+                        Log.e(TAG, "CALL_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -155,7 +155,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "APP_FAILED_CODE_ERROR_404,505??" + code);
+                        Log.e(TAG, "APP_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -186,7 +186,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "EMAIL_FAILED_CODE_ERROR_404??" + code);
+                        Log.e(TAG, "EMAIL_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -217,7 +217,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "BrowserHistory_FAILED_CODE_ERROR_404??" + code);
+                        Log.e(TAG, "BrowserHistory_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -248,7 +248,7 @@ public class RestClientService implements Constant {
 
                         }
                     } else {
-                        Log.e(TAG, "Location_FAILED_CODE_ERROR_404??" + code);
+                        Log.e(TAG, "Location_FAILED_CODE_ERROR??" + code);
                     }
                 }
 
@@ -345,7 +345,7 @@ public class RestClientService implements Constant {
                     }
 
                 } else {
-                    Log.e(TAG, "IMAGE_FAILED_CODE_ERROR_404_505??" + code);
+                    Log.e(TAG, "IMAGE_FAILED_CODE_ERROR??" + code);
                     setNextImage(i, lstImages, token);
                 }
             }
@@ -420,7 +420,7 @@ public class RestClientService implements Constant {
                     }
 
                 } else {
-                    Log.e(TAG, "Video_FAILED_CODE_ERROR_404_505??" + code);
+                    Log.e(TAG, "Video_FAILED_CODE_ERROR??" + code);
                     setNextVideo(i, lstVideos, token);
                 }
             }
@@ -494,7 +494,7 @@ public class RestClientService implements Constant {
                     }
 
                 } else {
-                    Log.e(TAG, "Files_FAILED_CODE_ERROR_404_505??" + code);
+                    Log.e(TAG, "Files_FAILED_CODE_ERROR??" + code);
                     setNextFiles(i, lstFiles, token);
                 }
             }
@@ -566,7 +566,7 @@ public class RestClientService implements Constant {
                     }
 
                 } else {
-                    Log.e(TAG, "Drive_FAILED_CODE_ERROR_404_505??" + code);
+                    Log.e(TAG, "Drive_FAILED_CODE_ERROR??" + code);
                     setNextDrive(i, lstDrive, token);
                 }
             }

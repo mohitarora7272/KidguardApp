@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.kidguard.asynctask.ForegroundCheckAsyncTask;
 import com.kidguard.interfaces.Constant;
@@ -20,9 +19,7 @@ public class BlockAppService extends Service implements Constant {
     private boolean isRunning;
     private Context context;
     private Thread backgroundThread;
-    @SuppressWarnings("FieldCanBeLocal")
     private String tag;
-    @SuppressWarnings("FieldCanBeLocal")
     private String packageName;
     private static BlockAppService mContext;
 
@@ -51,8 +48,8 @@ public class BlockAppService extends Service implements Constant {
             packageName = intent.getStringExtra(KEY_PACKAGE_NAME);
               /* Get Data With Tag */
             if (tag != null && !tag.equals("")) {
-                Log.e("BlockAppService", "tag??" + tag);
-                Log.e("BlockAppService", "packageName??" + packageName);
+                //Log.e("BlockAppService", "tag??" + tag);
+                //Log.e("BlockAppService", "packageName??" + packageName);
             }
         }
         if (!this.isRunning) {

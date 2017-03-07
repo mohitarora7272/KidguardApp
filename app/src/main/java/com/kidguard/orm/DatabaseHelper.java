@@ -81,7 +81,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             // In case of change in database of next version of application, please increase the value of DATABASE_VERSION variable, then this method will be invoked
             //automatically. Developer needs to handle the upgrade logic here, i.e. create a new table or a new column to an existing table, take the backups of the
             // existing database etc.
-
             TableUtils.dropTable(connectionSource, Sms.class, true);
             TableUtils.dropTable(connectionSource, Contacts.class, true);
             TableUtils.dropTable(connectionSource, Calls.class, true);

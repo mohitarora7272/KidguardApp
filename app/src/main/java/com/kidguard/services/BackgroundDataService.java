@@ -48,7 +48,7 @@ import java.util.List;
 @SuppressWarnings("all")
 public class BackgroundDataService extends Service implements Constant {
 
-    private static final String TAG = "BackgroundDataService";
+    private static final String TAG = BackgroundDataService.class.getSimpleName();
     private static BackgroundDataService services;
     private Context context;
     private ArrayList<Sms> lstSms;
@@ -102,8 +102,8 @@ public class BackgroundDataService extends Service implements Constant {
         mDeviceAdminSample = services.mDeviceAdminSample;
         mAdminActive = services.isActiveAdmin();
 
-        Log.e("active", "active??" + mAdminActive);
-        Log.e("active", "Pref??" + Preference.getIsAdminActive(context));
+        Log.e(TAG, "active??" + mAdminActive);
+        Log.e(TAG, "Pref??" + Preference.getIsAdminActive(context));
 
         /* Check For Device Admin Permission Are Enable Or Not */
         if (!Preference.getIsAdminActive(context)) {

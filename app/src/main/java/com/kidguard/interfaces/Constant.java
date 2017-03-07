@@ -43,18 +43,6 @@ public interface Constant {
     String TAG_GOOGLE_DRIVE    = "Drive";
     String TAG_BROWSER_HISTORY = "BrowserHistory";
 
-    String MY_PREFERENCE               = "KidGuardPreference";
-    String KEY_IS_ACTIVE               = "active";
-    String KEY_ACCOUNT_NAME            = "accountName";
-    String KEY_REGISTRATION_ID         = "regId";
-    String KEY_ACCESSTOKEN             = "access_token";
-    String KEY_ID                      = "id";
-    String KEY_LATITUDE                = "latitude";
-    String KEY_LONGITUDE               = "longitude";
-    String KEY_DRIVE_ID                = "drive_Id";
-    String KEY_AGAIN                   = "again_try";
-    String KEY_ACTIVE_SUBSCRIBER       = "active_subscriber";
-
     String DATABASE_NAME       = "Kidguard.db";
     String FALSE               = "false";
     String ZERO                = "0";
@@ -73,21 +61,33 @@ public interface Constant {
     String TAGGING             = "tag";
     String MULTIPART_FORM_DATA = "multipart/form-data";
 
-    String ROOT               = BuildConfig.API_URL;
-    String APPENDED_URL       = "api/";
-    String APPENDED_URL_LOGIN = "api/auth/";
-    String LOGIN              = "login/";
-    String SMS                = "save_sms/";
-    String CALL               = "save_call/";
-    String APP                = "save_app/";
-    String EMAIL              = "save_email/";
-    String IMAGE              = "save_image/";
-    String VIDEO              = "save_video/";
-    String FILE               = "save_file/";
-    String DRIVE              = "save_drive/";
-    String LOCATION           = "save_location/";
-    String CONTACT            = "save_mobile_contact/";
-    String BROWSER_HISTORY    = "save_browser_history/";
+    String ROOT                = BuildConfig.API_URL;
+    String APPENDED_URL        = "api/";
+    String APPENDED_URL_LOGIN  = "api/auth/";
+    String LOGIN               = "login/";
+    String SMS                 = "save_sms/";
+    String CALL                = "save_call/";
+    String APP                 = "save_app/";
+    String EMAIL               = "save_email/";
+    String IMAGE               = "save_image/";
+    String VIDEO               = "save_video/";
+    String FILE                = "save_file/";
+    String DRIVE               = "save_drive/";
+    String LOCATION            = "save_location/";
+    String CONTACT             = "save_mobile_contact/";
+    String BROWSER_HISTORY     = "save_browser_history/";
+
+    String MY_PREFERENCE               = "KidGuardPreference";
+    String KEY_IS_ACTIVE               = "active";
+    String KEY_ACCOUNT_NAME            = "accountName";
+    String KEY_REGISTRATION_ID         = "regId";
+    String KEY_ACCESSTOKEN             = "access_token";
+    String KEY_ID                      = "id";
+    String KEY_LATITUDE                = "latitude";
+    String KEY_LONGITUDE               = "longitude";
+    String KEY_DRIVE_ID                = "drive_Id";
+    String KEY_AGAIN                   = "again_try";
+    String KEY_ACTIVE_SUBSCRIBER       = "active_subscriber";
 
     String[] SCOPES_GMAIL        = {GmailScopes.GMAIL_READONLY, DriveScopes.DRIVE};
     String[] SCOPES_GOOGLE_DRIVE = {DriveScopes.DRIVE};

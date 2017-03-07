@@ -197,9 +197,9 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
                 Integer y = _500;
                 x = y.longValue();
             }
-            Log.e("x", "x??" + x);
+            Log.e(TAG, "x Up>>" + x);
             response = service.users().messages().list(userId).setMaxResults(x).execute();
-            Log.e("response", "Up" + response);
+            Log.e(TAG, "Response Up>>" + response);
 
             while (response.getMessages() != null) {
                 messages.addAll(response.getMessages());
@@ -223,9 +223,9 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         Integer y = _500;
         x = y.longValue();
-        Log.e("1", "1_DOWN>>>"+x);
+        Log.e(TAG, "x Down>>>" + x);
         response = service.users().messages().list(userId).setMaxResults(x).execute();
-        Log.e("response", "Down" + response);
+        Log.e(TAG, "Response Down>>" + response);
 
         while (response.getMessages() != null) {
             messages.addAll(response.getMessages());
@@ -244,7 +244,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         try {
             int countNew = Integer.parseInt(ZERO);
             long numRows = mailDao.countOf();
-            Log.e("numRows", "numRows??" + numRows);
+            Log.e(TAG, "numRows>>>" + numRows);
 
             final QueryBuilder<Mail, Integer> queryBuilder = mailDao.queryBuilder();
 
@@ -630,7 +630,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             throws IOException, MessagingException {
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID??" + message.getId());
-        Log.e("email_count", "" + i++);
+        Log.e(TAG, "email_count" + i++);
         Base64 base64Url = new Base64(true);
         byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
 
@@ -675,7 +675,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID_UP??" + message.getId());
-        Log.e("email_count", "" + i++);
+        Log.e(TAG, "email_count" + i++);
         Base64 base64Url = new Base64(true);
         byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
 
@@ -722,12 +722,14 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     /* GooglePlayServicesAvailabilityErrorDialog */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
-                MainActivity.getInstance(),
-                connectionStatusCode,
-                REQUEST_GOOGLE_PLAY_SERVICES);
-        dialog.show();
+        if (MainActivity.getInstance() != null) {
+            GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+            Dialog dialog = apiAvailability.getErrorDialog(
+                    MainActivity.getInstance(),
+                    connectionStatusCode,
+                    REQUEST_GOOGLE_PLAY_SERVICES);
+            dialog.show();
+        }
     }
 
     /* Is GooglePlayServices Available */
@@ -780,7 +782,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             try {
                 from = MimeUtility.decodeText(from);
             } catch (java.io.UnsupportedEncodingException ex) {
-                Log.d("rgai", "", ex);
+                Log.d("UnsupportedEncodingException", "exp>>", ex);
             }
         } else {
             return null;
@@ -801,8 +803,6 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             fromEmail = from;
         }
 
-        //Log.e("fromName", "fromName??" + fromName);
-        //Log.e("fromEmail", "fromEmail??" + fromEmail);
         return fromEmail;
     }
 

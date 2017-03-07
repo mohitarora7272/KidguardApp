@@ -4,6 +4,9 @@ package com.kidguard.model;
 public class Apps {
     String appname;
     String packageName;
+    String appDateTime;
+    String appDateTimeStamp;
+
 
     public String getPackageName() {
         return packageName;
@@ -19,6 +22,22 @@ public class Apps {
 
     public void setAppname(String appname) {
         this.appname = appname;
+    }
+
+    public String getAppDateTime() {
+        return appDateTime;
+    }
+
+    public void setAppDateTime(String appDateTime) {
+        this.appDateTime = appDateTime;
+    }
+
+    public String getAppDateTimeStamp() {
+        return appDateTimeStamp;
+    }
+
+    public void setAppDateTimeStamp(String appDateTimeStamp) {
+        this.appDateTimeStamp = appDateTimeStamp;
     }
 
 

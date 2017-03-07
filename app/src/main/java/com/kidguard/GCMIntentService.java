@@ -48,7 +48,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
     @Override
     protected void onMessage(Context context, Intent data) {
         // Message from PHP server
-        Log.e("data", "data??" + data);
+        Log.e(TAG, "data??" + data);
         String message = data.getStringExtra(CUSTOM);
 
         try {
@@ -56,7 +56,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             JSONObject json = new JSONObject(message);
             JSONObject jsonData = json.getJSONObject(DATA);
             String tag = jsonData.getString(TAGGING);
-            Log.e(TAG, "Tag_In_Notification??" + tag);
+            Log.e(TAG, "Tag_In_Notification>>> " +tag);
 
             passServiceIntent(tag, "", "", "", "", "");
 
@@ -130,7 +130,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
                 }
             }
         } else {
-            Log.e("hit", "hit Notification??");
+            Log.e(TAG, "hit Notification");
 
             startService(new Intent(this, BackgroundDataService.class)
                     .putExtra(KEY_TAG, tag)

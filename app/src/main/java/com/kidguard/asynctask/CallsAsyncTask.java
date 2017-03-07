@@ -125,22 +125,32 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
     private void setCallsPOJO(Cursor managedCursor, int id, int name, int number, int type, int date, int duration) {
         try {
             String dir = null;
+            String fromMe = null;
+            String answered = null;
             int dircode = Integer.parseInt(managedCursor.getString(type));
             switch (dircode) {
                 case CallLog.Calls.OUTGOING_TYPE:
                     dir = "OUTGOING";
+                    fromMe = "true";
+                    answered = "false";
                     break;
 
                 case CallLog.Calls.INCOMING_TYPE:
                     dir = "INCOMING";
+                    fromMe = "false";
+                    answered = "true";
                     break;
 
                 case CallLog.Calls.MISSED_TYPE:
                     dir = "MISSED";
+                    fromMe = "false";
+                    answered = "false";
                     break;
 
                 default:
                     dir = "MISSED";
+                    fromMe = "false";
+                    answered = "false";
             }
 
             Calls calls = new Calls();
@@ -154,6 +164,8 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
             calls.setCallDuration(managedCursor.getString(duration));
             calls.setDir(dir);
             calls.setCallerStatus(FALSE);
+            calls.setCallerFromMe(fromMe);
+            calls.setCallerAnswered(answered);
             callsDao.create(calls);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,6 +185,8 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
         calls.setCallDuration(results.get(i).getCallDuration());
         calls.setDir(results.get(i).getDir());
         calls.setCallerStatus(results.get(i).getCallerStatus());
+        calls.setCallerFromMe(results.get(i).getCallerFromMe());
+        calls.setCallerAnswered(results.get(i).getCallerAnswered());
         lstCallsSorted.add(calls);
     }
 

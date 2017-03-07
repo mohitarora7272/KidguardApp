@@ -73,6 +73,14 @@ columnName=contactPhoneNo
 fieldName=contactStatus
 columnName=contactStatus
 # --field-end--
+# --field-start--
+fieldName=contactDate
+columnName=contactDate
+# --field-end--
+# --field-start--
+fieldName=contactDateTimeStamp
+columnName=contactDateTimeStamp
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -122,6 +130,14 @@ columnName=callDateTime
 # --field-start--
 fieldName=callerStatus
 columnName=callerStatus
+# --field-end--
+# --field-start--
+fieldName=callerFromMe
+columnName=callerFromMe
+# --field-end--
+# --field-start--
+fieldName=callerAnswered
+columnName=callerAnswered
 # --field-end--
 # --table-fields-end--
 # --table-end--

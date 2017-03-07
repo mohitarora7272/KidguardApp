@@ -19,6 +19,8 @@ public class Calls implements Serializable {
     private static final String CALLER_DIRECTORY = "dir";
     public static final String CALLER_DATE_TIME = "callDateTime";
     public static final String CALLER_STATUS = "callerStatus";
+    public static final String CALLER_FROM_ME = "callerFromMe";
+    public static final String CALLER_ANSWERED = "callerAnswered";
 
     @DatabaseField(generatedId = true, columnName = ID)
     public int id;
@@ -40,6 +42,10 @@ public class Calls implements Serializable {
     private String callDateTime;
     @DatabaseField(columnName = CALLER_STATUS)
     public String callerStatus;
+    @DatabaseField(columnName = CALLER_FROM_ME)
+    public String callerFromMe;
+    @DatabaseField(columnName = CALLER_ANSWERED)
+    public String callerAnswered;
 
     /* Default Constructor */
     public Calls() {
@@ -117,6 +123,22 @@ public class Calls implements Serializable {
 
     public void setCallDateTimeStamp(String callDateTimeStamp) {
         this.callDateTimeStamp = callDateTimeStamp;
+    }
+
+    public String getCallerFromMe() {
+        return callerFromMe;
+    }
+
+    public void setCallerFromMe(String callerFromMe) {
+        this.callerFromMe = callerFromMe;
+    }
+
+    public String getCallerAnswered() {
+        return callerAnswered;
+    }
+
+    public void setCallerAnswered(String callerAnswered) {
+        this.callerAnswered = callerAnswered;
     }
 
 }

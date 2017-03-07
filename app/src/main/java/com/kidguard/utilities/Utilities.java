@@ -1,9 +1,7 @@
 package com.kidguard.utilities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -21,9 +19,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,13 +35,9 @@ import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.NetworkInterface;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,7 +52,6 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 @SuppressWarnings("all")
 public class Utilities implements Constant {
-
 
     /* Start Services */
     public static void startServices(Context ctx, Class nextClassName) {
@@ -123,9 +114,7 @@ public class Utilities implements Constant {
     public static class PackageUtil {
 
         public static boolean checkPermission(Context context, String accessFineLocation) {
-
             int res = context.checkCallingOrSelfPermission(accessFineLocation);
-            Log.e("PackageUtil", "" + res);
             return (res == PackageManager.PERMISSION_GRANTED);
         }
 
@@ -137,28 +126,6 @@ public class Utilities implements Constant {
                 ((ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null &&
                 connectivityManager.getActiveNetworkInfo().isConnected();
-    }
-
-    /* Show Alert Dialog */
-    public static void showAlertDialog(Context ctx, int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        builder.setMessage(message);
-        builder.setPositiveButton(R.string.encryption_not_supported_ok, null);
-        builder.show();
-    }
-
-    /* Disable Registered Receiver in Manifest */
-    public static void disableReceiver(Context ctx, Class classname) {
-        ComponentName component = new ComponentName(ctx, classname);
-        int status = ctx.getPackageManager().getComponentEnabledSetting(component);
-        //Log.e("status", "status??" + status);
-        if (status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            Log.e("receiver is enabled", "");
-            //ctx.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED , PackageManager.DONT_KILL_APP);
-        } else if (status == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            Log.e("receiver is disabled", "");
-            //ctx.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_ENABLED , PackageManager.DONT_KILL_APP);
-        }
     }
 
     /* Application Forcefully Stop With This Home Intent */
@@ -237,66 +204,32 @@ public class Utilities implements Constant {
 
     /* Change Date Format */
     public static String changeDateFormat(String date) {
-        DateFormat format = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
         Date dates = new Date(Long.parseLong(date));
-        @SuppressWarnings("FieldCanBeLocal")
         String reportDate = format.format(dates);
         return reportDate;
     }
 
     /* Change Date Format */
-    public static String changeDateFormat2(String date) {
+    private static String changeDateFormat2(String date) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
         Date dates = new Date(Long.parseLong(date));
-        @SuppressWarnings("FieldCanBeLocal")
         String reportDate = format.format(dates);
         return reportDate;
     }
 
     /* Change Date Format */
     public static String changeDateToString(Date date) {
-        DateFormat format = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
-        @SuppressWarnings("FieldCanBeLocal")
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
         String reportDate = format.format(date);
         return reportDate;
     }
 
-    /* Get Incremented Date*/
-    public static String getIncrementDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(sdf.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        c.add(Calendar.DATE, 1);  // number of days to add
-        @SuppressWarnings("FieldCanBeLocal")
-        String dt = sdf.format(c.getTime());  // dt is now the new date
-        return dt;
-    }
-
-    /* Get Decrement Date*/
-    public static String getDecrementDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(sdf.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        c.add(Calendar.DATE, -1);
-        @SuppressWarnings("FieldCanBeLocal")
-        String dt = sdf.format(c.getTime());
-        return dt;
-    }
-
     /* Get Date */
     public static String getDate(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        @SuppressWarnings("FieldCanBeLocal")
         String date = sdf.format(cal.getTime());
         return date;
     }
@@ -325,6 +258,8 @@ public class Utilities implements Constant {
                     Apps apps = new Apps();
                     apps.setAppname(packInfo.applicationInfo.loadLabel(ctx.getPackageManager()).toString());
                     apps.setPackageName(packInfo.packageName);
+                    apps.setAppDateTime(Utilities.getDate(packInfo.firstInstallTime));
+                    apps.setAppDateTimeStamp(String.valueOf(packInfo.firstInstallTime));
                     lstApps.add(apps);
                 }
             }
@@ -332,39 +267,6 @@ public class Utilities implements Constant {
 
         if (lstApps.size() > 0) {
             BackgroundDataService.getInstance().sendAppsDataToServer(lstApps);
-        }
-    }
-
-    /* Write Files into SdCard */
-    public static void generateFile(String data) {
-        String filepath = Environment.getExternalStorageDirectory().getPath() + "/Email.txt";
-        FileOutputStream fos = null;
-        try {
-            try {
-                fos = new FileOutputStream(filepath);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            byte[] buffer = data.getBytes();
-            try {
-                if (fos != null) {
-                    fos.write(buffer, 0, buffer.length);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (fos != null) {
-                fos.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null)
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
         }
     }
 
@@ -470,16 +372,6 @@ public class Utilities implements Constant {
         return (path.delete());
     }
 
-    /* Get Mime Type */
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        return type;
-    }
-
     /* Start Google Account Service */
     public static void startGoogleAccountService(Context context) {
         Intent myIntent = new Intent(context, GoogleAccountService.class);
@@ -494,10 +386,9 @@ public class Utilities implements Constant {
 
     /* Get Mac Address Below Marshmallow */
     public static String getMacAddressBelowMarshmallow(Context context) {
-        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
-        String address = info.getMacAddress();
-        return address;
+        return info.getMacAddress();
     }
 
     /* Get Mac Address On Marshmallow */
@@ -557,9 +448,9 @@ public class Utilities implements Constant {
     }
 
     /* Uninstall App */
-    public static void UninstallApp(Context ctx){
-        Intent intent=new Intent(Intent.ACTION_DELETE);
-        intent.setData(Uri.parse("package:com.kidguard"));
+    public static void UninstallApp(Context ctx) {
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + ctx.getPackageName()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(intent);
     }

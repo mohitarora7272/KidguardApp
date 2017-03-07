@@ -77,10 +77,8 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
                     for (int i = 0; i < imagesDao.queryForAll().size(); i++) {
                         while (cursor.moveToNext()) {
                             absolutePathOfImage = cursor.getString(column_index_data);
-                            Log.e("absolutePathOfImage","absolutePathOfImage??"+absolutePathOfImage);
                             List<Images> results = queryBuilder.where()
                                     .eq(Images.IMAGE_PATH, absolutePathOfImage).query();
-                            Log.e("results","results??"+results.size());
                             if (results.size() == 0) {
                                 setImagePOJO(absolutePathOfImage);
                             }

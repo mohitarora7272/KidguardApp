@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
 //        Intent myIntent = new Intent(this, BackgroundDataService.class);
-//        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
-//        myIntent.putExtra(KEY_COUNT, "5");
+//        myIntent.putExtra(KEY_TAG, TAG_LIST_APPS);
+//        myIntent.putExtra(KEY_COUNT, "");
 //        myIntent.putExtra(KEY_DATE_FROM, "");
 //        myIntent.putExtra(KEY_DATE_TO, "");
 //        myIntent.putExtra(KEY_SIZE, "");
@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private void startBlockAppReceiver() {
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion <= 21) {
-            //Log.e("run", "<21");
             Intent alarm = new Intent(this, BlockAppReceiver.class);
 
             boolean alarmRunning = (PendingIntent.getBroadcast(this, 0,
@@ -256,16 +255,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.e("requestCode", "onPermissionsGranted" + requestCode + perms);
+        Log.e(TAG, "requestCode onPermissionsGranted" + requestCode);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.e("requestCode", "onPermissionsDenied" + requestCode + perms);
-
+        Log.e(TAG, "requestCode onPermissionsDenied" + requestCode);
     }
 
     private void checkAndRequestPermissions() {

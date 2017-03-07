@@ -13,7 +13,7 @@ import retrofit2.Retrofit;
 /**
  * Created by kos on 2017/3/2.
  */
-
+@SuppressWarnings("all")
 public class ErrorUtils {
     public static APIError parseError(Response<?> response, Retrofit retrofit) throws IOException {
         Converter<ResponseBody, APIError> converter = retrofit.responseBodyConverter(APIError.class, new Annotation[0]);

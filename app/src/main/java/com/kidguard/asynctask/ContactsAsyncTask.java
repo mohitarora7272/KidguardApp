@@ -15,6 +15,7 @@ import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Contacts;
 import com.kidguard.orm.DatabaseHelper;
 import com.kidguard.services.BackgroundDataService;
+import com.kidguard.utilities.Utilities;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                 while (cur.moveToNext()) {
                                     String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                                     String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    String last_updated_timestamp = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP));
                                     if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                         // get the phone number
                                         Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -78,7 +80,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                                                 pCur.getString(
                                                                         pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
                                                 if (results.size() == 0) {
-                                                    setContactsPOJO(pCur, name, id);
+                                                    setContactsPOJO(pCur, name, id, last_updated_timestamp);
                                                 }
                                             }
                                             pCur.close();
@@ -89,10 +91,11 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                             }
 
                         } else {
-                           if (cur.getCount() > 0) {
+                            if (cur.getCount() > 0) {
                                 while (cur.moveToNext()) {
                                     String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                                     String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                    String last_updated_timestamp = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP));
                                     if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                         // get the phone number
                                         Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -100,13 +103,13 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                                 new String[]{id}, null);
                                         if (pCur != null) {
                                             while (pCur.moveToNext()) {
-                                                setContactsPOJO(pCur, name, id);
+                                                setContactsPOJO(pCur, name, id, last_updated_timestamp);
                                             }
                                             pCur.close();
                                         }
                                     }
                                 }
-                           }
+                            }
                         }
 
                         // Contacts Fetch With Tag
@@ -142,15 +145,17 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
 
 
     /* setContactsPOJO With Cursor */
-    private void setContactsPOJO(Cursor pCur, String name, String id) {
+    private void setContactsPOJO(Cursor pCur, String name, String id, String dateTimeStamp) {
         try {
-            final Contacts contact = new Contacts();
+            Contacts contact = new Contacts();
             String phone = pCur.getString(
                     pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contact.setContactsName(name);
             contact.setContactsPhoneNo(phone);
             contact.setContact_id(id);
             contact.setContactStatus(FALSE);
+            contact.setContactDate(Utilities.getDate(Long.parseLong(dateTimeStamp)));
+            contact.setContactDateTimeStamp(dateTimeStamp);
             contactsDao.create(contact);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,6 +169,8 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         contacts.setContactsPhoneNo(results.get(i).getContactsPhoneNo());
         contacts.setContactStatus(results.get(i).getContactStatus());
         contacts.setContact_id(results.get(i).getContact_id());
+        contacts.setContactDate(results.get(i).getContactDate());
+        contacts.setContactDateTimeStamp(results.get(i).getContactDateTimeStamp());
         lstContactsSorted.add(contacts);
     }
 

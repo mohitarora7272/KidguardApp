@@ -15,6 +15,8 @@ public class Contacts implements Serializable {
     public static final String CONTACT_NAME = "contactName";
     public static final String CONTACT_PHONE_NO = "contactPhoneNo";
     public static final String CONTACT_STATUS = "contactStatus";
+    public static final String CONTACT_DATE = "contactDate";
+    public static final String CONTACT_DATE_TIMESTAMP = "contactDateTimeStamp";
 
 
     @DatabaseField(generatedId = true, columnName = ID)
@@ -27,6 +29,10 @@ public class Contacts implements Serializable {
     private String contactStatus;
     @DatabaseField(columnName = CONTACT_ID)
     private String contact_id;
+    @DatabaseField(columnName = CONTACT_DATE)
+    private String contactDate;
+    @DatabaseField(columnName = CONTACT_DATE_TIMESTAMP)
+    private String contactDateTimeStamp;
 
     /* Default Constructor */
     public Contacts() {
@@ -62,6 +68,22 @@ public class Contacts implements Serializable {
 
     public void setContact_id(String contact_id) {
         this.contact_id = contact_id;
+    }
+
+    public String getContactDate() {
+        return contactDate;
+    }
+
+    public void setContactDate(String contactDate) {
+        this.contactDate = contactDate;
+    }
+
+    public String getContactDateTimeStamp() {
+        return contactDateTimeStamp;
+    }
+
+    public void setContactDateTimeStamp(String contactDateTimeStamp) {
+        this.contactDateTimeStamp = contactDateTimeStamp;
     }
 
 }

@@ -30,6 +30,7 @@ import java.util.List;
 @SuppressWarnings("all")
 public class LocationService extends Service implements LocationListener, Constant {
 
+    private static final String TAG = LocationService.class.getSimpleName();
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -38,8 +39,6 @@ public class LocationService extends Service implements LocationListener, Consta
     private static LocationService mContext;
     private Intent intent;
     private ArrayList<Locations> lstlocation;
-
-    @SuppressWarnings("FieldCanBeLocal")
     private String tag;
 
 
@@ -71,7 +70,7 @@ public class LocationService extends Service implements LocationListener, Consta
             tag = intent.getStringExtra(KEY_TAG);
                  /* Get Data With Tag */
             if (tag != null && !tag.equals("")) {
-                Log.e("tag", "LocationService??" + tag);
+                Log.e(TAG, "tag location services>>" + tag);
             }
 
         }
@@ -151,32 +150,31 @@ public class LocationService extends Service implements LocationListener, Consta
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e("Latitude", "Latitude??" + location.getLatitude());
-        Log.e("Longitude", "Longitude??" + location.getLongitude());
+        Log.e(TAG, "Latitude>>" + location.getLatitude());
+        Log.e(TAG, "Longitude>>" + location.getLongitude());
 
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
 
-        if(Preference.getActiveSubscriber(this) != null && !Preference.getActiveSubscriber(this).equals(FALSE)){
+        if (Preference.getActiveSubscriber(this) != null && !Preference.getActiveSubscriber(this).equals(FALSE)) {
             if (Preference.getLatitude(this) == null && Preference.getLongitude(this) == null) {
 
-                Log.e("if", "if");
                 Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
                 sendLocationToServer(location.getLatitude(), location.getLongitude(), 0.0);
 
             } else {
 
-                Log.e("distance", "is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                        ,Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                Log.e(TAG, "distance is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
+                        , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
                         location.getLongitude()));
                 double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                        ,Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
+                        , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
                         location.getLongitude());
 
                 Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
                 if (distance >= 50) {
 
-                    Log.e("hit", "Api");
+                    Log.e(TAG, "Hit Location Api");
                     sendLocationToServer(location.getLatitude(), location.getLongitude(), distance);
                 }
             }
