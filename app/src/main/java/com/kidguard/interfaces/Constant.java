@@ -42,6 +42,7 @@ public interface Constant {
     String TAG_BLOCK_APP       = "BlockApp";
     String TAG_GOOGLE_DRIVE    = "Drive";
     String TAG_BROWSER_HISTORY = "BrowserHistory";
+    String TAG_SYNC_PROCESS    = "SyncProcess";
 
     String DATABASE_NAME       = "Kidguard.db";
     String FALSE               = "false";
@@ -52,6 +53,7 @@ public interface Constant {
     String KEY_SUBJECT         = "subject";
     String KEY_TAG             = "tag";
     String KEY_SIZE            = "size";
+    String KEY_MAC_ADDRESS     = "mac_address";
     String KEY_PACKAGE_NAME    = "packageName";
     String DRIVE_NAME          = ".KidguardDrive";
     String DRIVE_DB_NAME       = "KidguardDatabase";
@@ -76,6 +78,7 @@ public interface Constant {
     String LOCATION            = "save_location/";
     String CONTACT             = "save_mobile_contact/";
     String BROWSER_HISTORY     = "save_browser_history/";
+    String DEVICE_SYNC         = "sync_process/";
 
     String MY_PREFERENCE               = "KidGuardPreference";
     String KEY_IS_ACTIVE               = "active";

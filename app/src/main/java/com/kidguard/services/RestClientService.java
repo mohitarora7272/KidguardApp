@@ -259,6 +259,37 @@ public class RestClientService implements Constant {
             };
             call.enqueue(callback);
         }
+
+        if (tag.equals(TAG_SYNC_PROCESS)) {
+            Call<ApiResponsePOJO> call = restClientAPI.sendSyncProcess(token);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
+                @Override
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
+
+                    int code = response.code();
+                    if (code == RESPONSE_CODE) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
+
+                            Log.e(TAG, "SyncProcess_TRUE??" + apiResponsePOJO.getStatus());
+
+                        } else {
+
+                            Log.e(TAG, "SyncProcess_FALSE??" + apiResponsePOJO.getStatus());
+
+                        }
+                    } else {
+                        Log.e(TAG, "SyncProcess_FAILED_CODE_ERROR??" + code);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
+                    Log.e(TAG, "<<<Failure With SyncProcessPOJO>>>" + t.getMessage());
+                }
+            };
+            call.enqueue(callback);
+        }
     }
 
     // Constructor For Images, Videos, Files, Drive

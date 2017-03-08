@@ -84,4 +84,8 @@ public interface RestClient {
                                             @PartMap() HashMap<String, RequestBody> map,
                                             @Part MultipartBody.Part file);
 
+    @FormUrlEncoded
+    @POST("./")
+    Call<ApiResponsePOJO> sendSyncProcess(@Field("device_mac_address") String device_mac_address);
+
 }

@@ -25,6 +25,7 @@ import com.kidguard.receivers.BlockAppReceiver;
 import com.kidguard.receivers.LocationReceiver;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
+import com.kidguard.services.RestClientService;
 import com.kidguard.utilities.Utilities;
 
 import java.util.ArrayList;
@@ -159,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         } catch (Exception e) {
             Log.e(TAG, "Exception??" + e.getMessage());
         }
-
     }
 
     /* Start Background Check Receiver */
@@ -197,6 +197,11 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
         if (GoogleAccountService.getInstance() != null) {
             stopService(new Intent(this, GoogleAccountService.class));
+        }
+
+        Log.e("MAC","Address>>"+getIntent().getStringExtra(KEY_MAC_ADDRESS));
+        if(getIntent().getStringExtra(KEY_MAC_ADDRESS) != null && !getIntent().getStringExtra(KEY_MAC_ADDRESS).isEmpty()){
+            new RestClientService(TAG_SYNC_PROCESS, getIntent().getStringExtra(KEY_MAC_ADDRESS), "");
         }
     }
 

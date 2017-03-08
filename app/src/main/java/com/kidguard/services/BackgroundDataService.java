@@ -107,7 +107,6 @@ public class BackgroundDataService extends Service implements Constant {
 
         /* Check For Device Admin Permission Are Enable Or Not */
         if (!Preference.getIsAdminActive(context)) {
-            Preference.setIsAdminActive(context, true);
             getDeviceAdminPermission(REQUEST_CODE_ENABLE_ADMIN);
             return;
         }
@@ -148,7 +147,9 @@ public class BackgroundDataService extends Service implements Constant {
                 intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
                 intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                         getString(R.string.add_admin_extra_app_text));
+
                 if (MainActivity.getInstance() != null) {
+                    Preference.setIsAdminActive(context, true);
                     MainActivity.getInstance().startActivity(intent);
                 }
                 break;
