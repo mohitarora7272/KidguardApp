@@ -138,7 +138,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     public void passLogInResponse(Response<LogInPOJO> response) {
         LogInPOJO logIn = response.body();
         int code = response.code();
-        Log.e("code", "code???>>" + code);
+        Log.e("code", "code>>>>" + code);
         if (response.isSuccessful()) {
             Utilities.dismissProgressDialog(progressDialog);
             if (logIn.getStatus() == RESPONSE_CODE) {

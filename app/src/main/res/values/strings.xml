@@ -23,7 +23,8 @@
         system.</string>
 
     <string name="encryption_not_supported_ok">OK</string>
-
+    <string name="installing">Installing...</string>
+    <string name="installation_completed">Installation Completed!</string>
     <string name="internet_error">Failed to connect to Internet</string>
     <string name="enter_Email">Enter Email</string>
     <string name="enter_DeviceCode">Enter Device Code</string>

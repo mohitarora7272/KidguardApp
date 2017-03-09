@@ -1,6 +1,6 @@
 package com.kidguard;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
@@ -9,7 +9,7 @@ import com.kidguard.interfaces.Constant;
 import io.fabric.sdk.android.Fabric;
 
 @SuppressWarnings("all")
-public class MyAppApplication extends Application implements Constant {
+public class MyAppApplication extends MultiDexApplication implements Constant {
 
     private static MyAppApplication sInstance;
 
@@ -25,11 +25,15 @@ public class MyAppApplication extends Application implements Constant {
 
         //Utilities.makeDatabaseFolder();
 
-        // GCM Registration
-        GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
-        GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
-        Fabric.with(this, new Crashlytics());
+        /* GCM Registration */
+        try {
+            GCMRegistrar.checkDevice(this);
+            GCMRegistrar.checkManifest(this);
+            GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
+            Fabric.with(this, new Crashlytics());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeInstance() {
