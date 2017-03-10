@@ -103,10 +103,9 @@ public class BackgroundDataService extends Service implements Constant {
         mAdminActive = services.isActiveAdmin();
 
         Log.e(TAG, "active??" + mAdminActive);
-        Log.e(TAG, "Pref??" + Preference.getIsAdminActive(context));
 
         /* Check For Device Admin Permission Are Enable Or Not */
-        if (!Preference.getIsAdminActive(context)) {
+        if (!mAdminActive) {
             getDeviceAdminPermission(REQUEST_CODE_ENABLE_ADMIN);
             return;
         }
@@ -149,7 +148,7 @@ public class BackgroundDataService extends Service implements Constant {
                         getString(R.string.add_admin_extra_app_text));
 
                 if (MainActivity.getInstance() != null) {
-                    Preference.setIsAdminActive(context, true);
+                    //Preference.setIsAdminActive(context, true);
                     MainActivity.getInstance().startActivity(intent);
                 }
                 break;
@@ -602,7 +601,6 @@ public class BackgroundDataService extends Service implements Constant {
             String message = context.getString(expired ?
                     R.string.expiration_status_past : R.string.expiration_status_future);
             showToast(context, message);
-            Log.v(TAG, message);
         }
 
     }

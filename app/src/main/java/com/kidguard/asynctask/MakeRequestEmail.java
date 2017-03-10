@@ -220,7 +220,6 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
 
         }
 
-
         Integer y = _500;
         x = y.longValue();
         Log.e(TAG, "x Down>>>" + x);

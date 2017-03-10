@@ -76,7 +76,6 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.rvalerio:fgchecker:1.0.1'
     compile 'pub.devrel:easypermissions:0.1.5'
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'

@@ -2,6 +2,7 @@ package com.kidguard.utilities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -27,6 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.kidguard.LogInActivity;
 import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
@@ -453,5 +455,16 @@ public class Utilities implements Constant {
         intent.setData(Uri.parse("package:" + ctx.getPackageName()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(intent);
+    }
+
+    /* Hide Icon */
+    public static void hideIcon(Context ctx) {
+        try {
+            PackageManager p = ctx.getPackageManager();
+            ComponentName componentName = new ComponentName(ctx, LogInActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
+            p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

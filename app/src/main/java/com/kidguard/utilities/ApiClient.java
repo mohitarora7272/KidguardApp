@@ -6,13 +6,11 @@ import com.google.gson.GsonBuilder;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressWarnings("all")
 public class ApiClient implements Constant {
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     private Retrofit retrofit = null;
     private String tag;
     private String authheader;
