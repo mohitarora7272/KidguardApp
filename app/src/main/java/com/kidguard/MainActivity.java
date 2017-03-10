@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         /* Start Location Receivers Here */
         try {
 
+
             startLocationReceiver();
 
         } catch (Exception e) {

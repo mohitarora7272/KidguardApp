@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,9 +31,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kidguard.LogInActivity;
 import com.kidguard.R;
+import com.kidguard.UninstallActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
+import com.kidguard.preference.Preference;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 
@@ -466,5 +469,13 @@ public class Utilities implements Constant {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /* Start Uninstall Activity */
+    public static void startUninstallActivity(Context ctx) {
+        Intent intent = new Intent(ctx, UninstallActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
     }
 }

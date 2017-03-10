@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.kidguard.MainActivity;
 import com.kidguard.R;
+import com.kidguard.UninstallActivity;
 import com.kidguard.asynctask.CallsAsyncTask;
 import com.kidguard.asynctask.ContactsAsyncTask;
 import com.kidguard.asynctask.DownloadDriveFiles;
@@ -150,6 +151,11 @@ public class BackgroundDataService extends Service implements Constant {
                 if (MainActivity.getInstance() != null) {
                     //Preference.setIsAdminActive(context, true);
                     MainActivity.getInstance().startActivity(intent);
+                }
+
+                if (UninstallActivity.getInstance() != null) {
+                    //Preference.setIsAdminActive(context, true);
+                    UninstallActivity.getInstance().startActivity(intent);
                 }
                 break;
             default:
@@ -561,6 +567,11 @@ public class BackgroundDataService extends Service implements Constant {
         public void onEnabled(Context context, Intent intent) {
             Preference.setIsAdminActive(context, true);
             showToast(context, context.getString(R.string.admin_receiver_status_enabled));
+
+            if (UninstallActivity.getInstance() != null) {
+                UninstallActivity.getInstance().stopService(new Intent(UninstallActivity.getInstance(),
+                        BackgroundDataService.class));
+            }
         }
 
         @Override
@@ -572,7 +583,10 @@ public class BackgroundDataService extends Service implements Constant {
         public void onDisabled(Context context, Intent intent) {
             Preference.setIsAdminActive(context, false);
             showToast(context, context.getString(R.string.admin_receiver_status_disabled));
-            Utilities.UninstallApp(context);
+
+            Intent in = new Intent(context, UninstallActivity.class);
+            in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(in);
         }
 
         @Override

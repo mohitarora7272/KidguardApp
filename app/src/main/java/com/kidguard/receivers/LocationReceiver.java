@@ -4,11 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.kidguard.interfaces.Constant;
 import com.kidguard.services.LocationService;
 
 @SuppressWarnings("all")
-public class LocationReceiver extends BroadcastReceiver implements Constant {
+public class LocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
