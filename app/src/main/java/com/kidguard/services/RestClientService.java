@@ -14,6 +14,7 @@ import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Video;
 import com.kidguard.pojo.ApiResponsePOJO;
+import com.kidguard.preference.Preference;
 import com.kidguard.utilities.ApiClient;
 import com.kidguard.utilities.Utilities;
 
@@ -272,20 +273,24 @@ public class RestClientService implements Constant {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
                             Log.e(TAG, "SyncProcess_TRUE??" + apiResponsePOJO.getStatus());
+                            Preference.setMacAddress(MyAppApplication.getInstance(), null);
 
                         } else {
 
                             Log.e(TAG, "SyncProcess_FALSE??" + apiResponsePOJO.getStatus());
+                            Preference.setMacAddress(MyAppApplication.getInstance(), null);
 
                         }
                     } else {
                         Log.e(TAG, "SyncProcess_FAILED_CODE_ERROR??" + code);
+                        Preference.setMacAddress(MyAppApplication.getInstance(), null);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With SyncProcessPOJO>>>" + t.getMessage());
+                    Preference.setMacAddress(MyAppApplication.getInstance(), null);
                 }
             };
             call.enqueue(callback);
@@ -653,6 +658,5 @@ public class RestClientService implements Constant {
                 + java.io.File.separator + DRIVE_NAME);
         Utilities.deleteDirectory(path);
         Utilities.refreshAndroidGallery(MyAppApplication.getInstance(), Uri.fromFile(path));
-        Log.e("delete", "drive folder");
     }
 }

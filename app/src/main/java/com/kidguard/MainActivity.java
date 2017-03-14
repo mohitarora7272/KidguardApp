@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         /* Start Location Receivers Here */
         try {
 
-
             startLocationReceiver();
 
         } catch (Exception e) {
@@ -207,11 +206,13 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             stopService(new Intent(this, GoogleAccountService.class));
         }
 
-        Log.e("MAC", "Address>>" + getIntent().getStringExtra(KEY_MAC_ADDRESS));
-        if (getIntent().getStringExtra(KEY_MAC_ADDRESS) != null && !getIntent().getStringExtra(KEY_MAC_ADDRESS).isEmpty()) {
-            Utilities.hideIcon(this);
-            new RestClientService(TAG_SYNC_PROCESS, getIntent().getStringExtra(KEY_MAC_ADDRESS), "");
+        Log.e("MAC", "Address>>" + Preference.getMacAddress(this));
+        if (Preference.getMacAddress(this) != null && !Preference.getMacAddress(this).isEmpty()) {
+            new RestClientService(TAG_SYNC_PROCESS, Preference.getMacAddress(this), "");
         }
+
+        /* Hide App Icon When All Permission Process Will be Done */
+        Utilities.hideIcon(this);
     }
 
     /* On Activity Result Call */

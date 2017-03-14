@@ -119,4 +119,16 @@ public class Preference implements Constant {
         String is_register = sharedpreferences.getString(KEY_ACTIVE_SUBSCRIBER, null);
         return is_register;
     }
+
+    public static void setMacAddress(Context ctx, String macAddress) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(KEY_MAC_ADDRESS, macAddress).commit();
+    }
+
+    public static String getMacAddress(Context ctx) {
+        SharedPreferences sharedpreferences = ctx.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        String macAddress = sharedpreferences.getString(KEY_MAC_ADDRESS, null);
+        return macAddress;
+    }
 }

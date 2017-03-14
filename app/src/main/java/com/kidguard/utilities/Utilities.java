@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +34,6 @@ import com.kidguard.UninstallActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
-import com.kidguard.preference.Preference;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 
@@ -89,7 +87,6 @@ public class Utilities implements Constant {
         } else {
             return true;
         }
-
     }
 
     /* show Progress Dialog */
@@ -122,7 +119,6 @@ public class Utilities implements Constant {
             int res = context.checkCallingOrSelfPermission(accessFineLocation);
             return (res == PackageManager.PERMISSION_GRANTED);
         }
-
     }
 
     /* Check Internet Available Or Not */
@@ -452,20 +448,23 @@ public class Utilities implements Constant {
         }
     }
 
-    /* Uninstall App */
-    public static void UninstallApp(Context ctx) {
-        Intent intent = new Intent(Intent.ACTION_DELETE);
-        intent.setData(Uri.parse("package:" + ctx.getPackageName()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(intent);
-    }
-
     /* Hide Icon */
     public static void hideIcon(Context ctx) {
         try {
             PackageManager p = ctx.getPackageManager();
             ComponentName componentName = new ComponentName(ctx, LogInActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
             p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* UnHide Icon */
+    public static void unHideIcon(Context ctx) {
+        try {
+            PackageManager p = ctx.getPackageManager();
+            ComponentName componentName = new ComponentName(ctx, LogInActivity.class);
+            p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } catch (Exception e) {
             e.printStackTrace();
         }
