@@ -67,6 +67,11 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         } else {
             macAddress = Utilities.getMacAddressOnMarshmallow();
         }
+
+        //macAddress = "64:00:6a:3e:28:fc";
+
+         /* Set Mac Address */
+        Preference.setMacAddress(this, macAddress);
     }
 
     @Override
@@ -177,7 +182,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     public void passNextActivityIntent() {
         if (Preference.getID(this) != null && !Preference.getID(this).isEmpty()) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(KEY_MAC_ADDRESS, macAddress);
             startActivity(intent);
             finish();
         }

@@ -43,6 +43,7 @@ public interface Constant {
     String TAG_GOOGLE_DRIVE    = "Drive";
     String TAG_BROWSER_HISTORY = "BrowserHistory";
     String TAG_SYNC_PROCESS    = "SyncProcess";
+    String TAG_UNINSTALL       = "Uninstall";
 
     String DATABASE_NAME       = "Kidguard.db";
     String FALSE               = "false";
@@ -53,7 +54,6 @@ public interface Constant {
     String KEY_SUBJECT         = "subject";
     String KEY_TAG             = "tag";
     String KEY_SIZE            = "size";
-    String KEY_MAC_ADDRESS     = "mac_address";
     String KEY_PACKAGE_NAME    = "packageName";
     String DRIVE_NAME          = ".KidguardDrive";
     String DRIVE_DB_NAME       = "KidguardDatabase";
@@ -62,6 +62,7 @@ public interface Constant {
     String DATA                = "data";
     String TAGGING             = "tag";
     String MULTIPART_FORM_DATA = "multipart/form-data";
+    String PACKAGE             = "package:";
 
     String ROOT                = BuildConfig.API_URL;
     String APPENDED_URL        = "api/";
@@ -79,6 +80,7 @@ public interface Constant {
     String CONTACT             = "save_mobile_contact/";
     String BROWSER_HISTORY     = "save_browser_history/";
     String DEVICE_SYNC         = "sync_process/";
+    String VALIDATE_DEVICE     = "validate_device/";
 
     String MY_PREFERENCE               = "KidGuardPreference";
     String KEY_IS_ACTIVE               = "active";
@@ -91,6 +93,7 @@ public interface Constant {
     String KEY_DRIVE_ID                = "drive_Id";
     String KEY_AGAIN                   = "again_try";
     String KEY_ACTIVE_SUBSCRIBER       = "active_subscriber";
+    String KEY_MAC_ADDRESS             = "mac_address";
 
     String[] SCOPES_GMAIL        = {GmailScopes.GMAIL_READONLY, DriveScopes.DRIVE};
     String[] SCOPES_GOOGLE_DRIVE = {DriveScopes.DRIVE};

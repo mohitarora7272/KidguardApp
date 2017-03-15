@@ -116,6 +116,13 @@ public class ApiClient implements Constant {
                         .build();
             }
 
+            if (tag.equals(TAG_UNINSTALL)) {
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(ROOT + APPENDED_URL + VALIDATE_DEVICE)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+            }
+
         }
         return retrofit.create(RestClient.class);
     }

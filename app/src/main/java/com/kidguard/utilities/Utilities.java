@@ -30,6 +30,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.kidguard.LogInActivity;
 import com.kidguard.R;
+import com.kidguard.UninstallActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
@@ -86,7 +87,6 @@ public class Utilities implements Constant {
         } else {
             return true;
         }
-
     }
 
     /* show Progress Dialog */
@@ -119,7 +119,6 @@ public class Utilities implements Constant {
             int res = context.checkCallingOrSelfPermission(accessFineLocation);
             return (res == PackageManager.PERMISSION_GRANTED);
         }
-
     }
 
     /* Check Internet Available Or Not */
@@ -449,14 +448,6 @@ public class Utilities implements Constant {
         }
     }
 
-    /* Uninstall App */
-    public static void UninstallApp(Context ctx) {
-        Intent intent = new Intent(Intent.ACTION_DELETE);
-        intent.setData(Uri.parse("package:" + ctx.getPackageName()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(intent);
-    }
-
     /* Hide Icon */
     public static void hideIcon(Context ctx) {
         try {
@@ -466,5 +457,24 @@ public class Utilities implements Constant {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /* UnHide Icon */
+    public static void unHideIcon(Context ctx) {
+        try {
+            PackageManager p = ctx.getPackageManager();
+            ComponentName componentName = new ComponentName(ctx, LogInActivity.class);
+            p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* Start Uninstall Activity */
+    public static void startUninstallActivity(Context ctx) {
+        Intent intent = new Intent(ctx, UninstallActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
     }
 }

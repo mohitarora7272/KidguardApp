@@ -88,4 +88,9 @@ public interface RestClient {
     @POST("./")
     Call<ApiResponsePOJO> sendSyncProcess(@Field("device_mac_address") String device_mac_address);
 
+    @FormUrlEncoded
+    @POST("./")
+    Call<ApiResponsePOJO> uninstallRequest(@Field("email") String email,
+                                           @Field("device_code") String deviceCode,
+                                           @Field("device_mac_address") String macAddress);
 }
