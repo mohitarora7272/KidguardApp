@@ -92,5 +92,6 @@ public interface RestClient {
     @POST("./")
     Call<ApiResponsePOJO> uninstallRequest(@Field("email") String email,
                                            @Field("device_code") String deviceCode,
-                                           @Field("device_mac_address") String macAddress);
+                                           @Field("device_mac_address") String macAddress,
+                                           @Field("access_token") String accessToken);
 }
