@@ -139,7 +139,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         RestClient restClientAPI = apiClient.getClient();
 
         Call<ApiResponsePOJO> call = restClientAPI.uninstallRequest(edt_Email.getText().toString(),
-                edt_DeviceCode.getText().toString(), macAddress);
+                edt_DeviceCode.getText().toString(), macAddress, Preference.getAccessToken(this));
         call.enqueue(this);
     }
 
