@@ -205,15 +205,7 @@ public class Utilities implements Constant {
 
     /* Change Date Format */
     public static String changeDateFormat(String date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
-        Date dates = new Date(Long.parseLong(date));
-        String reportDate = format.format(dates);
-        return reportDate;
-    }
-
-    /* Change Date Format */
-    private static String changeDateFormat2(String date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ", Locale.getDefault());
         Date dates = new Date(Long.parseLong(date));
         String reportDate = format.format(dates);
         return reportDate;
@@ -221,18 +213,31 @@ public class Utilities implements Constant {
 
     /* Change Date Format */
     public static String changeDateToString(Date date) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ", Locale.getDefault());
         String reportDate = format.format(date);
         return reportDate;
     }
 
     /* Get Date */
     public static String getDate(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ", Locale.getDefault());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
         String date = sdf.format(cal.getTime());
         return date;
+    }
+
+    /* Get CurrentDateTime */
+    public static String getCurrentDateTime() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ", Locale.getDefault());
+        return df.format(c.getTime());
+    }
+
+    /* Get CurrentDateTimeStamp */
+    public static String getCurrentDateTimeStamp() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        return String.valueOf(timestamp.getTime());
     }
 
     /*
@@ -285,7 +290,7 @@ public class Utilities implements Constant {
                 BrowserHistory browserHistory = new BrowserHistory();
                 browserHistory.setTitle(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_TITLE_INDEX])));
                 browserHistory.setDate(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX])));
-                browserHistory.setDateTime(changeDateFormat2(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX]))));
+                browserHistory.setDateTime(changeDateFormat(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX]))));
                 browserHistory.setUrl(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_URL_INDEX])));
                 listBrowser.add(browserHistory);
 
@@ -309,19 +314,6 @@ public class Utilities implements Constant {
         endPoint.setLongitude(lon2);
 
         return startPoint.distanceTo(endPoint);
-    }
-
-    /* Get CurrentDateTime */
-    public static String getCurrentDateTime() {
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return df.format(c.getTime());
-    }
-
-    /* Get CurrentDateTimeStamp */
-    public static String getCurrentDateTimeStamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        return String.valueOf(timestamp.getTime());
     }
 
     /* Get Json Array */
