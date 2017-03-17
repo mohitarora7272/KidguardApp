@@ -27,7 +27,7 @@ android {
 
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
-                    def project = "Kidguard"
+                    def project = "KidGuard"
                     //noinspection GroovyUnusedAssignment
                     def SEP = "_"
                     //noinspection GroovyUnusedAssignment

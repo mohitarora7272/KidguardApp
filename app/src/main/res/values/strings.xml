@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Kidguard</string>
+    <string name="app_name">KidGuard</string>
 
     <!-- Strings used by the sample DeviceAdminReceiver -->
-    <string name="admin_receiver_status">Kidguard %1$s</string>
+    <string name="admin_receiver_status">KidGuard %1$s</string>
     <string name="admin_receiver_status_enabled">enabled</string>
     <string name="admin_receiver_status_disabled">disabled</string>
     <string name="admin_receiver_status_pw_changed">pw changed</string>
@@ -16,7 +16,7 @@
     <string name="add_admin_extra_app_text">Additional text explaining why this needs to be added.</string>
 
     <!-- Manifest strings -->
-    <string name="sample_device_admin">Kidguard</string>
+    <string name="sample_device_admin">KidGuard</string>
     <string name="sample_device_admin_description">Sample code for writing
         a DeviceAdmin class.  This implementation provides a UI (in ApiDemos)
         for you to directly control what the DeviceAdmin does with the
