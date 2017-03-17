@@ -78,37 +78,40 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_SignIn:
-
-                if (Utilities.isNetworkAvailable(getApplicationContext())) {
-
-                    if (Utilities.isEmpty(edt_Email)) {
-                        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_email));
-                        return;
-                    }
-
-                    if (!Utilities.isValidEmail(edt_Email.getText().toString())) {
-                        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_valid_email));
-                        return;
-                    }
-
-                    if (Utilities.isEmpty(edt_DeviceCode)) {
-                        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_deviceCode));
-                        return;
-                    }
-
-                    Utilities.showProgressDialog(this, progressDialog);
-
-                    getLogin();
-
-                } else {
-                    Utilities.showSnackBar(this, coordinatorLayout,
-                            getString(R.string.internet_error));
-                }
+                signIn();
                 break;
 
             default:
 
                 break;
+        }
+    }
+
+    private void signIn() {
+        if (Utilities.isNetworkAvailable(getApplicationContext())) {
+
+            if (Utilities.isEmpty(edt_Email)) {
+                Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_email));
+                return;
+            }
+
+            if (!Utilities.isValidEmail(edt_Email.getText().toString())) {
+                Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_valid_email));
+                return;
+            }
+
+            if (Utilities.isEmpty(edt_DeviceCode)) {
+                Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_deviceCode));
+                return;
+            }
+
+            Utilities.showProgressDialog(this, progressDialog);
+
+            getLogin();
+
+        } else {
+            Utilities.showSnackBar(this, coordinatorLayout,
+                    getString(R.string.internet_error));
         }
     }
 
