@@ -11,13 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kidguard.exceptions.APIError;
@@ -42,7 +38,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
     private static UninstallActivity mActivity;
     private CoordinatorLayout coordinatorLayout;
     private ProgressDialog progressDialog;
-    private EditText edt_DeviceCode;
+    private EditText edt_DeviceCodeOrPassword;
     private EditText edt_Email;
     private Button btn_Uninstall;
     private Button btn_Activate;
@@ -60,7 +56,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         mActivity = UninstallActivity.this;
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
                 .coordinatorLayout);
-        edt_DeviceCode = (EditText) findViewById(R.id.edt_DeviceCode);
+        edt_DeviceCodeOrPassword = (EditText) findViewById(R.id.edt_DeviceCodeOrPassword);
         edt_Email = (EditText) findViewById(R.id.edt_Email);
         btn_Uninstall = (Button) findViewById(R.id.btn_Uninstall);
         btn_Uninstall.setOnClickListener(this);
@@ -98,7 +94,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
                         return;
                     }
 
-                    if (Utilities.isEmpty(edt_DeviceCode)) {
+                    if (Utilities.isEmpty(edt_DeviceCodeOrPassword)) {
                         Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_deviceCode));
                         return;
                     }
@@ -143,7 +139,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         RestClient restClientAPI = apiClient.getClient();
 
         Call<ApiResponsePOJO> call = restClientAPI.uninstallRequest(edt_Email.getText().toString(),
-                edt_DeviceCode.getText().toString(), macAddress, Preference.getAccessToken(this));
+                edt_DeviceCodeOrPassword.getText().toString(), macAddress, Preference.getAccessToken(this));
         call.enqueue(this);
     }
 
