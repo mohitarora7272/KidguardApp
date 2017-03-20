@@ -26,8 +26,9 @@
     <string name="installing">Installing...</string>
     <string name="installation_completed">Installation Completed!</string>
     <string name="internet_error">Failed to connect to Internet</string>
-    <string name="enter_Email">Enter Email</string>
-    <string name="enter_DeviceCode">Enter Device Code</string>
+    <string name="enter_Email">Email</string>
+    <string name="enter_DeviceCode">Device Code</string>
+    <string name="enter_DeviceCode_or_Password">Device Code or Password</string>
     <string name="enter_email">Please enter email</string>
     <string name="enter_deviceCode">Please enter device code</string>
     <string name="enter_valid_email">Please enter a valid e-mail address</string>
