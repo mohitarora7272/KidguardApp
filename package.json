@@ -1,0 +1,15 @@
+{
+  "name": "kidguard-android-device-app",
+  "version": "1.0.2",
+  "description": "KidGuard Android App",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimplyBridal/kidguard-android-device-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SimplyBridal/kidguard-android-device-app/issues"
+  },
+  "homepage": "https://github.com/SimplyBridal/kidguard-android-device-app#readme"
+}
