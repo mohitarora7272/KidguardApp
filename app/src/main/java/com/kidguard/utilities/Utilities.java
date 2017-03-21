@@ -278,28 +278,36 @@ public class Utilities implements Constant {
 
     /* Get Browser History */
     public static void getBrowserHistoryList(Context ctx) {
-        ArrayList<BrowserHistory> listBrowser = new ArrayList<>();
-        String sel = HISTORY_PROJECTION[4] + " = 0"; // 0 = history, 1 = bookmark
-        Cursor mCur = ctx.getContentResolver().query(BOOKMARKS_URI, HISTORY_PROJECTION, sel, null, null);
-        mCur.moveToFirst();
+        Cursor mCur = null;
+        try {
+            ArrayList<BrowserHistory> listBrowser = new ArrayList<>();
+            String sel = HISTORY_PROJECTION[4] + " = 0"; // 0 = history, 1 = bookmark
+            mCur = ctx.getContentResolver().query(BOOKMARKS_URI, HISTORY_PROJECTION, sel, null, null);
+            if (mCur != null) {
+                mCur.moveToFirst();
+                if (mCur.moveToFirst() && mCur.getCount() > 0) {
+                    boolean cont = true;
+                    while (mCur.isAfterLast() == false && cont) {
+                        BrowserHistory browserHistory = new BrowserHistory();
+                        browserHistory.setTitle(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_TITLE_INDEX])));
+                        browserHistory.setDate(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX])));
+                        browserHistory.setDateTime(changeDateFormat(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX]))));
+                        browserHistory.setUrl(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_URL_INDEX])));
+                        listBrowser.add(browserHistory);
 
-        if (mCur.moveToFirst() && mCur.getCount() > 0) {
-            boolean cont = true;
-            while (mCur.isAfterLast() == false && cont) {
-
-                BrowserHistory browserHistory = new BrowserHistory();
-                browserHistory.setTitle(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_TITLE_INDEX])));
-                browserHistory.setDate(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX])));
-                browserHistory.setDateTime(changeDateFormat(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_DATE_INDEX]))));
-                browserHistory.setUrl(mCur.getString(mCur.getColumnIndex(HISTORY_PROJECTION[HISTORY_PROJECTION_URL_INDEX])));
-                listBrowser.add(browserHistory);
-
-                // Do something with title and url
-                mCur.moveToNext();
+                        // Do something with title and url
+                        mCur.moveToNext();
+                    }
+                }
+                if (listBrowser.size() > 0) {
+                    BackgroundDataService.getInstance().sendBrowserHistoryToServer(listBrowser);
+                }
             }
-        }
-        if (listBrowser.size() > 0) {
-            BackgroundDataService.getInstance().sendBrowserHistoryToServer(listBrowser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (mCur != null && !mCur.isClosed())
+                mCur.close();
         }
     }
 
