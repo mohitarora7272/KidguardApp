@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
     private static MainActivity mActivity;
     private static TextView tv_install;
+    private static TextView tv_install1;
+    private static TextView tv_install2;
+
 
     public static MainActivity getInstance() {
         return mActivity;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         /* Retrieve the useful instance variables */
         mActivity = MainActivity.this;
         tv_install = (TextView) findViewById(R.id.tv_install);
+        tv_install1 = (TextView) findViewById(R.id.tv_install1);
+        tv_install2 = (TextView) findViewById(R.id.tv_install2);
         tv_install.setText(getString(R.string.installing));
     }
 
@@ -85,16 +90,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             }
 
         }
-
-//        Intent myIntent = new Intent(this, BackgroundDataService.class);
-//        myIntent.putExtra(KEY_TAG, TAG_LIST_APPS);
-//        myIntent.putExtra(KEY_COUNT, "");
-//        myIntent.putExtra(KEY_DATE_FROM, "");
-//        myIntent.putExtra(KEY_DATE_TO, "");
-//        myIntent.putExtra(KEY_SIZE, "");
-//        myIntent.putExtra(KEY_SUBJECT, "");
-//        startService(myIntent);
-
 
         /* Check Google Account Is Enable Or Not */
         if (Preference.getAccountName(this) == null) {
@@ -188,7 +183,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private void startLocationReceiver() {
 
         tv_install.setText(getString(R.string.installation_completed));
-
+        tv_install1.setText(getString(R.string.install_message1));
+        tv_install2.setText(getString(R.string.install_message2));
         Intent intent = new Intent(this, LocationReceiver.class);
         sendBroadcast(intent);
 
