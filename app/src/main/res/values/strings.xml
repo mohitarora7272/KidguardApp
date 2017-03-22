@@ -24,7 +24,7 @@
 
     <string name="encryption_not_supported_ok">OK</string>
     <string name="installing">Installing...</string>
-    <string name="installation_completed">Installation Completed!</string>
+    <string name="installation_completed">Installation Complete</string>
     <string name="internet_error">Failed to connect to Internet</string>
     <string name="enter_Email">Email</string>
     <string name="enter_DeviceCode">Device Code</string>
@@ -39,5 +39,8 @@
     <string name="uninstall_text">You need to enter device code to uninstall the app.</string>
     <string name="activate">Activate</string>
     <string name="activate_message">You need to activate Device Administrator</string>
+    <string name="install_message1">Your data is now initializing. Please login to your KidGuard account to sync and see the data. Please note the data may take a few hours to sync</string>
+    <string name="install_message2">The KidGuard app will hide itself from the app-drawer once initialization is complete. Should you need to uninstall it from this device, you will find the app in Settings -> Security -> Device Administrators.</string>
+
 
 </resources>
