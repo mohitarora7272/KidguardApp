@@ -3,19 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBg">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:padding="20dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@mipmap/kg_logo"
+            android:contentDescription="@string/app_name" />
 
         <EditText
             android:id="@+id/edt_Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="@string/enter_Email"
@@ -31,14 +39,13 @@
             android:id="@+id/edt_DeviceCodeOrPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edt_Email"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="@string/enter_DeviceCode_or_Password"
-            android:maxLines="1"
-            android:inputType="textPassword"
             android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:maxLines="1"
             android:paddingLeft="10dp"
             android:text=""
             android:textSize="18sp"
@@ -49,12 +56,14 @@
             android:id="@+id/btn_Uninstall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edt_DeviceCodeOrPassword"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/colorPrimaryDark"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:selectAllOnFocus="false"
             android:text="@string/uninstall"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
             android:textSize="15sp"
             android:typeface="normal" />
 
@@ -62,13 +71,25 @@
             android:id="@+id/btn_Activate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_Uninstall"
             android:layout_marginTop="30dp"
+            android:background="@color/colorPrimaryDark"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:selectAllOnFocus="false"
             android:text="@string/activate"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
             android:textSize="15sp"
             android:typeface="normal" />
-    </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:text="@string/kidguardWeb"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
 </android.support.design.widget.CoordinatorLayout>

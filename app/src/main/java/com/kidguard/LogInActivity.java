@@ -47,6 +47,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActionBar();
         passNextActivityIntent();
         setContentView(R.layout.activity_login);
         iniView();
@@ -72,6 +73,11 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
          /* Set Mac Address */
         Preference.setMacAddress(this, macAddress);
+    }
+
+    // Set ActionBar Hide
+    private void setActionBar() {
+        getSupportActionBar().hide();
     }
 
     @Override

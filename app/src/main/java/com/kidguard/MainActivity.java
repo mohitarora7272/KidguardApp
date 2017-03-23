@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActionBar();
         setContentView(R.layout.activity_main);
         /* Retrieve the useful instance variables */
         mActivity = MainActivity.this;
@@ -57,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         tv_install1 = (TextView) findViewById(R.id.tv_install1);
         tv_install2 = (TextView) findViewById(R.id.tv_install2);
         tv_install.setText(getString(R.string.installing));
+    }
+
+    // Set ActionBar Hide
+    private void setActionBar() {
+        getSupportActionBar().hide();
     }
 
     /* onResume */
