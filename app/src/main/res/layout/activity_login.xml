@@ -3,21 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="20dp"
-        tools:context="com.kidguard.LogInActivity">
+        android:padding="20dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:background="@mipmap/kg_logo"
+            android:contentDescription="@string/app_name" />
 
         <EditText
             android:id="@+id/edt_Email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="@string/enter_Email"
@@ -37,10 +44,10 @@
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="@string/enter_DeviceCode"
+            android:imeOptions="actionDone"
+            android:inputType="text"
             android:maxLength="4"
             android:maxLines="1"
-            android:inputType="text"
-            android:imeOptions="actionDone"
             android:paddingLeft="10dp"
             android:text=""
             android:textSize="18sp"
@@ -52,11 +59,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@color/colorPrimaryDark"
             android:ems="10"
             android:fontFamily="sans-serif"
             android:selectAllOnFocus="false"
             android:text="@string/common_signin_button_text"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
             android:textSize="15sp"
             android:typeface="normal" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:text="@string/kidguardWeb"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
 </android.support.design.widget.CoordinatorLayout>

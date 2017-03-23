@@ -52,6 +52,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActionBar();
         setContentView(R.layout.activity_uninstall);
         mActivity = UninstallActivity.this;
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id
@@ -76,6 +77,11 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         }
 
         //macAddress = "64:00:6a:3e:28:fc";
+    }
+
+    // Set ActionBar Hide
+    private void setActionBar() {
+        getSupportActionBar().hide();
     }
 
     @Override
