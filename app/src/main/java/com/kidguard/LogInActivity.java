@@ -1,9 +1,11 @@
 package com.kidguard;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,13 +24,15 @@ import com.kidguard.utilities.ErrorUtils;
 import com.kidguard.utilities.Utilities;
 
 import java.io.IOException;
+import java.util.List;
 
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressWarnings("all")
-public class LogInActivity extends AppCompatActivity implements Constant, View.OnClickListener {
+public class LogInActivity extends AppCompatActivity implements Constant, View.OnClickListener, EasyPermissions.PermissionCallbacks {
     private static final String TAG = LogInActivity.class.getSimpleName();
 
     private static LogInActivity mActivity;
@@ -67,6 +71,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             macAddress = Utilities.getMacAddressBelowMarshmallow(this);
         } else {
             macAddress = Utilities.getMacAddressOnMarshmallow();
+            checkPermissionReadContacts();
         }
 
         //macAddress = "64:00:6a:3e:28:fc";
@@ -193,6 +198,124 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    /* Check Permission Read Contacts */
+    private void checkPermissionReadContacts() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_CONTACTS)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.contactMsg),
+                    REQUEST_PERMISSION_READ_CONTACTS,
+                    Manifest.permission.READ_CONTACTS);
+            return;
+        }
+    }
+
+    /* Check Permission Read Sms */
+    private void checkPermissionReadSms() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_SMS)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.smsMsg),
+                    REQUEST_PERMISSION_SMS,
+                    Manifest.permission.READ_SMS);
+            return;
+        }
+    }
+
+    /* Check Permission Storage */
+    private void checkPermissionStorage() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                && !EasyPermissions.hasPermissions(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.storageMsg),
+                    REQUEST_PERMISSION_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return;
+        }
+    }
+
+    /*Check Permission Call */
+    private void checkPermissionCall() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_CALL_LOG)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.callMsg),
+                    REQUEST_PERMISSION_CALL,
+                    Manifest.permission.READ_CALL_LOG);
+            return;
+        }
+    }
+
+    /* Check Permission Location */
+    private void checkPermissionLocation() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                && !EasyPermissions.hasPermissions(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.locationMsg),
+                    REQUEST_PERMISSION_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+            return;
+        }
+    }
+
+    /* Check Permission Get Account */
+    private void checkPermissionGetAccount() {
+        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.GET_ACCOUNTS)) {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.getAccountMsg),
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Log.e(TAG, "requestCode onPermissionsGranted>>>" + requestCode);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.e(TAG, "requestCode onPermissionsDenied>>>" + requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+        switch (requestCode) {
+            case REQUEST_PERMISSION_READ_CONTACTS:
+                checkPermissionReadSms();
+                break;
+
+            case REQUEST_PERMISSION_SMS:
+                checkPermissionStorage();
+                break;
+
+            case REQUEST_PERMISSION_STORAGE:
+                checkPermissionCall();
+                break;
+
+            case REQUEST_PERMISSION_CALL:
+                checkPermissionLocation();
+                break;
+
+            case REQUEST_PERMISSION_LOCATION:
+                checkPermissionGetAccount();
+                break;
+
+            case REQUEST_PERMISSION_GET_ACCOUNTS:
+                break;
+            default:
+                break;
         }
     }
 }

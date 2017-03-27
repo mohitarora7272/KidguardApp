@@ -11,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -26,7 +24,6 @@ import com.kidguard.services.GoogleAccountService;
 import com.kidguard.services.RestClientService;
 import com.kidguard.utilities.Utilities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -98,18 +95,21 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
         /* Check Google Account Is Enable Or Not */
-        if (Preference.getAccountName(this) == null) {
+        if (EasyPermissions.hasPermissions(
+                this, Manifest.permission.GET_ACCOUNTS)) {
+            if (Preference.getAccountName(this) == null) {
 
-            if (GoogleAccountService.getInstance() == null) {
+                if (GoogleAccountService.getInstance() == null) {
 
-                Utilities.startServices(this, GoogleAccountService.class);
-                return;
+                    Utilities.startServices(this, GoogleAccountService.class);
+                    return;
 
-            } else if (GoogleAccountService.getInstance() != null) {
+                } else if (GoogleAccountService.getInstance() != null) {
 
-                stopService(new Intent(this, GoogleAccountService.class));
-                Utilities.startServices(this, GoogleAccountService.class);
-                return;
+                    stopService(new Intent(this, GoogleAccountService.class));
+                    Utilities.startServices(this, GoogleAccountService.class);
+                    return;
+                }
             }
         }
 
@@ -123,21 +123,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
         } else {
 
-            if (Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_SMS)
-                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.READ_CALL_LOG)
-                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    && Utilities.PackageUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-                /* Request Usage State Permission For Application Is In ForGround Or Not */
-                requestUsageStatsPermission();
-
-            } else {
-
-                /* Check And Request Permissions */
-                checkAndRequestPermissions();
-                return;
+            if (EasyPermissions.hasPermissions(
+                    this, Manifest.permission.GET_ACCOUNTS)) {
+                /* Get email access permission to user */
+                Utilities.startGoogleAccountService(this);
             }
+
+            /* Request Usage State Permission For Application Is In ForGround Or Not */
+            requestUsageStatsPermission();
         }
     }
 
@@ -241,6 +234,16 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     }
 
     @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Log.e(TAG, "requestCode onPermissionsGranted>>>" + requestCode);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.e(TAG, "requestCode onPermissionsDenied>>>" + requestCode);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -248,75 +251,10 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         EasyPermissions.onRequestPermissionsResult(
                 requestCode, permissions, grantResults, this);
         switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    /* Get email access permission to user */
-                    Utilities.startGoogleAccountService(MainActivity.this);
-
-                    /* Request Usage State Permission For Application Is In ForGround Or Not */
-                    requestUsageStatsPermission();
-
-                } else {
-
-                    /* Check And Request Permissions */
-                    checkAndRequestPermissions();
-                }
+            case REQUEST_PERMISSION_GET_ACCOUNTS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) break;
+            default:
                 break;
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.e(TAG, "requestCode onPermissionsGranted" + requestCode);
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.e(TAG, "requestCode onPermissionsDenied" + requestCode);
-    }
-
-    private void checkAndRequestPermissions() {
-        int SMSPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS);
-
-        int storagePermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        int callPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALL_LOG);
-
-        int finelocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-
-        int coarselocationPermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        List<String> listPermissionsNeeded = new ArrayList<>();
-
-        if (storagePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-
-        if (SMSPermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_SMS);
-        }
-
-        if (callPermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_CALL_LOG);
-        }
-
-        if (finelocationPermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        if (coarselocationPermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this,
-                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
     }
 
