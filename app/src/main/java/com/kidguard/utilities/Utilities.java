@@ -112,13 +112,10 @@ public class Utilities implements Constant {
         }
     }
 
-    /* Package Util */
-    public static class PackageUtil {
-
-        public static boolean checkPermission(Context context, String accessFineLocation) {
-            int res = context.checkCallingOrSelfPermission(accessFineLocation);
-            return (res == PackageManager.PERMISSION_GRANTED);
-        }
+    /* Check Permission */
+    public static boolean checkPermission(Context context, String accessFineLocation) {
+        int res = context.checkCallingOrSelfPermission(accessFineLocation);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
     /* Check Internet Available Or Not */

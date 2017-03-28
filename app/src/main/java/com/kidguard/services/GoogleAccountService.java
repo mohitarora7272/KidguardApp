@@ -12,6 +12,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.gmail.Gmail;
 import com.kidguard.MainActivity;
+import com.kidguard.R;
 import com.kidguard.asynctask.MakeRequestDrive;
 import com.kidguard.asynctask.MakeRequestEmail;
 import com.kidguard.interfaces.Constant;
@@ -136,7 +137,7 @@ public class GoogleAccountService extends Service implements Constant {
                 // Request the GET_ACCOUNTS permission via a user dialog
                 EasyPermissions.requestPermissions(
                         MainActivity.getInstance(),
-                        "This app needs to access your Google account (via Contacts).",
+                        getString(R.string.getAccountMsg),
                         REQUEST_PERMISSION_GET_ACCOUNTS,
                         Manifest.permission.GET_ACCOUNTS);
             }

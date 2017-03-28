@@ -166,37 +166,37 @@ public class BackgroundDataService extends Service implements Constant {
     /* Get Data With Tag */
     private void GetDataWithTag(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
         if (tag.equals(TAG_SMS)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_SMS)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_SMS)) {
                 new SmsAsyncTask(this).execute(count, dateFrom, dateTo);
             }
             return;
         }
 
         if (tag.equals(TAG_CONTACTS)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CONTACTS)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_CONTACTS)) {
                 new ContactsAsyncTask(this).execute(count, dateFrom, dateTo);
             }
             return;
         }
 
         if (tag.equals(TAG_CALLS)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_CALL_LOG)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_CALL_LOG)) {
                 new CallsAsyncTask(this).execute(count, dateFrom, dateTo);
             }
             return;
         }
 
         if (tag.equals(TAG_FILES)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.PackageUtil.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 new FilesAsyncTask(this).execute(count, dateFrom, dateTo);
             }
             return;
         }
 
         if (tag.equals(TAG_IMAGES)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.PackageUtil.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 new ImagesAsyncTask(this).execute(count, dateFrom, dateTo, size);
             }
             return;
@@ -237,8 +237,8 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_VIDEOS)) {
-            if (Utilities.PackageUtil.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.PackageUtil.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 new VideoAsyncTask(this).execute(count, dateFrom, dateTo, size);
             }
             return;

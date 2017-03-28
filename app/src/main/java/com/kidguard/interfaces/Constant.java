@@ -24,8 +24,14 @@ public interface Constant {
     int REQUEST_ACCOUNT_PICKER           = 1000;
     int REQUEST_AUTHORIZATION            = 1001;
     int REQUEST_GOOGLE_PLAY_SERVICES     = 1002;
-    int REQUEST_PERMISSION_GET_ACCOUNTS  = 1003;
     int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    int REQUEST_PERMISSION_READ_CONTACTS  = 1000;
+    int REQUEST_PERMISSION_SMS            = 1001;
+    int REQUEST_PERMISSION_STORAGE        = 1002;
+    int REQUEST_PERMISSION_CALL           = 1003;
+    int REQUEST_PERMISSION_LOCATION       = 1004;
+    int REQUEST_PERMISSION_GET_ACCOUNTS   = 1005;
 
     String TAG_SMS             = "Sms";
     String TAG_LOGIN           = "Login";
