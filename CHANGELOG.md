@@ -1,3 +1,12 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.3...v1.0.4) (2017-03-28)
+
+### Bug Fixes
+
+* **init:** moved all permissions dialog to login screen ([737347f](https://github.com/SimplyBridal/kidguard-android-device-app/commit/737347f))
+* **sync:** (call,contact etc.) ([18ebe44](https://github.com/SimplyBridal/kidguard-android-device-app/commit/18ebe44))
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.2...v1.0.3) (2017-03-23)
 
@@ -24,7 +33,3 @@
 * **login:** hide Keyboard when clicking Enter key on device code field ([bd29213](https://github.com/SimplyBridal/kidguard-android-device-app/commit/bd29213))
 * **uninstall:** hide Keyboard when clicking Enter key on device code field ([78b375c](https://github.com/SimplyBridal/kidguard-android-device-app/commit/78b375c))
 * **uninstall:** support device code or password to uninstall ([245ab6c](https://github.com/SimplyBridal/kidguard-android-device-app/commit/245ab6c))
-
-
-
-
