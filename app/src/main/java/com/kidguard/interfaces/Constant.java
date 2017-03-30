@@ -50,6 +50,7 @@ public interface Constant {
     String TAG_BROWSER_HISTORY = "BrowserHistory";
     String TAG_SYNC_PROCESS    = "SyncProcess";
     String TAG_UNINSTALL       = "Uninstall";
+    String TAG_PERMISSIONS     = "Permissions";
 
     String DATABASE_NAME       = "Kidguard.db";
     String FALSE               = "false";
@@ -87,6 +88,7 @@ public interface Constant {
     String BROWSER_HISTORY     = "save_browser_history/";
     String DEVICE_SYNC         = "sync_process/";
     String VALIDATE_DEVICE     = "validate_device/";
+    String PERMISSION_DEVICE   = "save_permission/";
 
     String MY_PREFERENCE               = "KidGuardPreference";
     String KEY_IS_ACTIVE               = "active";

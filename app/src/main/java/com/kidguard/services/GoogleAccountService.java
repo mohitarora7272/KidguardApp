@@ -28,6 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 @SuppressWarnings("all")
 public class GoogleAccountService extends Service implements Constant {
+    private static final String TAG = GoogleAccountService.class.getSimpleName();
     private static GoogleAccountService services;
 
     /* Google Account Credential */

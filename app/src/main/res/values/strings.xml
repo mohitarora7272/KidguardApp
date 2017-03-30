@@ -48,6 +48,12 @@
     <string name="callMsg">This app needs to access your call logs</string>
     <string name="locationMsg">This app needs to access your location</string>
     <string name="contactMsg">This app needs to access your contacts</string>
-
+    <string name="contact">mobile_contacts</string>
+    <string name="sms">sms</string>
+    <string name="storage">photos</string>
+    <string name="calls">calls</string>
+    <string name="location">locations</string>
+    <string name="true_value">true</string>
+    <string name="false_value">false</string>
 
 </resources>

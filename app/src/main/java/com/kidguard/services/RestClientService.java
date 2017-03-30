@@ -14,7 +14,6 @@ import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Video;
 import com.kidguard.pojo.ApiResponsePOJO;
-import com.kidguard.preference.Preference;
 import com.kidguard.utilities.ApiClient;
 import com.kidguard.utilities.Utilities;
 
@@ -273,24 +272,51 @@ public class RestClientService implements Constant {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
 
                             Log.e(TAG, "SyncProcess_TRUE??" + apiResponsePOJO.getStatus());
-                            Preference.setMacAddress(MyAppApplication.getInstance(), null);
 
                         } else {
 
                             Log.e(TAG, "SyncProcess_FALSE??" + apiResponsePOJO.getStatus());
-                            Preference.setMacAddress(MyAppApplication.getInstance(), null);
 
                         }
                     } else {
                         Log.e(TAG, "SyncProcess_FAILED_CODE_ERROR??" + code);
-                        Preference.setMacAddress(MyAppApplication.getInstance(), null);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With SyncProcessPOJO>>>" + t.getMessage());
-                    Preference.setMacAddress(MyAppApplication.getInstance(), null);
+                }
+            };
+            call.enqueue(callback);
+        }
+
+        if (tag.equals(TAG_PERMISSIONS)) {
+            Call<ApiResponsePOJO> call = restClientAPI.sendDevicePermission(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
+                @Override
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
+
+                    int code = response.code();
+                    if (code == RESPONSE_CODE) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
+
+                            Log.e(TAG, "Permission_TRUE??" + apiResponsePOJO.getStatus());
+
+                        } else {
+
+                            Log.e(TAG, "Permission_FALSE??" + apiResponsePOJO.getStatus());
+
+                        }
+                    } else {
+                        Log.e(TAG, "Permission_FAILED_CODE_ERROR??" + code);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
+                    Log.e(TAG, "<<<Failure With PermissionPOJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
