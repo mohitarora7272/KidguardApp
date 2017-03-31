@@ -75,8 +75,6 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
                 macAddress = Utilities.getMacAddressOnMarshmallow();
             }
         }
-
-        //macAddress = "64:00:6a:3e:28:fc";
     }
 
     // Set ActionBar Hide

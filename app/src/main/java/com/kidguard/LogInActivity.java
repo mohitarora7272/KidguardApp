@@ -74,9 +74,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             checkPermissionReadContacts();
         }
 
-        //macAddress = "64:00:6a:3e:28:fc";
-
-         /* Set Mac Address */
+        /* Set Mac Address */
         Preference.setMacAddress(this, macAddress);
     }
 
@@ -126,7 +124,6 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         }
     }
 
-    // 64:00:6a:3e:28:fc
     private void getLogin() {
         apiClient = new ApiClient(TAG_LOGIN);
         RestClient restClientAPI = apiClient.getClient();

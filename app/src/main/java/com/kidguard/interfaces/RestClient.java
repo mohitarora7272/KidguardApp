@@ -94,4 +94,8 @@ public interface RestClient {
                                            @Field("password_or_device_code") String deviceCodeOrPassword,
                                            @Field("device_mac_address") String macAddress,
                                            @Field("access_token") String accessToken);
+
+    @FormUrlEncoded
+    @POST("./")
+    Call<ApiResponsePOJO> sendDevicePermission(@Field("access_token") String token, @Field("data") String data);
 }

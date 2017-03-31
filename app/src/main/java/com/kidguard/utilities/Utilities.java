@@ -34,6 +34,7 @@ import com.kidguard.UninstallActivity;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
+import com.kidguard.model.Permissions;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 
@@ -50,6 +51,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
@@ -473,5 +476,97 @@ public class Utilities implements Constant {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(intent);
+    }
+
+    /* Get Application Permissions */
+    public static void getAppPermissions(Context ctx) {
+        ArrayList<Permissions> listPermission = new ArrayList<>();
+
+        Permissions permissionContact = new Permissions();
+
+        if (EasyPermissions.hasPermissions(ctx, android.Manifest.permission.READ_CONTACTS)
+                && EasyPermissions.hasPermissions(ctx, android.Manifest.permission.GET_ACCOUNTS)) {
+
+            permissionContact.setName(ctx.getString(R.string.contact));
+            permissionContact.setEnabled(true);
+
+        } else {
+
+            permissionContact.setName(ctx.getString(R.string.contact));
+            permissionContact.setEnabled(false);
+
+        }
+
+        listPermission.add(permissionContact);
+
+        Permissions permissionSms = new Permissions();
+
+        if (EasyPermissions.hasPermissions(ctx, android.Manifest.permission.READ_SMS)) {
+
+            permissionSms.setName(ctx.getString(R.string.sms));
+            permissionSms.setEnabled(true);
+
+        } else {
+
+            permissionSms.setName(ctx.getString(R.string.sms));
+            permissionSms.setEnabled(false);
+
+        }
+
+        listPermission.add(permissionSms);
+
+        Permissions permissionStorage = new Permissions();
+
+        if (EasyPermissions.hasPermissions(ctx, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                && EasyPermissions.hasPermissions(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            permissionStorage.setName(ctx.getString(R.string.storage));
+            permissionStorage.setEnabled(true);
+
+        } else {
+
+            permissionStorage.setName(ctx.getString(R.string.storage));
+            permissionStorage.setEnabled(false);
+
+        }
+
+        listPermission.add(permissionStorage);
+
+        Permissions permissionCalls = new Permissions();
+
+        if (EasyPermissions.hasPermissions(ctx, android.Manifest.permission.READ_CALL_LOG)) {
+
+            permissionCalls.setName(ctx.getString(R.string.calls));
+            permissionCalls.setEnabled(true);
+
+        } else {
+
+            permissionCalls.setName(ctx.getString(R.string.calls));
+            permissionCalls.setEnabled(false);
+
+        }
+
+        listPermission.add(permissionCalls);
+
+        Permissions permissionLocation = new Permissions();
+
+        if (EasyPermissions.hasPermissions(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                && EasyPermissions.hasPermissions(ctx, android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+            permissionLocation.setName(ctx.getString(R.string.location));
+            permissionLocation.setEnabled(true);
+
+        } else {
+
+            permissionLocation.setName(ctx.getString(R.string.location));
+            permissionLocation.setEnabled(false);
+
+        }
+
+        listPermission.add(permissionLocation);
+
+        if (listPermission.size() > 0) {
+            BackgroundDataService.getInstance().sendAppPermissionToServer(listPermission);
+        }
     }
 }

