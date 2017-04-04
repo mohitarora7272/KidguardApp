@@ -55,5 +55,6 @@
     <string name="location">locations</string>
     <string name="true_value">true</string>
     <string name="false_value">false</string>
+    <string name="common_signup_button_text">Sign up</string>
 
 </resources>
