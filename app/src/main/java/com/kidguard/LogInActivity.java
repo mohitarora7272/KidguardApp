@@ -3,6 +3,7 @@ package com.kidguard;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +41,7 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
     private EditText edt_Email;
     private EditText edt_DeviceCode;
     private Button btn_SignIn;
+    private Button btn_SignUp;
     private ProgressDialog progressDialog;
     private String macAddress;
     private ApiClient apiClient;
@@ -65,6 +67,8 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         edt_DeviceCode = (EditText) findViewById(R.id.edt_DeviceCode);
         btn_SignIn = (Button) findViewById(R.id.btn_SignIn);
         btn_SignIn.setOnClickListener(this);
+        btn_SignUp = (Button) findViewById(R.id.btn_SignUp);
+        btn_SignUp.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
 
         if (Build.VERSION.SDK_INT < 23) {
@@ -90,9 +94,23 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
                 signIn();
                 break;
 
+            case R.id.btn_SignUp:
+                signUp();
+                break;
+
             default:
 
                 break;
+        }
+    }
+
+    /* Sign Up */
+    private void signUp() {
+        if (Utilities.isNetworkAvailable(getApplicationContext())) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SIGN_UP_URL)));
+        } else {
+            Utilities.showSnackBar(this, coordinatorLayout,
+                    getString(R.string.internet_error));
         }
     }
 

@@ -103,6 +103,8 @@ public interface Constant {
     String KEY_ACTIVE_SUBSCRIBER       = "active_subscriber";
     String KEY_MAC_ADDRESS             = "mac_address";
 
+    String SIGN_UP_URL                 = "https://www.kidguard.com/funnel/form?utm_medium=android_app";
+
     String[] SCOPES_GMAIL        = {GmailScopes.GMAIL_READONLY, DriveScopes.DRIVE};
     String[] SCOPES_GOOGLE_DRIVE = {DriveScopes.DRIVE};
 
