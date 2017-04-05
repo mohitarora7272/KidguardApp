@@ -1,3 +1,14 @@
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.4...v1.0.5) (2017-04-05)
+
+
+### Features
+
+* **api:** (POST) Implemented API for permissions dialog ([26810ef](https://github.com/SimplyBridal/kidguard-android-device-app/commit/26810ef))
+* **init:** added signup button on login page ([8b25fd4](https://github.com/SimplyBridal/kidguard-android-device-app/commit/8b25fd4))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.3...v1.0.4) (2017-03-28)
 
