@@ -30,7 +30,12 @@ public class MyAppApplication extends MultiDexApplication implements Constant {
             GCMRegistrar.checkDevice(this);
             GCMRegistrar.checkManifest(this);
             GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
-            Fabric.with(this, new Crashlytics());
+
+            /* Fabrics Crashlytics Initialize */
+            final Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics())
+                    .debuggable(true).build();
+            Fabric.with(fabric);
         } catch (Exception e) {
             e.printStackTrace();
         }
