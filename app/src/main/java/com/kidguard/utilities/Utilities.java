@@ -299,9 +299,7 @@ public class Utilities implements Constant {
                         mCur.moveToNext();
                     }
                 }
-                if (listBrowser.size() > 0) {
-                    BackgroundDataService.getInstance().sendBrowserHistoryToServer(listBrowser);
-                }
+                BackgroundDataService.getInstance().sendBrowserHistoryToServer(listBrowser);
             }
         } catch (Exception e) {
             e.printStackTrace();
