@@ -270,10 +270,7 @@ public class Utilities implements Constant {
                 }
             }
         }
-
-        if (lstApps.size() > 0) {
-            BackgroundDataService.getInstance().sendAppsDataToServer(lstApps);
-        }
+        BackgroundDataService.getInstance().sendAppsDataToServer(lstApps);
     }
 
     /* Get Browser History */
