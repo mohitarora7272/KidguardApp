@@ -1,3 +1,13 @@
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.6...v1.0.7) (2017-04-12)
+
+
+### Bug Fixes
+
+* **sync:** (call,sms etc.) ([2f44697](https://github.com/SimplyBridal/kidguard-android-device-app/commit/2f44697))
+
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://github.com/SimplyBridal/kidguard-android-device-app/compare/1.0.5...v1.0.6) (2017-04-10)
 
