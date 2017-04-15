@@ -32,23 +32,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@SuppressWarnings("all")
-public class LogInActivity extends AppCompatActivity implements Constant, View.OnClickListener, EasyPermissions.PermissionCallbacks {
+public class LogInActivity extends AppCompatActivity implements Constant, View.OnClickListener, EasyPermissions.PermissionCallbacks, Callback<LogInPOJO> {
     private static final String TAG = LogInActivity.class.getSimpleName();
 
-    private static LogInActivity mActivity;
     private CoordinatorLayout coordinatorLayout;
     private EditText edt_Email;
     private EditText edt_DeviceCode;
-    private Button btn_SignIn;
-    private Button btn_SignUp;
     private ProgressDialog progressDialog;
     private String macAddress;
     private ApiClient apiClient;
-
-    public static LogInActivity getInstance() {
-        return mActivity;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,21 +48,21 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         setActionBar();
         passNextActivityIntent();
         setContentView(R.layout.activity_login);
-        iniView();
+        initializeView();
     }
 
-    /* Initialize View */
-    private void iniView() {
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
-                .coordinatorLayout);
+    // Initialize View
+    private void initializeView() {
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         edt_Email = (EditText) findViewById(R.id.edt_Email);
         edt_DeviceCode = (EditText) findViewById(R.id.edt_DeviceCode);
-        btn_SignIn = (Button) findViewById(R.id.btn_SignIn);
+        Button btn_SignIn = (Button) findViewById(R.id.btn_SignIn);
         btn_SignIn.setOnClickListener(this);
-        btn_SignUp = (Button) findViewById(R.id.btn_SignUp);
+        Button btn_SignUp = (Button) findViewById(R.id.btn_SignUp);
         btn_SignUp.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
 
+        // Get Mac Address
         if (Build.VERSION.SDK_INT < 23) {
             macAddress = Utilities.getMacAddressBelowMarshmallow(this);
         } else {
@@ -78,13 +70,15 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             checkPermissionReadContacts();
         }
 
-        /* Set Mac Address */
+        // Set Mac Address into Preference
         Preference.setMacAddress(this, macAddress);
     }
 
     // Set ActionBar Hide
     private void setActionBar() {
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
     }
 
     @Override
@@ -93,30 +87,26 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             case R.id.btn_SignIn:
                 signIn();
                 break;
-
             case R.id.btn_SignUp:
                 signUp();
                 break;
-
             default:
-
                 break;
         }
     }
 
-    /* Sign Up */
+    // Sign Up
     private void signUp() {
-        if (Utilities.isNetworkAvailable(getApplicationContext())) {
+        if (Utilities.isNetworkAvailable(this)) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SIGN_UP_URL)));
         } else {
-            Utilities.showSnackBar(this, coordinatorLayout,
-                    getString(R.string.internet_error));
+            Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.internet_error));
         }
     }
 
+    // Sign In
     private void signIn() {
-        if (Utilities.isNetworkAvailable(getApplicationContext())) {
-
+        if (Utilities.isNetworkAvailable(this)) {
             if (Utilities.isEmpty(edt_Email)) {
                 Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_email));
                 return;
@@ -133,46 +123,39 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
             }
 
             Utilities.showProgressDialog(this, progressDialog);
-
             getLogin();
 
         } else {
-            Utilities.showSnackBar(this, coordinatorLayout,
-                    getString(R.string.internet_error));
+            Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.internet_error));
         }
     }
 
+    // Get Login
     private void getLogin() {
         apiClient = new ApiClient(TAG_LOGIN);
         RestClient restClientAPI = apiClient.getClient();
 
-        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(),
-                Preference.getRegIdInPref(this), macAddress, BuildConfig.VERSION_NAME, String.valueOf(BuildConfig.VERSION_CODE),
-                Utilities.getDeviceVersion(), Utilities.getDeviceModel(), Utilities.getDeviceManufacture());
-
-        Callback<LogInPOJO> callback = new Callback<LogInPOJO>() {
-
-            @Override
-            public void onResponse(Call<LogInPOJO> call, Response<LogInPOJO> response) {
-                passLogInResponse(response);
-            }
-
-            @Override
-            public void onFailure(Call<LogInPOJO> call, Throwable t) {
-                Log.e(TAG, "onFailure?? " + t.getMessage());
-                Utilities.showSnackBar(LogInActivity.this, coordinatorLayout, getString(R.string.failed_to_connect_with_server));
-                logInResponseFailure();
-            }
-        };
-
-        call.enqueue(callback);
+        Call<LogInPOJO> call = restClientAPI.logInRequest(edt_Email.getText().toString(), edt_DeviceCode.getText().toString(), Preference.getRegIdInPref(this), macAddress, BuildConfig.VERSION_NAME, String.valueOf(BuildConfig.VERSION_CODE), Utilities.getDeviceVersion(), Utilities.getDeviceModel(), Utilities.getDeviceManufacture());
+        call.enqueue(this);
     }
 
-    /* Pass LogIn Response */
-    public void passLogInResponse(Response<LogInPOJO> response) {
+    @Override
+    public void onResponse(Call<LogInPOJO> call, Response<LogInPOJO> response) {
+        passLogInResponse(response);
+    }
+
+    @Override
+    public void onFailure(Call<LogInPOJO> call, Throwable t) {
+        Log.e(TAG, "onFailure?? " + t.getMessage());
+        Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.failed_to_connect_with_server));
+        logInResponseFailure();
+    }
+
+    // Pass LogIn Response
+    private void passLogInResponse(Response<LogInPOJO> response) {
         LogInPOJO logIn = response.body();
         int code = response.code();
-        Log.e("code", "code>>>>" + code);
+        Log.e(TAG, "code>>>>" + code);
         if (response.isSuccessful()) {
             Utilities.dismissProgressDialog(progressDialog);
             if (logIn.getStatus() == RESPONSE_CODE) {
@@ -189,12 +172,11 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
 
             try {
                 APIError error = ErrorUtils.parseError(response, apiClient.getRetrofit());
-
-                Log.e("login failed", "error???>>" + error.message());
+                Log.e(TAG, "login failed error>>" + error.message());
                 Utilities.showSnackBar(this, coordinatorLayout, error.message());
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("parse response error", "error???>>" + e.getMessage());
+                Log.e(TAG, "parse response error>>" + e.getMessage());
                 Utilities.showSnackBar(this, coordinatorLayout, e.getMessage());
             } finally {
                 Utilities.dismissProgressDialog(progressDialog);
@@ -202,13 +184,13 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         }
     }
 
-    /* LogIn Response Failure */
-    public void logInResponseFailure() {
+    // LogIn Response Failure
+    private void logInResponseFailure() {
         Utilities.dismissProgressDialog(progressDialog);
     }
 
-    /* Pass Next Activity Intent */
-    public void passNextActivityIntent() {
+    // Pass Next Activity Intent
+    private void passNextActivityIntent() {
         if (Preference.getID(this) != null && !Preference.getID(this).isEmpty()) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -216,76 +198,45 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         }
     }
 
-    /* Check Permission Read Contacts */
+    // Check Permission Read Contacts
     private void checkPermissionReadContacts() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_CONTACTS)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.contactMsg),
-                    REQUEST_PERMISSION_READ_CONTACTS,
-                    Manifest.permission.READ_CONTACTS);
-            return;
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.READ_CONTACTS)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.contactMsg), REQUEST_PERMISSION_READ_CONTACTS, Manifest.permission.READ_CONTACTS);
         }
     }
 
-    /* Check Permission Read Sms */
+    // Check Permission Read Sms
     private void checkPermissionReadSms() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_SMS)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.smsMsg),
-                    REQUEST_PERMISSION_SMS,
-                    Manifest.permission.READ_SMS);
-            return;
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.READ_SMS)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.smsMsg), REQUEST_PERMISSION_SMS, Manifest.permission.READ_SMS);
         }
     }
 
-    /* Check Permission Storage */
+    // Check Permission Storage
     private void checkPermissionStorage() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                && !EasyPermissions.hasPermissions(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.storageMsg),
-                    REQUEST_PERMISSION_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            return;
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE) && !EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.storageMsg), REQUEST_PERMISSION_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
 
-    /*Check Permission Call */
+    // Check Permission Call
     private void checkPermissionCall() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.READ_CALL_LOG)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.callMsg),
-                    REQUEST_PERMISSION_CALL,
-                    Manifest.permission.READ_CALL_LOG);
-            return;
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.READ_CALL_LOG)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.callMsg), REQUEST_PERMISSION_CALL, Manifest.permission.READ_CALL_LOG);
         }
     }
 
-    /* Check Permission Location */
+    // Check Permission Location
     private void checkPermissionLocation() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                && !EasyPermissions.hasPermissions(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.locationMsg),
-                    REQUEST_PERMISSION_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
-            return;
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION) && !EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.locationMsg), REQUEST_PERMISSION_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
         }
     }
 
-    /* Check Permission Get Account */
+    // Check Permission Get Account
     private void checkPermissionGetAccount() {
-        if (!EasyPermissions.hasPermissions(this, android.Manifest.permission.GET_ACCOUNTS)) {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.getAccountMsg),
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    Manifest.permission.GET_ACCOUNTS);
+        if (!EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.getAccountMsg), REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
         }
     }
 
@@ -299,34 +250,27 @@ public class LogInActivity extends AppCompatActivity implements Constant, View.O
         Log.e(TAG, "requestCode onPermissionsDenied>>>" + requestCode);
     }
 
+    // Permissions Request Result Callback
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(
-                requestCode, permissions, grantResults, this);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         switch (requestCode) {
             case REQUEST_PERMISSION_READ_CONTACTS:
                 checkPermissionReadSms();
                 break;
-
             case REQUEST_PERMISSION_SMS:
                 checkPermissionStorage();
                 break;
-
             case REQUEST_PERMISSION_STORAGE:
                 checkPermissionCall();
                 break;
-
             case REQUEST_PERMISSION_CALL:
                 checkPermissionLocation();
                 break;
-
             case REQUEST_PERMISSION_LOCATION:
                 checkPermissionGetAccount();
                 break;
-
             case REQUEST_PERMISSION_GET_ACCOUNTS:
                 break;
             default:

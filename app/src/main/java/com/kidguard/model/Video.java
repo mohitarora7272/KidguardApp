@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Video implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
@@ -21,23 +20,23 @@ public class Video implements Serializable {
 
 
     @DatabaseField(columnName = VIDEO_NAME)
-    String videoname;
+    private String videoname;
     @DatabaseField(columnName = VIDEO_PATH)
-    String videoPath;
+    private String videoPath;
     @DatabaseField(columnName = VIDEO_EXT)
-    String videoExt;
+    private String videoExt;
     @DatabaseField(columnName = VIDEO_STATUS)
-    String videoStatus;
+    private String videoStatus;
     @DatabaseField(columnName = VIDEO_SIZE_KB)
-    String videoSizeKB;
+    private String videoSizeKB;
     @DatabaseField(columnName = VIDEO_SIZE_MB)
-    String videoSizeMB;
+    private String videoSizeMB;
     @DatabaseField(columnName = DATE_TIME)
-    String dateTime;
+    private String dateTime;
     @DatabaseField(columnName = DATE_TIME_STAMP)
-    String dateTimeStamp;
+    private String dateTimeStamp;
 
-    /* Default Constructor */
+    // Default Constructor
     public Video() {
     }
 

@@ -21,20 +21,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("all")
 public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contacts>> implements Constant {
     private static final String TAG = ContactsAsyncTask.class.getSimpleName();
+
     private DatabaseHelper databaseHelper = null;
     private Dao<Contacts, Integer> contactsDao;
     private ArrayList<Contacts> lstContacts;
     private Context context;
 
-    /* Sms Constructor */
+    // ContactsAsyncTask Constructor
     public ContactsAsyncTask(Context context) {
         this.context = context;
     }
 
-    /* DatabaseHelper */
+    // Database Helper
     private DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
@@ -55,8 +55,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             ContentResolver cr = context.getContentResolver();
             Cursor cur = null;
             try {
-                cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                        null, null, null, null);
+                cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
                 if (cur != null) {
                     if (contactsDao.isTableExists()) {
                         long numRows = contactsDao.countOf();
@@ -69,16 +68,10 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                     String last_updated_timestamp = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP));
                                     if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                         // get the phone number
-                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                                new String[]{id}, null);
-
+                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
                                         if (pCur != null) {
                                             while (pCur.moveToNext()) {
-                                                List<Contacts> results = queryBuilder.where()
-                                                        .eq(Contacts.CONTACT_PHONE_NO,
-                                                                pCur.getString(
-                                                                        pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
+                                                List<Contacts> results = queryBuilder.where().eq(Contacts.CONTACT_PHONE_NO, pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))).query();
                                                 if (results.size() == 0) {
                                                     setContactsPOJO(pCur, name, id, last_updated_timestamp);
                                                 }
@@ -87,9 +80,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                         }
                                     }
                                 }
-
                             }
-
                         } else {
                             if (cur.getCount() > 0) {
                                 while (cur.moveToNext()) {
@@ -98,9 +89,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
                                     String last_updated_timestamp = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP));
                                     if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                         // get the phone number
-                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                                new String[]{id}, null);
+                                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
                                         if (pCur != null) {
                                             while (pCur.moveToNext()) {
                                                 setContactsPOJO(pCur, name, id, last_updated_timestamp);
@@ -114,14 +103,14 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
 
                         // Contacts Fetch With Tag
                         lstContacts = contactsFetchWithTag(contactsDao, params[0]);
-
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                /*if (cur != null && !cur.isClosed())
-                    cur.close();*/
+                if (cur != null && !cur.isClosed()) {
+                    cur.close();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -138,18 +127,16 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-        if (list != null && list.size() > 0)
-            Log.e(TAG, "Contacts List???" + list.size());
+
+        Log.e(TAG, "Contacts List???" + list.size());
         BackgroundDataService.getInstance().sendContactsDataToServer(list);
     }
 
-
-    /* setContactsPOJO With Cursor */
+    // Set Contacts POJO With Cursor
     private void setContactsPOJO(Cursor pCur, String name, String id, String dateTimeStamp) {
         try {
             Contacts contact = new Contacts();
-            String phone = pCur.getString(
-                    pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String phone = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contact.setContactsName(name);
             contact.setContactsPhoneNo(phone);
             contact.setContact_id(id);
@@ -162,7 +149,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         }
     }
 
-    /* set Contacts POJO With List*/
+    // Set Contacts POJO With List
     private void setContactsPOJO(ArrayList<Contacts> lstContactsSorted, List<Contacts> results, int i) {
         final Contacts contacts = new Contacts();
         contacts.setContactsName(results.get(i).getContactsName());
@@ -174,9 +161,8 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         lstContactsSorted.add(contacts);
     }
 
-    /* Check Count */
+    // Check Count
     private void checkCount(ArrayList<Contacts> lstContactsSorted, List<Contacts> results, String count, int countNew) {
-
         if (results != null && results.size() > 0) {
             if (Integer.parseInt(count) == results.size()) {
                 countNew = Integer.parseInt(count);
@@ -197,31 +183,23 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         ArrayList<Contacts> lstContactsSorted = new ArrayList<>();
         int countNew = 0;
         final QueryBuilder<Contacts, Integer> queryBuilder = contactsDao.queryBuilder();
-        //queryBuilder.orderBy(Sms.SMS_ID, false); // descending sort
         try {
-
+            List<Contacts> results;
             if (!count.equals("")) {
-                List<Contacts> results;
                 results = queryBuilder.where().eq(Contacts.CONTACT_STATUS, FALSE).query();
                 checkCount(lstContactsSorted, results, count, countNew);
-
             } else {
-                List<Contacts> results;
                 results = queryBuilder.where().eq(Contacts.CONTACT_STATUS, FALSE).query();
                 if (results != null && results.size() > 0) {
                     for (int i = 0; i < results.size(); i++) {
                         setContactsPOJO(lstContactsSorted, results, i);
                     }
                 }
-
             }
-            return lstContactsSorted;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return lstContactsSorted;
     }
-
 }

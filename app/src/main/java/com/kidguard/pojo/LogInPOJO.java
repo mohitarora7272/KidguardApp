@@ -1,22 +1,17 @@
 package com.kidguard.pojo;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-@SuppressWarnings("all")
+
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "status",
-        "error",
-        "message",
-        "user"
-})
+@JsonPropertyOrder({"status", "error", "message", "user"})
 public class LogInPOJO {
 
     @JsonProperty("status")
@@ -310,6 +305,5 @@ public class LogInPOJO {
         public void setAdditionalProperty(String name, Object value) {
             this.additionalProperties.put(name, value);
         }
-
     }
 }

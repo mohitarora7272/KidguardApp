@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,8 +50,6 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
-/* MakeRequestTask */
-@SuppressWarnings("all")
 public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> implements Constant {
     private static final String TAG = MakeRequestEmail.class.getSimpleName();
 
@@ -66,8 +65,8 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     private DatabaseHelper databaseHelper = null;
     private int i = 0;
 
-    public MakeRequestEmail(Context ctx, GoogleAccountCredential mCredential, String count,
-                            String dateFrom, String dateTo, String subject) {
+    // MakeRequestEmail Constructor
+    public MakeRequestEmail(Context ctx, GoogleAccountCredential mCredential, String count, String dateFrom, String dateTo, String subject) {
         this.ctx = ctx;
         this.count = count;
         this.dateFrom = dateFrom;
@@ -76,14 +75,10 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         this.mCredential = mCredential;
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-
-        mService = new Gmail.Builder(
-                transport, jsonFactory, mCredential)
-                .setApplicationName(ctx.getString(R.string.app_name))
-                .build();
-
+        mService = new Gmail.Builder(transport, jsonFactory, mCredential).setApplicationName(ctx.getString(R.string.app_name)).build();
     }
 
+    // Database Helper
     private DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(ctx, DatabaseHelper.class);
@@ -96,9 +91,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         super.onPreExecute();
         try {
             mailDao = getHelper().getMailDao();
-
             if (mailDao.isTableExists()) {
-
                 if (DatabaseHelper.getInstance() != null) {
                     TableUtils.dropTable(DatabaseHelper.getInstance().getConnectionSource(), Mail.class, true);
                     TableUtils.createTable(DatabaseHelper.getInstance().getConnectionSource(), Mail.class);
@@ -117,9 +110,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     @Override
     protected ArrayList<Mail> doInBackground(Void... params) {
         try {
-            return listMessagesMatchingQuery(mService, mCredential.getSelectedAccountName(),
-                    count, dateFrom, dateTo, subject);
-
+            return listMessagesMatchingQuery(mService, mCredential.getSelectedAccountName(), count, dateFrom, dateTo, subject);
         } catch (Exception e) {
             mLastError = e;
             cancel(true);
@@ -131,16 +122,11 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     protected void onCancelled() {
         if (mLastError != null) {
             if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                showGooglePlayServicesAvailabilityErrorDialog(
-                        ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                .getConnectionStatusCode());
+                showGooglePlayServicesAvailabilityErrorDialog(((GooglePlayServicesAvailabilityIOException) mLastError).getConnectionStatusCode());
             } else if (mLastError instanceof UserRecoverableAuthIOException) {
                 if (MainActivity.getInstance() != null) {
-                    MainActivity.getInstance().startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            REQUEST_AUTHORIZATION);
+                    MainActivity.getInstance().startActivityForResult(((UserRecoverableAuthIOException) mLastError).getIntent(), REQUEST_AUTHORIZATION);
                 }
-
             } else {
                 Log.e(TAG, "The following error occurred:\n" + mLastError.getMessage());
             }
@@ -150,50 +136,37 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
     }
 
     /**
-     * Fetch a list of Gmail labels attached to the specified account.
+     * Fetch a list of GMail labels attached to the specified account.
      *
      * @return List of Strings labels.
      * @throws IOException
      */
-    public ArrayList<Mail> listMessagesMatchingQuery(Gmail service, String userId,
-                                                     String count, String dateFrom, String dateTo,
-                                                     String subject) throws IOException {
+    @Nullable
+    private ArrayList<Mail> listMessagesMatchingQuery(Gmail service, String userId, String count, String dateFrom, String dateTo, String subject) throws IOException {
 
-        long x = 0;
-        ListMessagesResponse response = null;
-        List<Message> messages = new ArrayList<Message>();
-        ArrayList<Mail> mailList = new ArrayList<Mail>();
+        long x;
+        ListMessagesResponse response;
+        List<Message> messages = new ArrayList<>();
+        ArrayList<Mail> mailList = new ArrayList<>();
 
         if (dateFrom.equals("") && dateTo.equals("") && subject.equals("") && !count.equals("")) {
-
             Log.e("1", "1_UP");
             if (Integer.parseInt(count) < _100) {
-
                 Integer y = Integer.parseInt(count);
                 x = y.longValue();
-
             } else if (Integer.parseInt(count) < _200) {
-
                 Integer y = Integer.parseInt(count);
                 x = y.longValue();
-
             } else if (Integer.parseInt(count) < _300) {
-
                 Integer y = Integer.parseInt(count);
                 x = y.longValue();
-
             } else if (Integer.parseInt(count) < _400) {
-
                 Integer y = Integer.parseInt(count);
                 x = y.longValue();
-
             } else if (Integer.parseInt(count) < _500) {
-
                 Integer y = Integer.parseInt(count);
                 x = y.longValue();
-
             } else {
-
                 Integer y = _500;
                 x = y.longValue();
             }
@@ -201,23 +174,18 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             response = service.users().messages().list(userId).setMaxResults(x).execute();
             Log.e(TAG, "Response Up>>" + response);
 
-            while (response.getMessages() != null) {
+            if (response.getMessages() != null) {
                 messages.addAll(response.getMessages());
-                break;
             }
 
             for (Message message : messages) {
                 try {
-
                     mailList = getMimeMessageList(mService, mCredential.getSelectedAccountName(), message.getId(), mailList);
-
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 }
             }
-
             return mailList;
-
         }
 
         Integer y = _500;
@@ -226,9 +194,8 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         response = service.users().messages().list(userId).setMaxResults(x).execute();
         Log.e(TAG, "Response Down>>" + response);
 
-        while (response.getMessages() != null) {
+        if (response.getMessages() != null) {
             messages.addAll(response.getMessages());
-            break;
         }
 
         for (Message message : messages) {
@@ -239,317 +206,205 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             }
         }
 
-
         try {
             int countNew = Integer.parseInt(ZERO);
             long numRows = mailDao.countOf();
             Log.e(TAG, "numRows>>>" + numRows);
 
             final QueryBuilder<Mail, Integer> queryBuilder = mailDao.queryBuilder();
-
             if (numRows > Integer.parseInt(ZERO)) {
-
-                List<Mail> results = null;
+                List<Mail> results;
 
                 if (dateFrom.equals("") && dateTo.equals("") && subject.equals("") && !count.equals("")) {
-
                     Log.e("1", "1");
                     results = mailDao.queryForAll();
-
                     checkCount(mailList, results, count, countNew);
-
                     return mailList;
                 }
 
                 if (dateFrom.equals("") && dateTo.equals("") && !subject.equals("") && !count.equals("")) {
-
                     Log.e("2", "2");
-
                     results = queryBuilder.where().eq(Mail.MAIL_SUBJECT, subject).query();
-
                     checkCount(mailList, results, count, countNew);
-
                     return mailList;
                 }
 
                 if (dateFrom.equals("") && dateTo.equals("") && !subject.equals("") && count.equals("")) {
-
                     Log.e("3", "3");
-
                     results = queryBuilder.where().eq(Mail.MAIL_SUBJECT, subject).query();
-
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
                             setMailPOJO(mailList, results, j);
                         }
                     }
-
                     return mailList;
-
                 }
 
                 if (!dateFrom.equals("") && !dateTo.equals("") && subject.equals("") && count.equals("")) {
-
                     Log.e("4", "4");
-
                     List<Mail> resultDateFrom = queryBuilder.where().like(Mail.MAIL_DATE, dateFrom).query();
                     List<Mail> resultDateTo = queryBuilder.where().like(Mail.MAIL_DATE, dateTo).query();
-
                     if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             return null;
                         }
                         dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
-
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                     } else if (resultDateFrom.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateFrom = dateTo;
-
                         } else {
                             dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-
                         }
-
                     } else if (resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateTo = dateFrom;
-
                         } else {
-                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                    .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
+                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                         }
                     }
 
                     if (dateFrom.equals(dateTo)) {
-
-                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom)
-                                .query();
-
+                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom).query();
                         if (results != null && results.size() > 0) {
                             for (int j = 0; j < results.size(); j++) {
                                 setMailPOJO(mailList, results, j);
                             }
                         }
-
                     } else {
-                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo)
-                                .query();
-
+                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).query();
                         if (results != null && results.size() > 0) {
                             for (int j = 0; j < results.size(); j++) {
                                 setMailPOJO(mailList, results, j);
                             }
                         }
                     }
-
                     return mailList;
-
                 }
 
                 if (!dateFrom.equals("") && !dateTo.equals("") && !subject.equals("") && count.equals("")) {
-
                     Log.e("5", "5");
-
                     List<Mail> resultDateFrom = queryBuilder.where().like(Mail.MAIL_DATE, dateFrom).query();
                     List<Mail> resultDateTo = queryBuilder.where().like(Mail.MAIL_DATE, dateTo).query();
 
                     if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             return null;
                         }
                         dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
-
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                     } else if (resultDateFrom.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateFrom = dateTo;
-
                         } else {
                             dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-
                         }
-
                     } else if (resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateTo = dateFrom;
-
                         } else {
-                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                    .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
+                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                         }
                     }
 
                     if (dateFrom.equals(dateTo)) {
-
-                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom)
-                                .and().eq(Mail.MAIL_SUBJECT, subject).query();
-
+                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom).and().eq(Mail.MAIL_SUBJECT, subject).query();
                         if (results != null && results.size() > 0) {
                             for (int j = 0; j < results.size(); j++) {
                                 setMailPOJO(mailList, results, j);
                             }
                         }
-
                     } else {
-                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo)
-                                .and().eq(Mail.MAIL_SUBJECT, subject).query();
-
+                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).and().eq(Mail.MAIL_SUBJECT, subject).query();
                         if (results != null && results.size() > 0) {
                             for (int j = 0; j < results.size(); j++) {
                                 setMailPOJO(mailList, results, j);
                             }
                         }
                     }
-
                     return mailList;
-
                 }
 
                 if (!dateFrom.equals("") && !dateTo.equals("") && subject.equals("") && !count.equals("")) {
-
                     Log.e("6", "6");
-
                     List<Mail> resultDateFrom = queryBuilder.where().like(Mail.MAIL_DATE, dateFrom).query();
                     List<Mail> resultDateTo = queryBuilder.where().like(Mail.MAIL_DATE, dateTo).query();
-
                     if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             return null;
                         }
                         dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
-
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                     } else if (resultDateFrom.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateFrom = dateTo;
-
                         } else {
                             dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-
                         }
-
                     } else if (resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateTo = dateFrom;
-
                         } else {
-                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                    .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
+                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                         }
                     }
 
                     if (dateFrom.equals(dateTo)) {
-
                         results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom).query();
-
-
                     } else {
-
                         results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).query();
-
                     }
-
                     checkCount(mailList, results, count, countNew);
-
                     return mailList;
-
                 }
 
                 if (!dateFrom.equals("") && !dateTo.equals("") && !subject.equals("") && !count.equals("")) {
-
                     Log.e("7", "7");
-
                     List<Mail> resultDateFrom = queryBuilder.where().like(Mail.MAIL_DATE, dateFrom).query();
                     List<Mail> resultDateTo = queryBuilder.where().like(Mail.MAIL_DATE, dateTo).query();
-
                     if (resultDateFrom.size() == 0 && resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             return null;
                         }
                         dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
-
+                        dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                     } else if (resultDateFrom.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateFrom = dateTo;
-
                         } else {
                             dateFrom = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(0);
-
                         }
-
                     } else if (resultDateTo.size() == 0) {
-                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null
-                                && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
+                        if (getResultedDateFromTo(queryBuilder, dateFrom, dateTo) == null && getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() == 0) {
                             dateTo = dateFrom;
-
                         } else {
-                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo)
-                                    .get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
-
+                            dateTo = getResultedDateFromTo(queryBuilder, dateFrom, dateTo).get(getResultedDateFromTo(queryBuilder, dateFrom, dateTo).size() - 1);
                         }
                     }
 
                     if (dateFrom.equals(dateTo)) {
-
-                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom)
-                                .and().eq(Mail.MAIL_SUBJECT, subject).query();
-
-
+                        results = queryBuilder.where().eq(Mail.MAIL_DATE, dateFrom).and().eq(Mail.MAIL_SUBJECT, subject).query();
                     } else {
-
-                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo)
-                                .and().eq(Mail.MAIL_SUBJECT, subject).query();
-
+                        results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).and().eq(Mail.MAIL_SUBJECT, subject).query();
                     }
-
                     checkCount(mailList, results, count, countNew);
-
                     return mailList;
-
                 }
 
                 if (dateFrom.equals("") && dateTo.equals("") && subject.equals("") && count.equals("")) {
-
                     Log.e("8", "8");
                     results = mailDao.queryForAll();
-
                     if (results != null && results.size() > 0) {
                         for (int j = 0; j < results.size(); j++) {
                             setMailPOJO(mailList, results, j);
                         }
                     }
-
                     return mailList;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return mailList;
     }
 
@@ -559,26 +414,21 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-
         if (output == null || output.size() == 0) {
             Log.e(TAG, "No results returned.");
-
             if (BackgroundDataService.getInstance() != null) {
                 ctx.stopService(new Intent(ctx, BackgroundDataService.class));
             }
-
             if (GoogleAccountService.getInstance() != null) {
                 ctx.stopService(new Intent(ctx, GoogleAccountService.class));
             }
-
         } else {
-            Log.e(TAG, "Data retrieved using the Gmail API:");
-            if (output != null && output.size() > Integer.parseInt(ZERO))
-                GoogleAccountService.getInstance().sendEmailDataToServer(output);
+            Log.e(TAG, "Data retrieved using the GMail API:");
+            GoogleAccountService.getInstance().sendEmailDataToServer(output);
         }
     }
 
-    /* Set Mail POJO */
+    // Set Mail POJO
     private void setMailPOJO(List<Mail> mailList, List<Mail> results, int j) {
         Mail mail = new Mail();
         mail.setMail_id(results.get(j).getMail_id());
@@ -590,9 +440,8 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         mailList.add(mail);
     }
 
-    /* checkCount */
+    // checkCount
     private void checkCount(ArrayList<Mail> lstCallsSorted, List<Mail> results, String count, int countNew) {
-
         if (results != null && results.size() > 0) {
             if (Integer.parseInt(count) == results.size()) {
                 countNew = Integer.parseInt(count);
@@ -608,16 +457,14 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         }
     }
 
-    public Message getMessage(Gmail service, String userId, String messageId)
-            throws IOException {
-        Message message = service.users().messages().get(userId, messageId).execute();
-        return message;
+    public Message getMessage(Gmail service, String userId, String messageId) throws IOException {
+        return service.users().messages().get(userId, messageId).execute();
     }
 
     /**
      * Get a Message and use it to create a MimeMessage.
      *
-     * @param service   Authorized Gmail API instance.
+     * @param service   Authorized GMail API instance.
      * @param userId    User's email address. The special value "me"
      *                  can be used to indicate the authenticated user.
      * @param messageId ID of Message to retrieve.
@@ -625,22 +472,20 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
      * @throws IOException
      * @throws MessagingException
      */
-    private Dao<Mail, Integer> getMimeMessageDao(Gmail service, String userId, String messageId)
-            throws IOException, MessagingException {
+    private Dao<Mail, Integer> getMimeMessageDao(Gmail service, String userId, String messageId) throws IOException, MessagingException {
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID??" + message.getId());
         Log.e(TAG, "email_count" + i++);
-        Base64 base64Url = new Base64(true);
-        byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
+        byte[] emailBytes = Base64.decodeBase64(message.getRaw());
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
         MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
 
-       /* First Check Mail Database is Exists Or Not
-          If Exists Then Remove Table From Old Entries
-          and Fill With New Mail Entries In the Table*/
+  /* First Check Mail Database is Exists Or Not
+     If Exists Then Remove Table From Old Entries
+     and Fill With New Mail Entries In the Table*/
         try {
             Mail mail = new Mail();
             mail.setMail_id(message.getId());
@@ -650,18 +495,16 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             mail.setDate(Utilities.getDate(message.getInternalDate()));
             mail.setSnippet(message.getSnippet());
             mailDao.create(mail);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return mailDao;
     }
 
     /**
      * Get a Message and use it to create a MimeMessage.
      *
-     * @param service   Authorized Gmail API instance.
+     * @param service   Authorized GMail API instance.
      * @param userId    User's email address. The special value "me"
      *                  can be used to indicate the authenticated user.
      * @param messageId ID of Message to retrieve.
@@ -669,14 +512,12 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
      * @throws IOException
      * @throws MessagingException
      */
-    private ArrayList<Mail> getMimeMessageList(Gmail service, String userId, String messageId, ArrayList<Mail> mailList)
-            throws IOException, MessagingException {
+    private ArrayList<Mail> getMimeMessageList(Gmail service, String userId, String messageId, ArrayList<Mail> mailList) throws IOException, MessagingException {
 
         Message message = service.users().messages().get(userId, messageId).setFormat("raw").execute();
         Log.e("ID", "ID_UP??" + message.getId());
         Log.e(TAG, "email_count" + i++);
-        Base64 base64Url = new Base64(true);
-        byte[] emailBytes = base64Url.decodeBase64(message.getRaw());
+        byte[] emailBytes = Base64.decodeBase64(message.getRaw());
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
@@ -691,72 +532,56 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
         mail.setDate(Utilities.getDate(message.getInternalDate()));
         mail.setSnippet(message.getSnippet());
         mailList.add(mail);
-
         return mailList;
     }
 
     /* Get Resulted DateFrom To */
-    private List<String> getResultedDateFromTo(QueryBuilder<Mail,
-            Integer> queryBuilder, String dateFrom, String dateTo) {
+    private List<String> getResultedDateFromTo(QueryBuilder<Mail, Integer> queryBuilder, String dateFrom, String dateTo) {
         List<String> sortList = new ArrayList<>();
         try {
-            List<Mail> results = null;
-
-            results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).query();
-
+            List<Mail> results = queryBuilder.where().between(Mail.MAIL_DATE, dateFrom, dateTo).query();
             if (results != null && results.size() > 0) {
                 for (int i = 0; i < results.size(); i++) {
                     sortList.add(results.get(i).getDate());
                 }
                 Collections.sort(sortList);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return sortList;
     }
 
-    /* GooglePlayServicesAvailabilityErrorDialog */
-    void showGooglePlayServicesAvailabilityErrorDialog(
-            final int connectionStatusCode) {
+    //  GooglePlayServicesAvailabilityErrorDialog
+    private void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
         if (MainActivity.getInstance() != null) {
             GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-            Dialog dialog = apiAvailability.getErrorDialog(
-                    MainActivity.getInstance(),
-                    connectionStatusCode,
-                    REQUEST_GOOGLE_PLAY_SERVICES);
+            Dialog dialog = apiAvailability.getErrorDialog(MainActivity.getInstance(), connectionStatusCode, REQUEST_GOOGLE_PLAY_SERVICES);
             dialog.show();
         }
     }
 
-    /* Is GooglePlayServices Available */
+    // Is GooglePlayServices Available
     private boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(ctx);
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(ctx);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
 
-    /* Acquire GooglePlayServices */
+    // Acquire GooglePlayServices
     private void acquireGooglePlayServices() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(ctx);
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(ctx);
         if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
         }
     }
 
     private String getFormattedAddresses(Address[] addresses) {
-        List<String> recipientsList = new ArrayList<String>();
         String receiver = null;
         if (addresses != null && addresses.length != 0) {
-            for (Address adress : addresses) {
-                receiver = getPersonFromAddress(adress);
+            for (Address address : addresses) {
+                receiver = getPersonFromAddress(address);
             }
         }
         return receiver;
@@ -787,7 +612,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             return null;
         }
 
-        String fromName;
+        //String fromName;
         String fromEmail;
         String regex = "(.*)<([^<>]*)>";
 
@@ -795,13 +620,12 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(from);
             matcher.find();
-            fromName = matcher.group(1);
+            //fromName = matcher.group(1);
             fromEmail = matcher.group(2);
         } else {
-            fromName = from;
+            //fromName = from;
             fromEmail = from;
         }
-
         return fromEmail;
     }
 
@@ -814,7 +638,7 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
      */
     private static String prepareMimeFieldToDecode(String text) {
         text = text.trim();
-        if (text.indexOf("=?x-unknown?") != -1) {
+        if (text.contains("=?x-unknown?")) {
             text = text.replace("x-unknown", "iso-8859-2");
         }
         int quotStart = text.indexOf("\"");

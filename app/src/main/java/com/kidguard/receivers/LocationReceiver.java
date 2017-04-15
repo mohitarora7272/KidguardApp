@@ -6,14 +6,11 @@ import android.content.Intent;
 
 import com.kidguard.services.LocationService;
 
-@SuppressWarnings("all")
 public class LocationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Intent myIntent = new Intent(context, LocationService.class);
         context.startService(myIntent);
-
     }
 }

@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("all")
 public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> implements Constant {
     private static final String TAG = VideoAsyncTask.class.getSimpleName();
 
@@ -32,12 +31,12 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
     private ArrayList<File> fileList;
     private ArrayList<Video> lstVideos;
 
-    /* VideoAsyncTask Constructor */
+    // VideoAsyncTask Constructor
     public VideoAsyncTask(Context context) {
         this.context = context;
     }
 
-    /* DatabaseHelper */
+    // Database Helper
     private DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
@@ -48,15 +47,14 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        lstVideos = new ArrayList<Video>();
+        lstVideos = new ArrayList<>();
     }
 
     @Override
     protected ArrayList<Video> doInBackground(String... params) {
-        fileList = new ArrayList<File>();
+        fileList = new ArrayList<>();
         File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         fileList = getFile(root);
-
         try {
             videosDao = getHelper().getVideosDao();
             if (videosDao.isTableExists()) {
@@ -65,9 +63,7 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
                     final QueryBuilder<Video, Integer> queryBuilder = videosDao.queryBuilder();
                     for (int i = 0; i < videosDao.queryForAll().size(); i++) {
                         for (int j = 0; j < fileList.size(); j++) {
-                            List<Video> results = queryBuilder.where()
-                                    .eq(Video.VIDEO_PATH,
-                                            fileList.get(j).getAbsolutePath()).query();
+                            List<Video> results = queryBuilder.where().eq(Video.VIDEO_PATH, fileList.get(j).getAbsolutePath()).query();
                             if (results.size() == 0) {
                                 setVideoPOJO(fileList, j);
                             }
@@ -82,10 +78,8 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        /* Video Fetch With Tag */
+        // Video Fetch With Tag
         lstVideos = videoFetchWithTag(videosDao, params[0], params[1], params[3]);
-
         return lstVideos;
     }
 
@@ -97,43 +91,33 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-        if (list != null && list.size() > 0)
-            Log.e("Size", "VIDEO List???" + list.size());
-        BackgroundDataService.getInstance().sendVideosDataToServer(list);
 
+        Log.e(TAG, "VIDEO List???" + list.size());
+        BackgroundDataService.getInstance().sendVideosDataToServer(list);
     }
 
     // Get Video List
-    public ArrayList<File> getFile(File dir) {
+    private ArrayList<File> getFile(File dir) {
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
-
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) {
+            for (File file : listFile) {
+                if (file.isDirectory()) {
                     //fileList.add(listFile[i]);
-                    getFile(listFile[i]);
-
+                    getFile(file);
                 } else {
-                    if (listFile[i].getName().endsWith(".mp4")
-                            || listFile[i].getName().endsWith(".mkv")
-                            || listFile[i].getName().endsWith(".3gp")
-                            || listFile[i].getName().endsWith(".Wmv")
-                            || listFile[i].getName().endsWith(".flv"))
-
-                    {
-                        fileList.add(listFile[i]);
+                    if (file.getName().endsWith(".mp4") || file.getName().endsWith(".mkv") || file.getName().endsWith(".3gp") || file.getName().endsWith(".Wmv") || file.getName().endsWith(".flv")) {
+                        fileList.add(file);
                     }
                 }
-
             }
         }
         return fileList;
     }
 
-    /* Set Video POJO With File List*/
+    // Set Video POJO With File List
     private void setVideoPOJO(ArrayList<File> fileList, int i) {
         Video video = new Video();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ");
         video.setDate_time(sdf.format(fileList.get(i).lastModified()));
         video.setDate_time_stamp(String.valueOf(fileList.get(i).lastModified()));
         video.setVideoname(fileList.get(i).getName());
@@ -147,16 +131,14 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    /* Video Fetch With Tag*/
+    // Video Fetch With Tag
     private ArrayList<Video> videoFetchWithTag(Dao<Video, Integer> VideoDao, String count, String ext, String size) {
         ArrayList<Video> lstVideoSorted = new ArrayList<>();
-        List<Video> results = null;
+        List<Video> results;
         int countNew = 0;
         final QueryBuilder<Video, Integer> queryBuilder = VideoDao.queryBuilder();
-
         if (!count.equals("") && ext.equals("") && size.equals("")) {
             try {
                 results = queryBuilder.where().eq(Video.VIDEO_STATUS, FALSE).query();
@@ -165,7 +147,6 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
                 e.printStackTrace();
             }
             return lstVideoSorted;
-
         }
 
         if (count.equals("") && !ext.equals("") && size.equals("")) {
@@ -187,20 +168,15 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             return lstVideoSorted;
         }
 
         if (count.equals("") && ext.equals("") && !size.equals("")) {
             try {
-
                 if (Integer.parseInt(size) > 0) {
-
-                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size)
-                            .and().eq(Video.VIDEO_STATUS, FALSE).query();
+                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size).and().eq(Video.VIDEO_STATUS, FALSE).query();
                 } else {
                     results = queryBuilder.where().eq(Video.VIDEO_STATUS, FALSE).query();
-
                 }
 
                 if (results != null && results.size() > 0) {
@@ -208,7 +184,6 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
                         setVideoPOJO(lstVideoSorted, results, j);
                     }
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -217,17 +192,12 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
 
         if (!count.equals("") && ext.equals("") && !size.equals("")) {
             try {
-
                 if (Integer.parseInt(size) > 0) {
-
-                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size)
-                            .and().eq(Video.VIDEO_STATUS, FALSE).query();
+                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size).and().eq(Video.VIDEO_STATUS, FALSE).query();
                 } else {
                     results = queryBuilder.where().eq(Video.VIDEO_STATUS, FALSE).query();
                 }
-
                 checkCount(lstVideoSorted, results, count, countNew);
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -236,18 +206,12 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
 
         if (!count.equals("") && !ext.equals("") && !size.equals("")) {
             try {
-
                 if (Integer.parseInt(size) > 0) {
-
-                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size)
-                            .and().eq(Video.VIDEO_EXT, ext).and().eq(Video.VIDEO_STATUS, FALSE).query();
-
+                    results = queryBuilder.where().between(Video.VIDEO_SIZE_KB, ZERO, size).and().eq(Video.VIDEO_EXT, ext).and().eq(Video.VIDEO_STATUS, FALSE).query();
                 } else {
                     results = queryBuilder.where().eq(Video.VIDEO_EXT, ext).and().eq(Video.VIDEO_STATUS, FALSE).query();
                 }
-
                 checkCount(lstVideoSorted, results, count, countNew);
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -256,24 +220,20 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
 
         if (count.equals("") && ext.equals("") && size.equals("")) {
             try {
-
                 results = videosDao.queryForAll();
                 for (int i = 0; i < results.size(); i++) {
                     setVideoPOJO(lstVideoSorted, results, i);
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             return lstVideoSorted;
-
         }
         return lstVideoSorted;
     }
 
-    /* Check Count */
+    // Check Count
     private void checkCount(ArrayList<Video> lstVideoSorted, List<Video> results, String count, int countNew) {
-
         if (results != null && results.size() > 0) {
             if (Integer.parseInt(count) == results.size()) {
                 countNew = Integer.parseInt(count);
@@ -289,7 +249,7 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
         }
     }
 
-    /* Set Video POJO */
+    // Set Video POJO
     private void setVideoPOJO(ArrayList<Video> lstVideoSorted, List<Video> results, int i) {
         Video video = new Video();
         video.setVideoname(results.get(i).getVideoname());
@@ -324,7 +284,6 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
             size = f.length();
             size = size / 1024;
             size = size / 1024;
-
         } catch (Exception e) {
             Log.e("Exception", "Size??" + e.getMessage());
         }

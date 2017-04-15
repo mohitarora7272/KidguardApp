@@ -17,20 +17,11 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
-@SuppressWarnings("all")
 public interface RestClient {
 
     @FormUrlEncoded
     @POST("./")
-    Call<LogInPOJO> logInRequest(@Field("email") String email,
-                                 @Field("device_code") String deviceCode,
-                                 @Field("device_registration_id") String deviceRegistrationId,
-                                 @Field("device_mac_address") String macAddress,
-                                 @Field("app_version_name") String appVersionName,
-                                 @Field("app_version_code") String appVersionCode,
-                                 @Field("os_version") String osVersion,
-                                 @Field("device_model") String deviceModel,
-                                 @Field("manufacturer") String manufacturer);
+    Call<LogInPOJO> logInRequest(@Field("email") String email, @Field("device_code") String deviceCode, @Field("device_registration_id") String deviceRegistrationId, @Field("device_mac_address") String macAddress, @Field("app_version_name") String appVersionName, @Field("app_version_code") String appVersionCode, @Field("os_version") String osVersion, @Field("device_model") String deviceModel, @Field("manufacturer") String manufacturer);
 
     @FormUrlEncoded
     @POST("./")
@@ -62,27 +53,19 @@ public interface RestClient {
 
     @Multipart
     @POST("./")
-    Call<ApiResponsePOJO> sendImageToServer(@Query("access_token") String token,
-                                            @PartMap() HashMap<String, RequestBody> map,
-                                            @Part MultipartBody.Part file);
+    Call<ApiResponsePOJO> sendImageToServer(@Query("access_token") String token, @PartMap() HashMap<String, RequestBody> map, @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<ApiResponsePOJO> sendVideoToServer(@Query("access_token") String token,
-                                            @PartMap() HashMap<String, RequestBody> map,
-                                            @Part MultipartBody.Part file);
+    Call<ApiResponsePOJO> sendVideoToServer(@Query("access_token") String token, @PartMap() HashMap<String, RequestBody> map, @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<ApiResponsePOJO> sendFilesToServer(@Query("access_token") String token,
-                                            @PartMap() HashMap<String, RequestBody> map,
-                                            @Part MultipartBody.Part file);
+    Call<ApiResponsePOJO> sendFilesToServer(@Query("access_token") String token, @PartMap() HashMap<String, RequestBody> map, @Part MultipartBody.Part file);
 
     @Multipart
     @POST("./")
-    Call<ApiResponsePOJO> sendDriveToServer(@Query("access_token") String token,
-                                            @PartMap() HashMap<String, RequestBody> map,
-                                            @Part MultipartBody.Part file);
+    Call<ApiResponsePOJO> sendDriveToServer(@Query("access_token") String token, @PartMap() HashMap<String, RequestBody> map, @Part MultipartBody.Part file);
 
     @FormUrlEncoded
     @POST("./")
@@ -90,10 +73,7 @@ public interface RestClient {
 
     @FormUrlEncoded
     @POST("./")
-    Call<ApiResponsePOJO> uninstallRequest(@Field("email") String email,
-                                           @Field("password_or_device_code") String deviceCodeOrPassword,
-                                           @Field("device_mac_address") String macAddress,
-                                           @Field("access_token") String accessToken);
+    Call<ApiResponsePOJO> uninstallRequest(@Field("email") String email, @Field("password_or_device_code") String deviceCodeOrPassword, @Field("device_mac_address") String macAddress, @Field("access_token") String accessToken);
 
     @FormUrlEncoded
     @POST("./")

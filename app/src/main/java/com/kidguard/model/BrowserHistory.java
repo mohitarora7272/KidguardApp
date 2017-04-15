@@ -1,12 +1,11 @@
 package com.kidguard.model;
 
-@SuppressWarnings("all")
 public class BrowserHistory {
 
-    String title;
-    String date;
-    String url;
-    String dateTime;
+    private String title;
+    private String date;
+    private String url;
+    private String dateTime;
 
     public String getDateTime() {
         return dateTime;
@@ -39,6 +38,4 @@ public class BrowserHistory {
     public void setTitle(String title) {
         this.title = title;
     }
-
-
 }

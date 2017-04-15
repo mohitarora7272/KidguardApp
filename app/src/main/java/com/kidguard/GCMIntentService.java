@@ -19,22 +19,18 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-@SuppressWarnings("all")
 public class GCMIntentService extends GCMBaseIntentService implements Constant {
-
     private static final String TAG = GCMIntentService.class.getSimpleName();
 
     // Use your PROJECT ID from Google API into SENDER_ID
-
     public GCMIntentService() {
         super(SENDER_ID);
     }
 
     @Override
     protected void onRegistered(Context context, String registrationId) {
-
         Log.e(TAG, "registrationId>>>>" + registrationId);
-        /* Saving reg id to shared preferences */
+        // Saving registrationId to shared preferences
         Preference.storeRegIdInPref(this, registrationId);
     }
 
@@ -44,8 +40,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
 
     @Override
     protected void onMessage(Context context, Intent data) {
-
-        /* Message from PHP server */
+        // Message from PHP server
         String message = data.getStringExtra(CUSTOM);
 
         try {
@@ -53,9 +48,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             JSONObject json = new JSONObject(message);
             JSONObject jsonData = json.getJSONObject(DATA);
             String tag = jsonData.getString(TAGGING);
-
             passServiceIntent(tag, "", "", "", "", "");
-
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
         } catch (Exception e) {
@@ -63,10 +56,8 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
         }
     }
 
-    /* Pass Service Intent */
-    private void passServiceIntent(String tag, String count, String dateFrom,
-                                   String dateTo, String size, String subject) {
-
+    // Pass Service Intent
+    private void passServiceIntent(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
         if (BackgroundDataService.getInstance() != null) {
             stopService(new Intent(this, BackgroundDataService.class));
         }
@@ -75,31 +66,19 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             stopService(new Intent(this, GoogleAccountService.class));
         }
 
-        /* Check and Delete And Refresh Gallery Google Drive Folder in Sd Card */
-        File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString()
-                + java.io.File.separator + DRIVE_NAME);
+        // Check and Delete And Refresh Gallery Google Drive Folder in Sd Card
+        File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString() + java.io.File.separator + DRIVE_NAME);
         Utilities.deleteDirectory(toFiles);
         Utilities.refreshAndroidGallery(this, Uri.fromFile(toFiles));
 
         if (tag.equals(TAG_LOCATION)) {
-
             if (LocationService.getInstance() != null) {
                 stopService(new Intent(this, LocationService.class));
             }
-
-            startService(new Intent(this, LocationService.class)
-                    .putExtra(KEY_TAG, tag));
-
+            startService(new Intent(this, LocationService.class).putExtra(KEY_TAG, tag));
         } else {
-            Log.e(TAG, "Tag_In_Notification>>>"+" "+tag);
-
-            startService(new Intent(this, BackgroundDataService.class)
-                    .putExtra(KEY_TAG, tag)
-                    .putExtra(KEY_COUNT, count)
-                    .putExtra(KEY_DATE_FROM, dateFrom)
-                    .putExtra(KEY_DATE_TO, dateTo)
-                    .putExtra(KEY_SIZE, size)
-                    .putExtra(KEY_SUBJECT, subject));
+            Log.e(TAG, "Tag_In_Notification>>>" + " " + tag);
+            startService(new Intent(this, BackgroundDataService.class).putExtra(KEY_TAG, tag).putExtra(KEY_COUNT, count).putExtra(KEY_DATE_FROM, dateFrom).putExtra(KEY_DATE_TO, dateTo).putExtra(KEY_SIZE, size).putExtra(KEY_SUBJECT, subject));
         }
     }
 

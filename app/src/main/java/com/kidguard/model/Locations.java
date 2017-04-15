@@ -1,12 +1,11 @@
 package com.kidguard.model;
 
-@SuppressWarnings("all")
 public class Locations {
-    String latitude;
-    String longitude;
-    String dateTime;
-    String dateTimeStamp;
-    String distance;
+    private String latitude;
+    private String longitude;
+    private String dateTime;
+    private String dateTimeStamp;
+    private String distance;
 
     public String getDateTime() {
         return dateTime;

@@ -13,7 +13,7 @@ import com.google.api.services.drive.model.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-@SuppressWarnings("all")
+
 public class HttpDownloadManager {
     private static final String TAG = HttpDownloadManager.class.getSimpleName();
     private String downloadUrl;
@@ -29,10 +29,9 @@ public class HttpDownloadManager {
         super();
         this.downloadUrl = sourceFile.getDownloadUrl();
         this.toFile = destinationFile.toString();
-        if(sourceFile.getFileSize() != null){
+        if (sourceFile.getFileSize() != null) {
             this.totalBytes = sourceFile.getFileSize();
         }
-
     }
 
     public interface FileDownloadProgressListener {
@@ -45,15 +44,13 @@ public class HttpDownloadManager {
 
     public boolean download(Drive service) {
         HttpResponse respEntity = null;
-
         try {
             // URL url = new URL(urlString);
             Log.e(TAG, "downloadUrl??" + downloadUrl);
             if (downloadUrl == null) {
                 return false;
             }
-            respEntity = service.getRequestFactory()
-                    .buildGetRequest(new GenericUrl(downloadUrl)).execute();
+            respEntity = service.getRequestFactory().buildGetRequest(new GenericUrl(downloadUrl)).execute();
             HttpRequest request = respEntity.getRequest();
             request.setConnectTimeout(40 * 1000);
             InputStream in = respEntity.getContent();
@@ -64,8 +61,7 @@ public class HttpDownloadManager {
             FileOutputStream f = new FileOutputStream(toFile) {
 
                 @Override
-                public void write(@NonNull byte[] buffer, int byteOffset,
-                                  int byteCount) throws IOException {
+                public void write(@NonNull byte[] buffer, int byteOffset, int byteCount) throws IOException {
                     super.write(buffer, byteOffset, byteCount);
                 }
             };
@@ -101,4 +97,3 @@ public class HttpDownloadManager {
         return true;
     }
 }
-

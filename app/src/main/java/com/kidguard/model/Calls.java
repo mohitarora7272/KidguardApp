@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Calls implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
@@ -47,7 +46,7 @@ public class Calls implements Serializable {
     @DatabaseField(columnName = CALLER_ANSWERED)
     public String callerAnswered;
 
-    /* Default Constructor */
+    // Default Constructor
     public Calls() {
     }
 
@@ -58,7 +57,6 @@ public class Calls implements Serializable {
     public void setCallerId(String callerId) {
         this.callerId = callerId;
     }
-
 
     public String getCallerName() {
         return callerName;
@@ -91,7 +89,6 @@ public class Calls implements Serializable {
     public void setCallType(String callType) {
         this.callType = callType;
     }
-
 
     public String getCallDuration() {
         return callDuration;
@@ -140,5 +137,4 @@ public class Calls implements Serializable {
     public void setCallerAnswered(String callerAnswered) {
         this.callerAnswered = callerAnswered;
     }
-
 }
