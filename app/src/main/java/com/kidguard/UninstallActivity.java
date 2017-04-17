@@ -32,16 +32,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@SuppressWarnings("all")
 public class UninstallActivity extends AppCompatActivity implements Constant, View.OnClickListener, Callback<ApiResponsePOJO> {
     private static final String TAG = UninstallActivity.class.getSimpleName();
+
     private static UninstallActivity mActivity;
     private CoordinatorLayout coordinatorLayout;
     private ProgressDialog progressDialog;
     private EditText edt_DeviceCodeOrPassword;
     private EditText edt_Email;
-    private Button btn_Uninstall;
-    private Button btn_Activate;
     private ApiClient apiClient;
     private String macAddress;
 
@@ -55,17 +53,16 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         setActionBar();
         setContentView(R.layout.activity_uninstall);
         mActivity = UninstallActivity.this;
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
-                .coordinatorLayout);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         edt_DeviceCodeOrPassword = (EditText) findViewById(R.id.edt_DeviceCodeOrPassword);
         edt_Email = (EditText) findViewById(R.id.edt_Email);
-        btn_Uninstall = (Button) findViewById(R.id.btn_Uninstall);
+        Button btn_Uninstall = (Button) findViewById(R.id.btn_Uninstall);
         btn_Uninstall.setOnClickListener(this);
-        btn_Activate = (Button) findViewById(R.id.btn_Activate);
+        Button btn_Activate = (Button) findViewById(R.id.btn_Activate);
         btn_Activate.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
 
-        /* Getting Mac Address */
+        // Getting Mac Address
         if (Preference.getMacAddress(this) != null && !Preference.getMacAddress(this).isEmpty()) {
             macAddress = Preference.getMacAddress(this);
         } else {
@@ -79,7 +76,9 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
 
     // Set ActionBar Hide
     private void setActionBar() {
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
     }
 
     @Override
@@ -87,7 +86,6 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         switch (v.getId()) {
             case R.id.btn_Uninstall:
                 if (Utilities.isNetworkAvailable(getApplicationContext())) {
-
                     if (Utilities.isEmpty(edt_Email)) {
                         Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.enter_email));
                         return;
@@ -104,69 +102,59 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
                     }
 
                     Utilities.showProgressDialog(this, progressDialog);
-
                     getUninstall();
 
                 } else {
-                    Utilities.showSnackBar(this, coordinatorLayout,
-                            getString(R.string.internet_error));
+                    Utilities.showSnackBar(this, coordinatorLayout, getString(R.string.internet_error));
                 }
                 break;
-
             case R.id.btn_Activate:
-                /* Check Is Admin Active Or Not */
+                // Check Is Admin Active Or Not
                 if (!Preference.getIsAdminActive(this)) {
-
                     if (BackgroundDataService.getInstance() == null) {
-
                         Utilities.startServices(this, BackgroundDataService.class);
                         return;
-
                     } else if (BackgroundDataService.getInstance() != null) {
-
                         stopService(new Intent(this, BackgroundDataService.class));
                         Utilities.startServices(this, BackgroundDataService.class);
                         return;
                     }
                 }
                 break;
-
             default:
                 break;
         }
 
     }
 
-    /* Get Uninstall */
+    // Un-install Method Call
     private void getUninstall() {
         apiClient = new ApiClient(TAG_UNINSTALL);
         RestClient restClientAPI = apiClient.getClient();
 
-        Call<ApiResponsePOJO> call = restClientAPI.uninstallRequest(edt_Email.getText().toString(),
-                edt_DeviceCodeOrPassword.getText().toString(), macAddress, Preference.getAccessToken(this));
+        Call<ApiResponsePOJO> call = restClientAPI.uninstallRequest(edt_Email.getText().toString(), edt_DeviceCodeOrPassword.getText().toString(), macAddress, Preference.getAccessToken(this));
         call.enqueue(this);
     }
 
+    // onResponse Callback
     @Override
     public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
         ApiResponsePOJO apiResponse = response.body();
         int code = response.code();
-        Log.e("code", "code>>>>" + code);
+        Log.e(TAG, "code>>>>" + code);
         if (response.isSuccessful()) {
             Utilities.dismissProgressDialog(progressDialog);
             if (apiResponse.getStatus() == RESPONSE_CODE) {
                 uninstallApp();
             }
         } else {
-
             try {
                 APIError error = ErrorUtils.parseError(response, apiClient.getRetrofit());
-
-                Log.e("Uninstall failed", "error???>>" + error.message());
+                Log.e(TAG, "Uninstall failed error>>" + error.message());
                 Utilities.showSnackBar(this, coordinatorLayout, error.message());
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("parse response error", "error???>>" + e.getMessage());
+                Log.e(TAG, "parse response error>>" + e.getMessage());
                 Utilities.showSnackBar(this, coordinatorLayout, e.getMessage());
             } finally {
                 Utilities.dismissProgressDialog(progressDialog);
@@ -181,14 +169,15 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         Utilities.dismissProgressDialog(progressDialog);
     }
 
-    /* Uninstall App */
-    public void uninstallApp() {
+    // Calling Un-install App Intent
+    private void uninstallApp() {
         Intent intent = new Intent(Intent.ACTION_DELETE);
         intent.setData(Uri.parse(PACKAGE + getPackageName()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    // onBackPressed Call
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -196,6 +185,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         Utilities.startUninstallActivity(this);
     }
 
+    // onResume Call
     @Override
     protected void onResume() {
         super.onResume();
@@ -205,26 +195,29 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         }
     }
 
+    // onPause Call
     @Override
     protected void onPause() {
         super.onPause();
         Utilities.startUninstallActivity(this);
     }
 
+    // onStop Call
     @Override
     protected void onStop() {
         super.onStop();
         Utilities.startUninstallActivity(this);
     }
 
+    // onDestroy Call
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Utilities.startUninstallActivity(this);
     }
 
-    /* show Message in toast */
-    void showToast(Context context, String msg) {
+    // Showing Message in Toast
+    private void showToast(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 }

@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Sms implements Serializable {
 
     private static final long serialVersionUID = -222864131214757024L;
@@ -21,39 +20,29 @@ public class Sms implements Serializable {
     public static final String SMS_STATUS = "sms_status";
     public static final String SMS_FROM_ME = "from_me";
 
-
     @DatabaseField(generatedId = true, columnName = ID)
     public int id;
-
     @DatabaseField(columnName = SMS_ID)
     public String sms_id;
-
     @DatabaseField(columnName = SMS_ADDRESS)
     public String address;
-
     @DatabaseField(columnName = SMS_MESSAGE)
     public String message;
-
     @DatabaseField(columnName = SMS_READ_STATE)
     public String readState;
-
     @DatabaseField(columnName = SMS_DATE)
     public String date;
-
     @DatabaseField(columnName = SMS_FOLDER_NAME)
     public String folderName;
-
     @DatabaseField(columnName = SMS_STATUS)
     public String sms_status;
-
     @DatabaseField(columnName = SMS_DATE_TIMESTAMP)
     public String date_timestamp;
-
     @DatabaseField(columnName = SMS_FROM_ME)
     public String from_me;
 
 
-    /* Default Constructor */
+    // Default Constructor
     public Sms() {
     }
 
@@ -64,7 +53,6 @@ public class Sms implements Serializable {
     public void setSms_status(String sms_status) {
         this.sms_status = sms_status;
     }
-
 
     public String getSmsId() {
         return sms_id;
@@ -89,7 +77,6 @@ public class Sms implements Serializable {
     public String getFolderName() {
         return folderName;
     }
-
 
     public void setSmsId(String sms_id) {
         this.sms_id = sms_id;
@@ -130,5 +117,4 @@ public class Sms implements Serializable {
     public void setFrom_me(String from_me) {
         this.from_me = from_me;
     }
-
 }

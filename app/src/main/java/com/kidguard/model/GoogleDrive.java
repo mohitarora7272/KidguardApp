@@ -4,7 +4,7 @@ package com.kidguard.model;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
-@SuppressWarnings("all")
+
 public class GoogleDrive implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 

@@ -1,8 +1,5 @@
 package com.kidguard.exceptions;
 
-/**
- * Created by kos on 2017/3/2.
- */
 
 public class APIError {
     private int statusCode;

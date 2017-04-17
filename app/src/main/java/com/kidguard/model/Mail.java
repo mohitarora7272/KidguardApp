@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Mail implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
@@ -34,7 +33,7 @@ public class Mail implements Serializable {
     private String date_timestamp;
 
 
-    /* Default Constructor */
+    // Default Constructor
     public Mail() {
     }
 
@@ -85,5 +84,4 @@ public class Mail implements Serializable {
     public void setFrom(String from) {
         this.from = from;
     }
-
 }

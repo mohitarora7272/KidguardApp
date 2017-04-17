@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Contacts implements Serializable {
 
     private static final long serialVersionUID = -222864131214757024L;
@@ -34,7 +33,7 @@ public class Contacts implements Serializable {
     @DatabaseField(columnName = CONTACT_DATE_TIMESTAMP)
     private String contactDateTimeStamp;
 
-    /* Default Constructor */
+    // Default Constructor
     public Contacts() {
     }
 
@@ -85,5 +84,4 @@ public class Contacts implements Serializable {
     public void setContactDateTimeStamp(String contactDateTimeStamp) {
         this.contactDateTimeStamp = contactDateTimeStamp;
     }
-
 }

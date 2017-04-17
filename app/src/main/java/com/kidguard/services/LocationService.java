@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -27,22 +28,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("all")
 public class LocationService extends Service implements LocationListener, Constant {
-
     private static final String TAG = LocationService.class.getSimpleName();
-    // Google client to interact with Google API
+
+    private static LocationService mContext;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private double fusedLatitude = 0.0;
-    private double fusedLongitude = 0.0;
-    private static LocationService mContext;
     private Intent intent;
-    private ArrayList<Locations> lstlocation;
-    private String tag;
 
-
-    // LocationService Instance
+    // Location Service Instance
     public static LocationService getInstance() {
         return mContext;
     }
@@ -56,25 +50,20 @@ public class LocationService extends Service implements LocationListener, Consta
     @Override
     public void onCreate() {
         super.onCreate();
-
         mContext = LocationService.this;
-
         startFusedLocation();
         registerRequestUpdate(mContext);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         if (intent != null) {
-            tag = intent.getStringExtra(KEY_TAG);
-                 /* Get Data With Tag */
+            String tag = intent.getStringExtra(KEY_TAG);
+            // Get Data With Tag
             if (tag != null && !tag.equals("")) {
                 Log.e(TAG, "tag location services>>" + tag);
             }
-
         }
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -84,32 +73,31 @@ public class LocationService extends Service implements LocationListener, Consta
         this.intent = intent;
     }
 
-    /* Start Fused Locations */
-    public void startFusedLocation() {
+    // Start Fused Locations
+    private void startFusedLocation() {
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
-                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                        @Override
-                        public void onConnected(Bundle bundle) {
-                        }
+            mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                @Override
+                public void onConnected(Bundle bundle) {
+                }
 
-                        @Override
-                        public void onConnectionSuspended(int cause) {
-                        }
+                @Override
+                public void onConnectionSuspended(int cause) {
+                }
 
-                    }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+            }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
 
-                        @Override
-                        public void onConnectionFailed(ConnectionResult result) {
-                        }
-                    }).build();
+                @Override
+                public void onConnectionFailed(@NonNull ConnectionResult result) {
+                }
+            }).build();
             mGoogleApiClient.connect();
         } else {
             mGoogleApiClient.connect();
         }
     }
 
-    /* Stop Fused Locations */
+    // Stop Fused Locations
     public void stopFusedLocation() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
@@ -119,8 +107,8 @@ public class LocationService extends Service implements LocationListener, Consta
         }
     }
 
-    /* Register Request Update */
-    public void registerRequestUpdate(final LocationListener listener) {
+    // Register Request Update
+    private void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(60000); // every minute
@@ -128,9 +116,7 @@ public class LocationService extends Service implements LocationListener, Consta
             @Override
             public void run() {
                 try {
-                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                            mLocationRequest, listener);
-
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, listener);
                 } catch (SecurityException e) {
                     //e.printStackTrace();
                 } catch (Exception e) {
@@ -144,36 +130,25 @@ public class LocationService extends Service implements LocationListener, Consta
         }, 1000); // every second
     }
 
-    public boolean isGoogleApiClientConnected() {
+    private boolean isGoogleApiClientConnected() {
         return mGoogleApiClient != null && mGoogleApiClient.isConnected();
     }
 
+    // onLocationChanged
     @Override
     public void onLocationChanged(Location location) {
         Log.e(TAG, "Latitude>>" + location.getLatitude());
         Log.e(TAG, "Longitude>>" + location.getLongitude());
-
-        setFusedLatitude(location.getLatitude());
-        setFusedLongitude(location.getLongitude());
-
         if (Preference.getActiveSubscriber(this) != null && !Preference.getActiveSubscriber(this).equals(FALSE)) {
             if (Preference.getLatitude(this) == null && Preference.getLongitude(this) == null) {
-
                 Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
                 sendLocationToServer(location.getLatitude(), location.getLongitude(), 0.0);
-
             } else {
-
-                Log.e(TAG, "distance is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                        , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
-                        location.getLongitude()));
-                double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this))
-                        , Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(),
-                        location.getLongitude());
+                Log.e(TAG, "distance is:->>>" + Utilities.distance(Double.parseDouble(Preference.getLatitude(this)), Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(), location.getLongitude()));
+                double distance = Utilities.distance(Double.parseDouble(Preference.getLatitude(this)), Double.parseDouble(Preference.getLongitude(this)), location.getLatitude(), location.getLongitude());
 
                 Preference.setLatLong(this, location.getLatitude(), location.getLongitude());
                 if (distance >= 50) {
-
                     Log.e(TAG, "Hit Location Api");
                     sendLocationToServer(location.getLatitude(), location.getLongitude(), distance);
                 }
@@ -181,33 +156,22 @@ public class LocationService extends Service implements LocationListener, Consta
         }
     }
 
-    public void setFusedLatitude(double lat) {
-        fusedLatitude = lat;
-    }
-
-    public void setFusedLongitude(double lon) {
-        fusedLongitude = lon;
-    }
-
-    /* Send Location To Server */
+    // Send locations to server when the distance of the user(children) is greater than 50 meter with the last location.
     private void sendLocationToServer(double latitude, double longitude, double distance) {
-
-        lstlocation = new ArrayList<>();
+        ArrayList<Locations> lstLocation = new ArrayList<>();
         Locations locations = new Locations();
         locations.setLatitude(String.valueOf(latitude));
         locations.setLongitude(String.valueOf(longitude));
         locations.setDistance(String.valueOf(distance));
         locations.setDateTime(Utilities.getCurrentDateTime());
         locations.setDateTimeStamp(Utilities.getCurrentDateTimeStamp());
-        lstlocation.add(locations);
-
-        if (lstlocation != null && lstlocation.size() > Integer.parseInt(ZERO)) {
-            StringBuffer sbAppend = new StringBuffer();
+        lstLocation.add(locations);
+        if (lstLocation.size() > Integer.parseInt(ZERO)) {
+            StringBuilder sbAppend = new StringBuilder();
             Gson gson = new Gson();
             Type type = new TypeToken<List<Sms>>() {
             }.getType();
-            //String jsonSMS = gson.toJson(lstSms, type);
-            JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstlocation, type);
+            JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstLocation, type);
             JsonArray jsonArrayLocation = Utilities.getJsonArray(jsonArray);
             String finalJSON = "\"Location\":" + jsonArrayLocation;
             sbAppend.append(finalJSON);

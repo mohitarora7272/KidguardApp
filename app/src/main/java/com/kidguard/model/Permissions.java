@@ -1,9 +1,8 @@
 package com.kidguard.model;
 
-@SuppressWarnings("all")
 public class Permissions {
-    String name;
-    Boolean enabled;
+    private String name;
+    private Boolean enabled;
 
     public String getName() {
         return name;

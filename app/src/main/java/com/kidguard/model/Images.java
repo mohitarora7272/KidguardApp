@@ -4,7 +4,7 @@ package com.kidguard.model;
 import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
-@SuppressWarnings("all")
+
 public class Images implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
@@ -35,7 +35,7 @@ public class Images implements Serializable {
     String imageStatus;
 
 
-    /* Default Constructor */
+    // Default Constructor
     public Images() {
     }
 
@@ -55,7 +55,6 @@ public class Images implements Serializable {
         this.sizeMB = sizeMB;
     }
 
-
     public String getDateTime() {
         return dateTime;
     }
@@ -63,7 +62,6 @@ public class Images implements Serializable {
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
-
 
     public String getImagePath() {
         return imagePath;
@@ -96,5 +94,4 @@ public class Images implements Serializable {
     public void setImageName(String imageName) {
         this.imageName = imageName;
     }
-
 }

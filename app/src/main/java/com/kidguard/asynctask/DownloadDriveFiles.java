@@ -1,4 +1,3 @@
-
 package com.kidguard.asynctask;
 
 
@@ -18,8 +17,6 @@ import com.kidguard.utilities.HttpDownloadManager;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/* Download Files Google Drive */
-@SuppressWarnings("all")
 public class DownloadDriveFiles extends AsyncTask<String, Integer, Boolean> implements Constant {
     private static final String TAG = DownloadDriveFiles.class.getSimpleName();
     private Drive mDrive = null;
@@ -41,15 +38,13 @@ public class DownloadDriveFiles extends AsyncTask<String, Integer, Boolean> impl
     protected Boolean doInBackground(String... params) {
         try {
             final File file = mDrive.files().get(params[0]).execute();
-            java.io.File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString()
-                    + java.io.File.separator + DRIVE_NAME);
+            java.io.File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString() + java.io.File.separator + DRIVE_NAME);
 
             if (!toFiles.exists()) {
                 toFiles.mkdirs();
             }
 
             java.io.File toFile = new java.io.File(toFiles.toString(), params[1]);
-
             HttpDownloadManager downloader = new HttpDownloadManager(file, toFile);
             downloader.setListener(new HttpDownloadManager.FileDownloadProgressListener() {
 

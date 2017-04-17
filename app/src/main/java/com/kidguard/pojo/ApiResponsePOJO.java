@@ -1,21 +1,17 @@
 package com.kidguard.pojo;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-@SuppressWarnings("all")
+
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "status",
-        "error",
-        "message"
-})
+@JsonPropertyOrder({"status", "error", "message"})
 public class ApiResponsePOJO {
 
     @JsonProperty("status")
@@ -66,5 +62,4 @@ public class ApiResponsePOJO {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
 }

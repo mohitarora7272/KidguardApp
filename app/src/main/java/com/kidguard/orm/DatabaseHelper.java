@@ -22,12 +22,8 @@ import com.kidguard.model.Video;
 
 import java.sql.SQLException;
 
-@SuppressWarnings("all")
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant {
 
-    /************************************************
-     * Suggested Copy/Paste code. Everything from here to the done block.
-     ************************************************/
     private static DatabaseHelper databaseHelper;
     private Dao<Sms, Integer> smsDao;
     private Dao<Contacts, Integer> contactsDao;
@@ -39,10 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
     private Dao<GoogleDrive, Integer> googleDriveDao;
 
     public DatabaseHelper(Context context) {
-//        super(context, Environment.getExternalStorageDirectory().getPath()
-//                        + File.separator + DRIVE_DB_NAME
-//                        + File.separator + DATABASE_NAME,
-//                null, DATABASE_VERSION, R.raw.ormlite_config);
+        //super(context, Environment.getExternalStorageDirectory().getPath() + File.separator + DRIVE_DB_NAME + File.separator + DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
         databaseHelper = DatabaseHelper.this;
     }
@@ -51,14 +44,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
         return databaseHelper;
     }
 
-    /************************************************
-     * Suggested Copy/Paste Done
-     ************************************************/
-
     @Override
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
-
             // Create tables. This onCreate() method will be invoked only once of the application life time i.e. the first time when the application starts.
             TableUtils.createTable(connectionSource, Sms.class);
             TableUtils.createTable(connectionSource, Contacts.class);
@@ -68,7 +56,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             TableUtils.createTable(connectionSource, Video.class);
             TableUtils.createTable(connectionSource, Mail.class);
             TableUtils.createTable(connectionSource, GoogleDrive.class);
-
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create databases", e);
         }
@@ -77,7 +64,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
     @Override
     public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
         try {
-
             // In case of change in database of next version of application, please increase the value of DATABASE_VERSION variable, then this method will be invoked
             //automatically. Developer needs to handle the upgrade logic here, i.e. create a new table or a new column to an existing table, take the backups of the
             // existing database etc.
@@ -89,18 +75,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             TableUtils.dropTable(connectionSource, Video.class, true);
             TableUtils.dropTable(connectionSource, Mail.class, true);
             TableUtils.dropTable(connectionSource, GoogleDrive.class, true);
-
             onCreate(sqliteDatabase, connectionSource);
-
         } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
-                    + newVer, e);
+            Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new " + newVer, e);
         }
     }
 
     // Create the getDao methods of all database tables to access those from android code.
     // Insert, delete, read, update everything will be happened through DAOs
-
     public Dao<Contacts, Integer> getContactsDao() throws SQLException {
         if (contactsDao == null) {
             contactsDao = getDao(Contacts.class);

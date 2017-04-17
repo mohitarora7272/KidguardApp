@@ -8,7 +8,6 @@ import com.kidguard.interfaces.Constant;
 
 import io.fabric.sdk.android.Fabric;
 
-@SuppressWarnings("all")
 public class MyAppApplication extends MultiDexApplication implements Constant {
 
     private static MyAppApplication sInstance;
@@ -22,19 +21,15 @@ public class MyAppApplication extends MultiDexApplication implements Constant {
         super.onCreate();
         sInstance = this;
         sInstance.initializeInstance();
-
-        //Utilities.makeDatabaseFolder();
-
-        /* GCM Registration */
+        // Utilities.makeDatabaseFolder();
+        // GCM Registration
         try {
             GCMRegistrar.checkDevice(this);
             GCMRegistrar.checkManifest(this);
             GCMRegistrar.register(this, GCMIntentService.SENDER_ID);
 
-            /* Fabrics Crashlytics Initialize */
-            final Fabric fabric = new Fabric.Builder(this)
-                    .kits(new Crashlytics())
-                    .debuggable(true).build();
+            // Fabrics Crashlytics Initialize
+            final Fabric fabric = new Fabric.Builder(this).kits(new Crashlytics()).debuggable(true).build();
             Fabric.with(fabric);
         } catch (Exception e) {
             e.printStackTrace();

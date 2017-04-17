@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.Serializable;
 
-@SuppressWarnings("all")
 public class Files implements Serializable {
     private static final long serialVersionUID = -222864131214757024L;
 
@@ -38,7 +37,7 @@ public class Files implements Serializable {
     @DatabaseField(columnName = DATE_TIME_STAMP)
     String dateTimeStamp;
 
-    /* Default Constructor */
+    // Default Constructor
     public Files() {
     }
 
@@ -49,7 +48,6 @@ public class Files implements Serializable {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
-
 
     public String getFilename() {
         return filename;
@@ -90,7 +88,6 @@ public class Files implements Serializable {
     public void setFileSizeKB(String fileSizeKB) {
         this.fileSizeKB = fileSizeKB;
     }
-
 
     public String getDate_time_stamp() {
         return dateTimeStamp;
