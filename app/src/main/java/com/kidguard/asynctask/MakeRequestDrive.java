@@ -3,8 +3,8 @@ package com.kidguard.asynctask;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -27,7 +27,6 @@ import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.GoogleDrive;
 import com.kidguard.orm.DatabaseHelper;
-import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.utilities.Utilities;
 
@@ -131,6 +130,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
         }
     }
 
+    @Nullable
     private ArrayList<GoogleDrive> getDataFromDriveApi() throws IOException {
         ArrayList<GoogleDrive> fileInfo = new ArrayList<>();
         int x;
@@ -400,20 +400,7 @@ public class MakeRequestDrive extends AsyncTask<Void, String, ArrayList<GoogleDr
             databaseHelper = null;
         }
 
-        if (output == null || output.size() == 0) {
-            Log.e("No Result", "No results returned.");
-            if (BackgroundDataService.getInstance() != null) {
-                ctx.stopService(new Intent(ctx, BackgroundDataService.class));
-            }
-
-            if (GoogleAccountService.getInstance() != null) {
-                ctx.stopService(new Intent(ctx, GoogleAccountService.class));
-            }
-
-        } else {
-            Log.e("Data retrieved", "Data retrieved using the Google Drive API:");
-            GoogleAccountService.getInstance().sendGoogleDriveDataToServer(output, mDrive);
-        }
+        new GoogleAccountService(ctx, "").sendGoogleDriveDataToServer(output, mDrive);
     }
 
     // Set GoogleDrive POJO

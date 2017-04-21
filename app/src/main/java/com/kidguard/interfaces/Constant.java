@@ -16,7 +16,6 @@ public interface Constant {
     int _500 = 500;
 
     int DATABASE_VERSION = 1;
-    int REQUEST_CODE_ENABLE_ADMIN = 1;
     int RESPONSE_CODE = 200;
     int REQUEST_ACCOUNT_PICKER = 1000;
     int REQUEST_AUTHORIZATION = 1001;
@@ -50,12 +49,7 @@ public interface Constant {
     String DATABASE_NAME = "Kidguard.db";
     String FALSE = "false";
     String ZERO = "0";
-    String KEY_COUNT = "count";
-    String KEY_DATE_FROM = "dateFrom";
-    String KEY_DATE_TO = "dateTo";
-    String KEY_SUBJECT = "subject";
     String KEY_TAG = "tag";
-    String KEY_SIZE = "size";
     String DRIVE_NAME = ".KidguardDrive";
     String DRIVE_DB_NAME = "KidguardDatabase";
     String SENDER_ID = "969615957584";
@@ -64,6 +58,7 @@ public interface Constant {
     String TAGGING = "tag";
     String MULTIPART_FORM_DATA = "multipart/form-data";
     String PACKAGE = "package:";
+    String GOOGLE_ACCOUNT = "google_account";
 
     String ROOT = BuildConfig.API_URL;
     String APPENDED_URL = "api/";

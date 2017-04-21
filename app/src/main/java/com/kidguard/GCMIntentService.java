@@ -10,7 +10,6 @@ import com.google.android.gcm.GCMBaseIntentService;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.preference.Preference;
 import com.kidguard.services.BackgroundDataService;
-import com.kidguard.services.GoogleAccountService;
 import com.kidguard.services.LocationService;
 import com.kidguard.utilities.Utilities;
 
@@ -58,16 +57,8 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
 
     // Pass Service Intent
     private void passServiceIntent(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
-        if (BackgroundDataService.getInstance() != null) {
-            stopService(new Intent(this, BackgroundDataService.class));
-        }
-
-        if (GoogleAccountService.getInstance() != null) {
-            stopService(new Intent(this, GoogleAccountService.class));
-        }
-
         // Check and Delete And Refresh Gallery Google Drive Folder in Sd Card
-        File toFiles = new java.io.File(Environment.getExternalStorageDirectory().toString() + java.io.File.separator + DRIVE_NAME);
+        File toFiles = new File(Environment.getExternalStorageDirectory().toString() + File.separator + DRIVE_NAME);
         Utilities.deleteDirectory(toFiles);
         Utilities.refreshAndroidGallery(this, Uri.fromFile(toFiles));
 
@@ -78,7 +69,7 @@ public class GCMIntentService extends GCMBaseIntentService implements Constant {
             startService(new Intent(this, LocationService.class).putExtra(KEY_TAG, tag));
         } else {
             Log.e(TAG, "Tag_In_Notification>>>" + " " + tag);
-            startService(new Intent(this, BackgroundDataService.class).putExtra(KEY_TAG, tag).putExtra(KEY_COUNT, count).putExtra(KEY_DATE_FROM, dateFrom).putExtra(KEY_DATE_TO, dateTo).putExtra(KEY_SIZE, size).putExtra(KEY_SUBJECT, subject));
+            new BackgroundDataService(this, tag, count, dateFrom, dateTo, size, subject);
         }
     }
 

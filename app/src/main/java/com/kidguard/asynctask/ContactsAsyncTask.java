@@ -129,7 +129,7 @@ public class ContactsAsyncTask extends AsyncTask<String, Void, ArrayList<Contact
         }
 
         Log.e(TAG, "Contacts List???" + list.size());
-        BackgroundDataService.getInstance().sendContactsDataToServer(list);
+        new BackgroundDataService(context).sendContactsDataToServer(list);
     }
 
     // Set Contacts POJO With Cursor

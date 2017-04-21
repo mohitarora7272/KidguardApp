@@ -22,6 +22,7 @@ import com.kidguard.receivers.LocationReceiver;
 import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.services.RestClientService;
+import com.kidguard.utilities.DeviceAdmin;
 import com.kidguard.utilities.Utilities;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private TextView tv_install;
     private TextView tv_install1;
     private TextView tv_install2;
+    private Boolean isGoogleAccountExecuted = false;
 
     public static MainActivity getInstance() {
         return mActivity;
@@ -61,8 +63,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     }
 
     // onResume Call
+    @Override
     protected void onResume() {
         super.onResume();
+        executePermissions();
+    }
+
+    // Execute Permissions
+    private void executePermissions() {
         // Check Internet is Available or Not
         if (!Utilities.isNetworkAvailable(this)) {
             tv_install.setText(getString(R.string.internet_error));
@@ -79,44 +87,36 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
         // Check Is Admin Active Or Not
         if (!Preference.getIsAdminActive(this)) {
-            if (BackgroundDataService.getInstance() == null) {
-                Utilities.startServices(this, BackgroundDataService.class);
-                return;
-            } else if (BackgroundDataService.getInstance() != null) {
-                stopService(new Intent(this, BackgroundDataService.class));
-                Utilities.startServices(this, BackgroundDataService.class);
-                return;
-            }
+            new DeviceAdmin(this);
+            return;
         }
 
         // Check Google Account Is Enable Or Not
         if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (Preference.getAccountName(this) == null) {
-                if (GoogleAccountService.getInstance() == null) {
-                    Utilities.startServices(this, GoogleAccountService.class);
-                    return;
-                } else if (GoogleAccountService.getInstance() != null) {
-                    stopService(new Intent(this, GoogleAccountService.class));
-                    Utilities.startServices(this, GoogleAccountService.class);
-                    return;
-                }
+                new GoogleAccountService(this, GOOGLE_ACCOUNT);
+                return;
             }
         }
 
         if (Build.VERSION.SDK_INT < 23) {
-            // Get email access permission to user
-            Utilities.startGoogleAccountService(this);
-            // Request Usage State Permission For Application Is In ForGround Or Not
-            requestUsageStatsPermission();
+            if (!isGoogleAccountExecuted) {
+                // Get email access permission to user
+                new GoogleAccountService(this, TAG_EMAIL, ZERO, "", "", "", "");
+                isGoogleAccountExecuted = true;
+            }
         } else {
             if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
-                // Get email access permission to user
-                Utilities.startGoogleAccountService(this);
+                if (!isGoogleAccountExecuted) {
+                    // Get email access permission to user
+                    new GoogleAccountService(this, TAG_EMAIL, ZERO, "", "", "", "");
+                    isGoogleAccountExecuted = true;
+                }
             }
-
-            // Request Usage State Permission For Application Is In ForGround Or Not
-            requestUsageStatsPermission();
         }
+
+        // Request Usage State Permission For Application Is In ForGround Or Not
+        requestUsageStatsPermission();
     }
 
     // Request Usage Stats Permission on RunTime
@@ -163,14 +163,6 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
     // Stop Services Intent
     private void stopServicesIntent() {
-        if (BackgroundDataService.getInstance() != null) {
-            stopService(new Intent(this, BackgroundDataService.class));
-        }
-
-        if (GoogleAccountService.getInstance() != null) {
-            stopService(new Intent(this, GoogleAccountService.class));
-        }
-
         // Check Permission On Device
         checkPermissionOnDevice();
 
@@ -185,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
 
     // Check Permission On Device Method Call
     private void checkPermissionOnDevice() {
-        startService(new Intent(this, BackgroundDataService.class).putExtra(KEY_TAG, TAG_PERMISSIONS).putExtra(KEY_COUNT, "").putExtra(KEY_DATE_FROM, "").putExtra(KEY_DATE_TO, "").putExtra(KEY_SIZE, "").putExtra(KEY_SUBJECT, ""));
+        new BackgroundDataService(this, TAG_PERMISSIONS, "", "", "", "", "");
     }
 
     // On Activity Result Call
@@ -234,21 +226,10 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
     }
 
-    /* onDestroy */
+    // onDestroy
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Utilities.isNetworkAvailable(this) && Utilities.isGpsEnabled(this)) {
-            if (BackgroundDataService.getInstance() != null) {
-                Log.e(TAG, "Stop BackgroundDataService");
-                stopService(new Intent(this, BackgroundDataService.class));
-            }
-
-            if (GoogleAccountService.getInstance() != null) {
-                Log.e(TAG, "Stop GoogleAccountService");
-                stopService(new Intent(this, GoogleAccountService.class));
-            }
-        }
         finish();
     }
 }

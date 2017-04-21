@@ -52,6 +52,7 @@ public class ApiClient implements Constant {
             if (tag.equals(TAG_EMAIL)) {
                 retrofit = new Retrofit.Builder().baseUrl(ROOT + APPENDED_URL + EMAIL).addConverterFactory(GsonConverterFactory.create(gson)).build();
             }
+
             if (tag.equals(TAG_GOOGLE_DRIVE)) {
                 retrofit = new Retrofit.Builder().baseUrl(ROOT + APPENDED_URL + DRIVE).addConverterFactory(GsonConverterFactory.create(gson)).build();
             }

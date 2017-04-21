@@ -93,7 +93,7 @@ public class VideoAsyncTask extends AsyncTask<String, Void, ArrayList<Video>> im
         }
 
         Log.e(TAG, "VIDEO List???" + list.size());
-        BackgroundDataService.getInstance().sendVideosDataToServer(list);
+        new BackgroundDataService(context).sendVideosDataToServer(list);
     }
 
     // Get Video List
