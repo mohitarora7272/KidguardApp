@@ -129,7 +129,7 @@ public class SmsAsyncTask extends AsyncTask<String, Void, ArrayList<Sms>> implem
         }
 
         Log.e(TAG, "SMS List???" + smsList.size());
-        BackgroundDataService.getInstance().sendSmsDataToServer(smsList);
+        new BackgroundDataService(context).sendSmsDataToServer(smsList);
     }
 
     // Set Sms POJO With Cursor

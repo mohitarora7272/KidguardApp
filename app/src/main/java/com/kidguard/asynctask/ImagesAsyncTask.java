@@ -107,7 +107,7 @@ public class ImagesAsyncTask extends AsyncTask<String, Void, ArrayList<Images>> 
         }
 
         Log.e("Size", "Images List???" + list.size());
-        BackgroundDataService.getInstance().sendImageDataToServer(list);
+        new BackgroundDataService(context).sendImageDataToServer(list);
     }
 
     // Set Image POJO

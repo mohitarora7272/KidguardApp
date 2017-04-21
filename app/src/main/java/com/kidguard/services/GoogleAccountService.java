@@ -1,10 +1,7 @@
 package com.kidguard.services;
 
 import android.Manifest;
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.content.Context;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -24,58 +21,48 @@ import java.util.Arrays;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class GoogleAccountService extends Service implements Constant {
-    private static final String TAG = GoogleAccountService.class.getSimpleName();
-
-    private static GoogleAccountService gAccountServices;
-    public GoogleAccountCredential mCredential;
+public class GoogleAccountService implements Constant {
+    private GoogleAccountCredential mCredential;
     private String tag;
     private String count;
     private String dateFrom;
     private String dateTo;
     private String subject;
     private String size;
+    private Context ctx;
 
-    public static GoogleAccountService getInstance() {
-        return gAccountServices;
+    // Default Constructor
+    public GoogleAccountService(Context ctx, String getAccountStr) {
+        this.ctx = ctx;
+        if (getAccountStr != null && !getAccountStr.equals("")) {
+            getGoogleAccount();
+        }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        gAccountServices = GoogleAccountService.this;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            tag = intent.getStringExtra(KEY_TAG);
-            count = intent.getStringExtra(KEY_COUNT);
-            dateFrom = intent.getStringExtra(KEY_DATE_FROM);
-            dateTo = intent.getStringExtra(KEY_DATE_TO);
-            subject = intent.getStringExtra(KEY_SUBJECT);
-            size = intent.getStringExtra(KEY_SIZE);
+    // GoogleAccountService Constructor
+    public GoogleAccountService(Context ctx, String tag, String count, String dateFrom, String dateTo, String subject, String size) {
+        this.ctx = ctx;
+        if (tag != null && !tag.equals("")) {
+            this.tag = tag;
+            this.count = count;
+            this.dateFrom = dateFrom;
+            this.dateTo = dateTo;
+            this.subject = subject;
+            this.size = size;
         }
         getGoogleAccount();
-        return super.onStartCommand(intent, flags, startId);
     }
 
     // Get Google Account
     private void getGoogleAccount() {
         if (tag != null) {
             if (tag.equals(TAG_EMAIL)) {
-                mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
+                mCredential = GoogleAccountCredential.usingOAuth2(ctx.getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
             } else {
-                mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GOOGLE_DRIVE)).setBackOff(new ExponentialBackOff());
+                mCredential = GoogleAccountCredential.usingOAuth2(ctx.getApplicationContext(), Arrays.asList(SCOPES_GOOGLE_DRIVE)).setBackOff(new ExponentialBackOff());
             }
         } else {
-            mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
+            mCredential = GoogleAccountCredential.usingOAuth2(ctx.getApplicationContext(), Arrays.asList(SCOPES_GMAIL)).setBackOff(new ExponentialBackOff());
         }
 
         getResultsFromApi();
@@ -88,9 +75,9 @@ public class GoogleAccountService extends Service implements Constant {
         } else {
             if (tag != null && !tag.equals("")) {
                 if (tag.equals(TAG_EMAIL)) {
-                    new MakeRequestEmail(this, mCredential, count, dateFrom, dateTo, subject).execute();
+                    new MakeRequestEmail(ctx, mCredential, count, dateFrom, dateTo, subject).execute();
                 } else {
-                    new MakeRequestDrive(this, mCredential, count, dateFrom, dateTo, subject, size).execute();
+                    new MakeRequestDrive(ctx, mCredential, count, dateFrom, dateTo, subject, size).execute();
                 }
             }
         }
@@ -98,8 +85,8 @@ public class GoogleAccountService extends Service implements Constant {
 
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
     private void chooseAccount() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = Preference.getAccountName(this);
+        if (EasyPermissions.hasPermissions(ctx, Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = Preference.getAccountName(ctx);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
@@ -112,24 +99,23 @@ public class GoogleAccountService extends Service implements Constant {
         } else {
             if (MainActivity.getInstance() != null) {
                 // Request the GET_ACCOUNTS permission via a user dialog
-                EasyPermissions.requestPermissions(MainActivity.getInstance(), getString(R.string.getAccountMsg), REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
+                EasyPermissions.requestPermissions(MainActivity.getInstance(), ctx.getString(R.string.getAccountMsg), REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
             }
         }
     }
 
     // Send EMAIL Data To Server
     public void sendEmailDataToServer(ArrayList<Mail> lstEmail) {
-        if (lstEmail != null && lstEmail.size() > 0) {
-            BackgroundDataService.getInstance().sendEmailDataToServer(lstEmail);
-        }
-        stopSelf();
+        new BackgroundDataService(ctx).sendEmailDataToServer(lstEmail);
     }
 
     // Send Google Drive Data To Server
     public void sendGoogleDriveDataToServer(ArrayList<GoogleDrive> lstDrive, Drive mDrive) {
-        if (lstDrive != null && lstDrive.size() > 0) {
-            BackgroundDataService.getInstance().sendGoogleDriveDataToServer(lstDrive, mDrive);
-        }
-        stopSelf();
+        new BackgroundDataService(ctx).sendGoogleDriveDataToServer(lstDrive, mDrive);
+    }
+
+    // Get Google Credentials
+    public GoogleAccountCredential getGoogleCredentials() {
+        return mCredential;
     }
 }

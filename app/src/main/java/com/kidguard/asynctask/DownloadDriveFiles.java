@@ -82,7 +82,7 @@ public class DownloadDriveFiles extends AsyncTask<String, Integer, Boolean> impl
             id++;
             Preference.setDriveId(ctx, id);
         } else {
-            BackgroundDataService.getInstance().sendSaveDriveDataToServer();
+            new BackgroundDataService(ctx).sendSaveDriveDataToServer(lstDrive);
         }
     }
 }

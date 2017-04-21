@@ -21,8 +21,8 @@ import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
 import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.preference.Preference;
-import com.kidguard.services.BackgroundDataService;
 import com.kidguard.utilities.ApiClient;
+import com.kidguard.utilities.DeviceAdmin;
 import com.kidguard.utilities.ErrorUtils;
 import com.kidguard.utilities.Utilities;
 
@@ -111,14 +111,8 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
             case R.id.btn_Activate:
                 // Check Is Admin Active Or Not
                 if (!Preference.getIsAdminActive(this)) {
-                    if (BackgroundDataService.getInstance() == null) {
-                        Utilities.startServices(this, BackgroundDataService.class);
-                        return;
-                    } else if (BackgroundDataService.getInstance() != null) {
-                        stopService(new Intent(this, BackgroundDataService.class));
-                        Utilities.startServices(this, BackgroundDataService.class);
-                        return;
-                    }
+                    new DeviceAdmin(this);
+                    return;
                 }
                 break;
             default:

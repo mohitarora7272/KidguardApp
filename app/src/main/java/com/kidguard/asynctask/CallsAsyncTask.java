@@ -120,7 +120,7 @@ public class CallsAsyncTask extends AsyncTask<String, Void, ArrayList<Calls>> im
         }
 
         Log.e(TAG, "CALLS List???" + list.size());
-        BackgroundDataService.getInstance().sendCallsDataToServer(list);
+        new BackgroundDataService(context).sendCallsDataToServer(list);
     }
 
     // Set Calls POJO With Cursor

@@ -94,7 +94,7 @@ public class FilesAsyncTask extends AsyncTask<String, Void, ArrayList<Files>> im
         }
 
         Log.e("Size", "FILES List???" + list.size());
-        BackgroundDataService.getInstance().sendFilesDataToServer(list);
+        new BackgroundDataService(context).sendFilesDataToServer(list);
     }
 
     // Get Files List

