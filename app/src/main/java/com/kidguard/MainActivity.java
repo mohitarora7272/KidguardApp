@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private TextView tv_install1;
     private TextView tv_install2;
     private Boolean isGoogleAccountExecuted = false;
+    private Boolean isMiDialogOpen = false;
 
     public static MainActivity getInstance() {
         return mActivity;
@@ -144,6 +147,14 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             return;
         }
 
+        if (!isMiDialogOpen) {
+            isMiDialogOpen = true;
+            if (Build.MANUFACTURER.equalsIgnoreCase(getString(R.string.xiomi_text))) {
+                showMiDialog();
+                return;
+            }
+        }
+
         // Start Location Receivers Here
         try {
             startLocationReceiver();
@@ -224,6 +235,25 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             default:
                 break;
         }
+    }
+
+    // Show Auto Start Permissions Dialog For Mi Phones
+    private void showMiDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.mi_dialog_title));
+        builder.setMessage(getString(R.string.mi_dialog_message));
+        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // dismiss dialog
+                dialog.dismiss();
+                onResume();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
     }
 
     // onDestroy
