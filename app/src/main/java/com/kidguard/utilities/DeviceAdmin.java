@@ -1,6 +1,5 @@
 package com.kidguard.utilities;
 
-
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -21,7 +20,6 @@ public class DeviceAdmin {
     public DeviceAdmin(Context ctx) {
         this.ctx = ctx;
         initializeAdmin();
-        checkIsAdminActiveOrNot();
     }
 
     // Initializing Administrator
@@ -32,14 +30,12 @@ public class DeviceAdmin {
     }
 
     // Check Device Administrator Is Active Or Not
-    private void checkIsAdminActiveOrNot() {
-        if (!isActiveAdmin()) {
-            // Launch the activity to have the user enable our admin.
-            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
-            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, ctx.getString(R.string.add_admin_extra_app_text));
-            ctx.startActivity(intent);
-        }
+    public void openAdminScreen() {
+        // Launch the activity to have the user enable our admin.
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdminSample);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, ctx.getString(R.string.add_admin_extra_app_text));
+        ctx.startActivity(intent);
     }
 
     // Helper to determine if we are an active admin

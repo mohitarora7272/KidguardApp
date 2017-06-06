@@ -95,7 +95,7 @@ dependencies {
     compile('com.google.apis:google-api-services-drive:v2-rev247-1.22.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
     compile files('libs/gcm.jar')

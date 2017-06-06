@@ -1,6 +1,5 @@
 package com.kidguard.interfaces;
 
-
 import android.net.Uri;
 
 import com.google.api.services.drive.DriveScopes;
@@ -28,6 +27,8 @@ public interface Constant {
     int REQUEST_PERMISSION_CALL = 1003;
     int REQUEST_PERMISSION_LOCATION = 1004;
     int REQUEST_PERMISSION_GET_ACCOUNTS = 1005;
+    int REQUEST_CODE_NOTIFICATION = 64;
+    int REQUEST_CODE_READ_MESSAGE = 2048;
 
     String TAG_SMS = "Sms";
     String TAG_LOGIN = "Login";
@@ -45,6 +46,7 @@ public interface Constant {
     String TAG_SYNC_PROCESS = "SyncProcess";
     String TAG_UNINSTALL = "Uninstall";
     String TAG_PERMISSIONS = "Permissions";
+    String TAG_WHATSAPP = "WhatsApp";
 
     String DATABASE_NAME = "Kidguard.db";
     String FALSE = "false";
@@ -59,6 +61,9 @@ public interface Constant {
     String MULTIPART_FORM_DATA = "multipart/form-data";
     String PACKAGE = "package:";
     String GOOGLE_ACCOUNT = "google_account";
+    String TYPE_INCOMING = "Incoming";
+    String TYPE_OUTGOING = "Outgoing";
+    String TAB_MODEL = "SM-T355Y";
 
     String ROOT = BuildConfig.API_URL;
     String APPENDED_URL = "api/";
@@ -78,6 +83,7 @@ public interface Constant {
     String DEVICE_SYNC = "sync_process/";
     String VALIDATE_DEVICE = "validate_device/";
     String PERMISSION_DEVICE = "save_permission/";
+    String WHATS_APP = "save_whatsapp_message/";
 
     String MY_PREFERENCE = "KidGuardPreference";
     String KEY_IS_ACTIVE = "active";

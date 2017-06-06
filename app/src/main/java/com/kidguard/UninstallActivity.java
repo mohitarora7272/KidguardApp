@@ -1,6 +1,5 @@
 package com.kidguard;
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +41,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
     private EditText edt_Email;
     private ApiClient apiClient;
     private String macAddress;
+    private DeviceAdmin deviceAdmin;
 
     public static UninstallActivity getInstance() {
         return mActivity;
@@ -61,6 +61,7 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
         Button btn_Activate = (Button) findViewById(R.id.btn_Activate);
         btn_Activate.setOnClickListener(this);
         progressDialog = new ProgressDialog(this);
+        deviceAdmin = new DeviceAdmin(this);
 
         // Getting Mac Address
         if (Preference.getMacAddress(this) != null && !Preference.getMacAddress(this).isEmpty()) {
@@ -110,15 +111,14 @@ public class UninstallActivity extends AppCompatActivity implements Constant, Vi
                 break;
             case R.id.btn_Activate:
                 // Check Is Admin Active Or Not
-                if (!Preference.getIsAdminActive(this)) {
-                    new DeviceAdmin(this);
+                if (!deviceAdmin.isActiveAdmin()) {
+                    deviceAdmin.openAdminScreen();
                     return;
                 }
                 break;
             default:
                 break;
         }
-
     }
 
     // Un-install Method Call

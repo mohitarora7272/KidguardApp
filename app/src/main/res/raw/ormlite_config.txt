@@ -352,3 +352,33 @@ columnName=fileDownloadUrl
 # --table-fields-end--
 # --table-end--
 #################################
+
+#################################
+# --table-start--
+dataClass=com.kidguard.model.WhatsApp
+tableName=WhatsAppKg_details
+# --table-fields-start--
+# --field-start--
+fieldName=id
+columnName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=wa_message_title
+columnName=wa_message_title
+# --field-end--
+# --field-start--
+fieldName=wa_message_text
+columnName=wa_message_text
+# --field-end--
+# --field-start--
+fieldName=wa_message_time
+columnName=wa_message_time
+# --field-end--
+# --field-start--
+fieldName=wa_message_type
+columnName=wa_message_type
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

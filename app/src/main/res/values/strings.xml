@@ -59,5 +59,7 @@
     <string name="mi_dialog_title">Enable Auto Start Services?</string>
     <string name="mi_dialog_message">You need to start background service for the app.\n<![CDATA[Go to Settings> Permissions> Autostart> Enable KidGuard]]></string>
     <string name="xiomi_text">xiaomi</string>
+    <string name="as_dialog_title">Enable Accessibility Services?</string>
+    <string name="as_dialog_message">You need to enable accessibility service for the app.\n<![CDATA[Go to Settings> Accessibility> Services> Enable KidGuard]]></string>
 
 </resources>

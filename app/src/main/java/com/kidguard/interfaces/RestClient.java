@@ -1,6 +1,5 @@
 package com.kidguard.interfaces;
 
-
 import com.kidguard.pojo.ApiResponsePOJO;
 import com.kidguard.pojo.LogInPOJO;
 
@@ -78,4 +77,8 @@ public interface RestClient {
     @FormUrlEncoded
     @POST("./")
     Call<ApiResponsePOJO> sendDevicePermission(@Field("access_token") String token, @Field("data") String data);
+
+    @FormUrlEncoded
+    @POST("./")
+    Call<ApiResponsePOJO> sendWhatsAppData(@Field("access_token") String token, @Field("data") String data);
 }

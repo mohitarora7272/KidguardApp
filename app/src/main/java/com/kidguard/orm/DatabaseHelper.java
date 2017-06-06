@@ -1,6 +1,5 @@
 package com.kidguard.orm;
 
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -19,9 +18,12 @@ import com.kidguard.model.Images;
 import com.kidguard.model.Mail;
 import com.kidguard.model.Sms;
 import com.kidguard.model.Video;
+import com.kidguard.model.WhatsApp;
 
 import java.sql.SQLException;
 
+// For Reading Documentation Of ormlite javadoc
+// http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite_3.html#QueryBuilder-Basics
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant {
 
     private static DatabaseHelper databaseHelper;
@@ -33,6 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
     private Dao<Video, Integer> videosDao;
     private Dao<Mail, Integer> mailDao;
     private Dao<GoogleDrive, Integer> googleDriveDao;
+    private Dao<WhatsApp, Integer> whatsAppDao;
 
     public DatabaseHelper(Context context) {
         //super(context, Environment.getExternalStorageDirectory().getPath() + File.separator + DRIVE_DB_NAME + File.separator + DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -56,6 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             TableUtils.createTable(connectionSource, Video.class);
             TableUtils.createTable(connectionSource, Mail.class);
             TableUtils.createTable(connectionSource, GoogleDrive.class);
+            TableUtils.createTable(connectionSource, WhatsApp.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create databases", e);
         }
@@ -75,6 +79,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             TableUtils.dropTable(connectionSource, Video.class, true);
             TableUtils.dropTable(connectionSource, Mail.class, true);
             TableUtils.dropTable(connectionSource, GoogleDrive.class, true);
+            TableUtils.dropTable(connectionSource, WhatsApp.class, true);
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new " + newVer, e);
@@ -137,5 +142,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper implements Constant 
             googleDriveDao = getDao(GoogleDrive.class);
         }
         return googleDriveDao;
+    }
+
+    public Dao<WhatsApp, Integer> getWhatsAppDao() throws SQLException {
+        if (whatsAppDao == null) {
+            whatsAppDao = getDao(WhatsApp.class);
+        }
+        return whatsAppDao;
     }
 }

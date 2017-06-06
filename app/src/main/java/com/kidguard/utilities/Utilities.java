@@ -20,6 +20,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,6 +38,7 @@ import com.kidguard.model.Apps;
 import com.kidguard.model.BrowserHistory;
 import com.kidguard.model.Permissions;
 import com.kidguard.services.BackgroundDataService;
+import com.kidguard.services.MyAccessibilityService;
 
 import java.io.File;
 import java.net.NetworkInterface;
@@ -199,6 +202,13 @@ public class Utilities implements Constant {
     public static String getCurrentDateTime() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ", Locale.getDefault());
+        return df.format(c.getTime());
+    }
+
+    // Getting Date to Passing long type of time for whats app notification
+    public static String getTimeNotificationWA() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return df.format(c.getTime());
     }
 
@@ -466,5 +476,38 @@ public class Utilities implements Constant {
         listPermission.add(permissionLocation);
 
         new BackgroundDataService(ctx).sendAppPermissionToServer(listPermission);
+    }
+
+    // Check if Accessibility service is enabled or not
+    public static boolean isAccessibilityEnabled(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = mContext.getPackageName() + "/" + MyAccessibilityService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(mContext.getApplicationContext().getContentResolver(), android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.e("Accessibility", "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("Error", "Error finding setting, default accessibility to not found: " + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.e("Accessibility", "***ACCESSIBILITY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(mContext.getApplicationContext().getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+                    Log.e("Accessibility", "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        Log.e("Accessibility", "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.e("Accessibility", "***ACCESSIBILITY IS DISABLED***");
+        }
+
+        return false;
     }
 }

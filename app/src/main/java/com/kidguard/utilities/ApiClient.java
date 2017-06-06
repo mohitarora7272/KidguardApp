@@ -80,6 +80,10 @@ public class ApiClient implements Constant {
             if (tag.equals(TAG_PERMISSIONS)) {
                 retrofit = new Retrofit.Builder().baseUrl(ROOT + APPENDED_URL + PERMISSION_DEVICE).addConverterFactory(GsonConverterFactory.create(gson)).build();
             }
+
+            if (tag.equals(TAG_WHATSAPP)) {
+                retrofit = new Retrofit.Builder().baseUrl(ROOT + APPENDED_URL + WHATS_APP).addConverterFactory(GsonConverterFactory.create(gson)).build();
+            }
         }
         return retrofit.create(RestClient.class);
     }
